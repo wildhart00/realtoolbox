@@ -99,11 +99,28 @@ const ToolDetailPage = () => {
 
   return (
     <AppLayout>
-      {/* Header */}
-      <section className="border-b border-border/60 bg-gradient-subtle px-6 py-10 lg:px-10">
+      {/* Hero image */}
+      <section className="px-6 pt-6 lg:px-10">
         <Button asChild variant="ghost" size="sm" className="mb-4 -ml-2 text-muted-foreground">
           <Link to="/"><ArrowLeft className="h-4 w-4" /> All tools</Link>
         </Button>
+        <div className="relative h-48 w-full overflow-hidden rounded-2xl shadow-md sm:h-64 lg:h-80">
+          {tool.hero_image_url ? (
+            <img
+              src={tool.hero_image_url}
+              alt={`${tool.name} hero`}
+              className="h-full w-full object-cover"
+              loading="eager"
+            />
+          ) : (
+            <div className="h-full w-full bg-gradient-accent" />
+          )}
+          <div className="absolute inset-0 bg-gradient-to-t from-background/70 via-background/10 to-transparent" />
+        </div>
+      </section>
+
+      {/* Header */}
+      <section className="border-b border-border/60 px-6 py-8 lg:px-10">
         <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
           <div className="flex items-start gap-5">
             {tool.logo_url ? (
@@ -151,16 +168,24 @@ const ToolDetailPage = () => {
           <div className="space-y-10">
             <div>
               <h2 className="text-xl font-bold tracking-tight">About {tool.name}</h2>
-              <p className="mt-3 whitespace-pre-line leading-relaxed text-muted-foreground">{tool.description}</p>
+              <div className="prose prose-sm mt-3 max-w-none text-muted-foreground">
+                {(tool.full_description ?? tool.description)
+                  .split(/\n\s*\n/)
+                  .map((para, i) => (
+                    <p key={i} className="leading-relaxed [&:not(:first-child)]:mt-4">
+                      {para}
+                    </p>
+                  ))}
+              </div>
             </div>
 
             {tool.key_features.length > 0 && (
               <div>
-                <h2 className="text-xl font-bold tracking-tight">Key features</h2>
-                <ul className="mt-4 grid gap-2 sm:grid-cols-2">
+                <h2 className="text-xl font-bold tracking-tight">Key features & benefits</h2>
+                <ul className="mt-4 space-y-2">
                   {tool.key_features.map((f, i) => (
-                    <li key={i} className="flex items-start gap-2.5 rounded-lg border border-border/60 bg-card p-3 text-sm">
-                      <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-accent-soft text-accent">✓</span>
+                    <li key={i} className="flex items-start gap-3 rounded-lg border border-border/60 bg-card p-3 text-sm">
+                      <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-success/15 text-success">✓</span>
                       <span>{f}</span>
                     </li>
                   ))}

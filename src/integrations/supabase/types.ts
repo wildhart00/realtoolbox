@@ -321,6 +321,8 @@ export type Database = {
           founder_avatar_url: string | null
           founder_bio: string | null
           founder_name: string | null
+          full_description: string | null
+          hero_image_url: string | null
           id: string
           is_editors_pick: boolean
           is_featured: boolean
@@ -342,6 +344,8 @@ export type Database = {
           founder_avatar_url?: string | null
           founder_bio?: string | null
           founder_name?: string | null
+          full_description?: string | null
+          hero_image_url?: string | null
           id?: string
           is_editors_pick?: boolean
           is_featured?: boolean
@@ -363,6 +367,8 @@ export type Database = {
           founder_avatar_url?: string | null
           founder_bio?: string | null
           founder_name?: string | null
+          full_description?: string | null
+          hero_image_url?: string | null
           id?: string
           is_editors_pick?: boolean
           is_featured?: boolean
