@@ -1,9 +1,19 @@
-import { Link, useLocation } from "react-router-dom";
-import { Search, Sparkles, Menu, X } from "lucide-react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Search, Sparkles, Menu, X, LogOut, User as UserIcon } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/hooks/useAuth";
+import { useSearch } from "@/hooks/useSearch";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 const navLinks = [
   { name: "Tools", href: "/" },
@@ -15,6 +25,13 @@ const navLinks = [
 export function Topbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+  const { user, signOut } = useAuth();
+  const { query, setQuery } = useSearch();
+
+  const handleSearchFocus = () => {
+    if (location.pathname !== "/") navigate("/");
+  };
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-border/60 bg-background/80 backdrop-blur-xl">
@@ -32,12 +49,21 @@ export function Topbar() {
           <div className="relative w-full">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
-              placeholder="Search 200+ AI tools for real estate..."
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              onFocus={handleSearchFocus}
+              placeholder="Search AI tools for real estate..."
               className="h-10 pl-10 bg-muted/50 border-border/60 focus-visible:bg-background"
             />
-            <kbd className="absolute right-3 top-1/2 -translate-y-1/2 hidden rounded border border-border bg-background px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground sm:block">
-              ⌘K
-            </kbd>
+            {query && (
+              <button
+                onClick={() => setQuery("")}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                aria-label="Clear search"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            )}
           </div>
         </div>
 
@@ -60,12 +86,39 @@ export function Topbar() {
         </nav>
 
         <div className="hidden lg:flex items-center gap-2">
-          <Button asChild variant="ghost" size="sm">
-            <Link to="/auth">Sign in</Link>
-          </Button>
-          <Button asChild variant="accent" size="sm">
-            <Link to="/auth?mode=signup">Join Hub</Link>
-          </Button>
+          {user ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="flex h-9 w-9 items-center justify-center rounded-full ring-1 ring-border/60 hover:ring-accent/40">
+                  <Avatar className="h-9 w-9">
+                    <AvatarFallback className="bg-accent-soft text-accent text-xs font-semibold">
+                      {(user.email ?? "U")[0].toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <div className="px-2 py-1.5 text-xs text-muted-foreground truncate">{user.email}</div>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link to="/members"><UserIcon className="mr-2 h-4 w-4" />Members Hub</Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={signOut}>
+                  <LogOut className="mr-2 h-4 w-4" />Sign out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <>
+              <Button asChild variant="ghost" size="sm">
+                <Link to="/auth">Sign in</Link>
+              </Button>
+              <Button asChild variant="accent" size="sm">
+                <Link to="/auth?mode=signup">Join Hub</Link>
+              </Button>
+            </>
+          )}
         </div>
 
         <button
@@ -82,7 +135,13 @@ export function Topbar() {
           <div className="space-y-1 p-4">
             <div className="relative mb-3">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input placeholder="Search tools..." className="h-10 pl-10 bg-muted/50" />
+              <Input
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                onFocus={handleSearchFocus}
+                placeholder="Search tools..."
+                className="h-10 pl-10 bg-muted/50"
+              />
             </div>
             {navLinks.map((l) => (
               <Link
@@ -95,12 +154,20 @@ export function Topbar() {
               </Link>
             ))}
             <div className="flex gap-2 pt-2">
-              <Button asChild variant="outline" size="sm" className="flex-1">
-                <Link to="/auth">Sign in</Link>
-              </Button>
-              <Button asChild variant="accent" size="sm" className="flex-1">
-                <Link to="/auth?mode=signup">Join Hub</Link>
-              </Button>
+              {user ? (
+                <Button variant="outline" size="sm" className="flex-1" onClick={signOut}>
+                  Sign out
+                </Button>
+              ) : (
+                <>
+                  <Button asChild variant="outline" size="sm" className="flex-1">
+                    <Link to="/auth">Sign in</Link>
+                  </Button>
+                  <Button asChild variant="accent" size="sm" className="flex-1">
+                    <Link to="/auth?mode=signup">Join Hub</Link>
+                  </Button>
+                </>
+              )}
             </div>
           </div>
         </div>

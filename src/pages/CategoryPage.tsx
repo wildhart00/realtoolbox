@@ -1,74 +1,66 @@
 import { useParams, Link } from "react-router-dom";
-import { AppLayout } from "@/components/layout/AppLayout";
-import { ToolCard } from "@/components/tools/ToolCard";
-import { getCategoryBySlug } from "@/data/categories";
-import { getToolsByCategory } from "@/data/tools";
+import { useMemo } from "react";
+import * as Icons from "lucide-react";
 import { ArrowLeft } from "lucide-react";
+import { AppLayout } from "@/components/layout/AppLayout";
+import { ToolGrid } from "@/components/tools/ToolGrid";
 import { Button } from "@/components/ui/button";
-import { useEffect } from "react";
+import { useCategories, useTools } from "@/hooks/useDirectory";
+import { useSearch } from "@/hooks/useSearch";
 
 const CategoryPage = () => {
   const { slug } = useParams<{ slug: string }>();
-  const category = slug ? getCategoryBySlug(slug) : undefined;
-  const categoryTools = slug ? getToolsByCategory(slug) : [];
+  const { data: categories = [] } = useCategories();
+  const { data: tools = [], isLoading } = useTools();
+  const { query } = useSearch();
 
-  useEffect(() => {
-    if (category) {
-      document.title = `${category.name} AI tools for real estate | RealToolbox.ai`;
+  const category = categories.find((c) => c.slug === slug);
+
+  const filtered = useMemo(() => {
+    let list = tools.filter((t) => t.categories?.some((c) => c.slug === slug));
+    if (query.trim()) {
+      const q = query.toLowerCase();
+      list = list.filter(
+        (t) => t.name.toLowerCase().includes(q) || t.tagline.toLowerCase().includes(q)
+      );
     }
-  }, [category]);
+    return list;
+  }, [tools, slug, query]);
 
-  if (!category) {
-    return (
-      <AppLayout>
-        <div className="flex flex-col items-center justify-center px-6 py-24 text-center">
-          <h1 className="text-2xl font-bold">Category not found</h1>
-          <Button asChild variant="link" className="mt-4">
-            <Link to="/">← Back to all tools</Link>
-          </Button>
-        </div>
-      </AppLayout>
-    );
-  }
-
-  const Icon = category.icon;
+  const IconComp = (category?.icon && (Icons as any)[category.icon]) || Icons.LayoutGrid;
 
   return (
     <AppLayout>
-      <div className="px-6 py-10 lg:px-10">
-        <Button asChild variant="ghost" size="sm" className="mb-6 -ml-3">
+      <section className="border-b border-border/60 bg-gradient-subtle px-6 py-10 lg:px-10">
+        <Button asChild variant="ghost" size="sm" className="mb-3 -ml-2 text-muted-foreground">
           <Link to="/">
-            <ArrowLeft className="h-4 w-4" /> All categories
+            <ArrowLeft className="h-4 w-4" /> All tools
           </Link>
         </Button>
-
         <div className="flex items-center gap-4">
-          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-accent-soft text-accent">
-            <Icon className="h-7 w-7" />
+          <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-accent-soft text-accent">
+            <IconComp className="h-7 w-7" />
           </div>
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">{category.name}</h1>
-            <p className="mt-1 text-muted-foreground">{category.description}</p>
+            <h1 className="text-3xl font-bold tracking-tight">{category?.name ?? "Category"}</h1>
+            <p className="mt-1 text-sm text-muted-foreground">
+              {filtered.length} {filtered.length === 1 ? "tool" : "tools"} in this category
+            </p>
           </div>
         </div>
+      </section>
 
-        <div className="mt-4 text-sm text-muted-foreground">
-          {categoryTools.length} {categoryTools.length === 1 ? "tool" : "tools"} in this category
-        </div>
-
-        {categoryTools.length === 0 ? (
-          <div className="mt-12 rounded-2xl border border-dashed border-border bg-muted/30 p-12 text-center">
-            <p className="text-muted-foreground">No tools in this category yet.</p>
-            <Button asChild variant="accent" className="mt-4">
-              <Link to="/submit">Be the first to submit one</Link>
-            </Button>
+      <section className="px-6 py-10 lg:px-10">
+        {isLoading ? (
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="h-44 animate-pulse rounded-2xl border border-border/60 bg-muted/40" />
+            ))}
           </div>
         ) : (
-          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {categoryTools.map((t) => <ToolCard key={t.id} tool={t} />)}
-          </div>
+          <ToolGrid tools={filtered} />
         )}
-      </div>
+      </section>
     </AppLayout>
   );
 };
