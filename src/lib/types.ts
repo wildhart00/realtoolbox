@@ -15,6 +15,8 @@ export interface Tool {
   name: string;
   tagline: string;
   description: string;
+  full_description: string | null;
+  hero_image_url: string | null;
   website_url: string;
   logo_url: string | null;
   pricing: PricingModel;
