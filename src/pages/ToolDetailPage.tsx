@@ -193,20 +193,6 @@ const ToolDetailPage = () => {
               </div>
             )}
 
-            {tool.key_features.length > 0 && (
-              <div>
-                <h2 className="text-xl font-bold tracking-tight">Key features</h2>
-                <ul className="mt-4 grid gap-2 sm:grid-cols-2">
-                  {tool.key_features.map((f, i) => (
-                    <li key={i} className="flex items-start gap-2.5 rounded-lg border border-border/60 bg-card p-3 text-sm">
-                      <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-accent-soft text-accent">✓</span>
-                      <span>{f}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-
             {tool.use_cases.length > 0 && (
               <div>
                 <h2 className="text-xl font-bold tracking-tight">Real estate use cases</h2>
