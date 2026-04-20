@@ -1,0 +1,61 @@
+import { NavLink, useParams } from "react-router-dom";
+import { categories } from "@/data/categories";
+import { cn } from "@/lib/utils";
+import { LayoutGrid } from "lucide-react";
+
+export function CategorySidebar() {
+  const params = useParams();
+  const activeSlug = params.slug;
+
+  return (
+    <aside className="hidden lg:block w-64 shrink-0 border-r border-border/60 bg-sidebar">
+      <div className="sticky top-16 h-[calc(100vh-4rem)] overflow-y-auto px-3 py-6">
+        <div className="px-3 pb-2">
+          <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            Categories
+          </p>
+        </div>
+
+        <NavLink
+          to="/"
+          end
+          className={({ isActive }) =>
+            cn(
+              "group flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-base",
+              isActive && !activeSlug
+                ? "bg-accent-soft text-accent"
+                : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+            )
+          }
+        >
+          <LayoutGrid className="h-4 w-4" />
+          <span>All Tools</span>
+        </NavLink>
+
+        <div className="my-2 border-t border-sidebar-border/60" />
+
+        <nav className="space-y-0.5">
+          {categories.map((cat) => {
+            const Icon = cat.icon;
+            const isActive = activeSlug === cat.slug;
+            return (
+              <NavLink
+                key={cat.id}
+                to={`/category/${cat.slug}`}
+                className={cn(
+                  "group flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-base",
+                  isActive
+                    ? "bg-accent-soft text-accent"
+                    : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                )}
+              >
+                <Icon className={cn("h-4 w-4 shrink-0", isActive ? "text-accent" : "text-muted-foreground group-hover:text-foreground")} />
+                <span className="truncate">{cat.name}</span>
+              </NavLink>
+            );
+          })}
+        </nav>
+      </div>
+    </aside>
+  );
+}
