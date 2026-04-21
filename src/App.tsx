@@ -14,6 +14,7 @@ import ResetPasswordPage from "./pages/ResetPasswordPage.tsx";
 import SubmitPage from "./pages/SubmitPage.tsx";
 import MembersPage from "./pages/MembersPage.tsx";
 import BlogPage from "./pages/BlogPage.tsx";
+import { ScrollToTop } from "./components/ScrollToTop.tsx";
 
 const queryClient = new QueryClient();
 
@@ -23,6 +24,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        <ScrollToTop />
         <AuthProvider>
           <SearchProvider>
             <Routes>
