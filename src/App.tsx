@@ -12,8 +12,8 @@ import ToolDetailPage from "./pages/ToolDetailPage.tsx";
 import AuthPage from "./pages/AuthPage.tsx";
 import ResetPasswordPage from "./pages/ResetPasswordPage.tsx";
 import SubmitPage from "./pages/SubmitPage.tsx";
-import MembersPage from "./pages/MembersPage.tsx";
 import BlogPage from "./pages/BlogPage.tsx";
+import GoRedirectPage from "./pages/GoRedirectPage.tsx";
 import { ScrollToTop } from "./components/ScrollToTop.tsx";
 
 const queryClient = new QueryClient();
@@ -31,10 +31,10 @@ const App = () => (
               <Route path="/" element={<Index />} />
               <Route path="/category/:slug" element={<CategoryPage />} />
               <Route path="/tools/:slug" element={<ToolDetailPage />} />
+              <Route path="/go/:slug" element={<GoRedirectPage />} />
               <Route path="/blog" element={<BlogPage />} />
               <Route path="/blog/:slug" element={<BlogPage />} />
               <Route path="/submit" element={<SubmitPage />} />
-              <Route path="/members" element={<MembersPage />} />
               <Route path="/auth" element={<AuthPage />} />
               <Route path="/reset-password" element={<ResetPasswordPage />} />
               <Route path="*" element={<NotFound />} />
