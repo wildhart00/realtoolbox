@@ -3,7 +3,7 @@ import type { Tool } from "@/lib/types";
 import { ToolLogo, domainFromUrl } from "./ToolLogo";
 import { PricingBadge } from "./PricingBadge";
 
-export function ToolCard({ tool }: { tool: Tool }) {
+export function ToolCard({ tool, isSaved: _isSaved }: { tool: Tool; isSaved?: boolean }) {
   const domain = domainFromUrl(tool.website_url);
   const category = tool.categories?.[0];
 
