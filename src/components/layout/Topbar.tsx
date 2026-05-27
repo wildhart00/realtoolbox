@@ -1,82 +1,65 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Search, Sparkles, Menu, X, LogOut, User as UserIcon } from "lucide-react";
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useAuth } from "@/hooks/useAuth";
-import { useSearch } from "@/hooks/useSearch";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 const navLinks = [
-  { name: "Tools", href: "/" },
+  { name: "Browse", href: "/" },
+  { name: "MCPs", href: "/category/mcps" },
+  { name: "Skills", href: "/category/skills" },
   { name: "Blog", href: "/blog" },
-  { name: "Members Hub", href: "/members" },
-  { name: "Submit Tool", href: "/submit" },
+  { name: "Newsletter", href: "/#newsletter" },
 ];
 
 export function Topbar() {
-  const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  const { user, signOut } = useAuth();
-  const { query, setQuery } = useSearch();
+  const [open, setOpen] = useState(false);
 
-  const handleSearchFocus = () => {
-    if (location.pathname !== "/") navigate("/");
+  const handleNewsletter = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (location.pathname !== "/") navigate("/#newsletter");
+    else document.getElementById("newsletter")?.scrollIntoView({ behavior: "smooth" });
+    setOpen(false);
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-border/60 bg-background/80 backdrop-blur-xl">
-      <div className="mx-auto flex h-16 max-w-[1400px] items-center gap-4 px-4 lg:px-6">
-        <Link to="/" className="flex items-center gap-2 shrink-0">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-accent shadow-glow">
-            <Sparkles className="h-5 w-5 text-accent-foreground" />
+    <header
+      className="sticky top-0 z-50 border-b border-foreground/[0.06] backdrop-blur-xl"
+      style={{ background: "hsl(230 22% 5% / 0.9)" }}
+    >
+      <div className="mx-auto max-w-[1200px] flex items-center justify-between gap-4 h-[60px] px-6 lg:px-10">
+        {/* Logo */}
+        <Link to="/" className="flex items-center gap-[9px] shrink-0">
+          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-accent">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+              <polyline points="9,22 9,12 15,12 15,22" />
+            </svg>
           </div>
-          <span className="text-lg font-bold tracking-tight">
-            RealToolbox<span className="text-accent">.ai</span>
+          <span className="font-display text-[17px] font-bold text-foreground tracking-[-0.02em]">
+            RealToolbox<span className="text-[hsl(229_94%_82%)]">.ai</span>
           </span>
         </Link>
 
-        <div className="hidden flex-1 max-w-xl mx-4 lg:flex">
-          <div className="relative w-full">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              onFocus={handleSearchFocus}
-              placeholder="Search AI tools for real estate..."
-              className="h-10 pl-10 bg-muted/50 border-border/60 focus-visible:bg-background"
-            />
-            {query && (
-              <button
-                onClick={() => setQuery("")}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                aria-label="Clear search"
-              >
-                <X className="h-4 w-4" />
-              </button>
-            )}
-          </div>
-        </div>
-
-        <nav className="hidden items-center gap-1 lg:flex">
+        {/* Center nav */}
+        <nav className="hidden lg:flex items-center gap-0.5">
           {navLinks.map((l) => {
-            const active = location.pathname === l.href;
+            const active =
+              l.href === "/"
+                ? location.pathname === "/"
+                : l.href.startsWith("/category")
+                  ? false
+                  : location.pathname.startsWith(l.href.replace("/#", "/"));
+            const isNewsletter = l.href.includes("#newsletter");
             return (
               <Link
-                key={l.href}
+                key={l.name}
                 to={l.href}
+                onClick={isNewsletter ? handleNewsletter : undefined}
                 className={cn(
-                  "rounded-md px-3 py-2 text-sm font-medium transition-base",
-                  active ? "text-foreground" : "text-muted-foreground hover:text-foreground"
+                  "text-[13.5px] font-medium px-2.5 py-1.5 rounded-md transition-base",
+                  active ? "text-foreground" : "text-muted-foreground hover:text-foreground hover:bg-foreground/[0.05]",
                 )}
               >
                 {l.name}
@@ -85,90 +68,50 @@ export function Topbar() {
           })}
         </nav>
 
-        <div className="hidden lg:flex items-center gap-2">
-          {user ? (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <button className="flex h-9 w-9 items-center justify-center rounded-full ring-1 ring-border/60 hover:ring-accent/40">
-                  <Avatar className="h-9 w-9">
-                    <AvatarFallback className="bg-accent-soft text-accent text-xs font-semibold">
-                      {(user.email ?? "U")[0].toUpperCase()}
-                    </AvatarFallback>
-                  </Avatar>
-                </button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56">
-                <div className="px-2 py-1.5 text-xs text-muted-foreground truncate">{user.email}</div>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
-                  <Link to="/members"><UserIcon className="mr-2 h-4 w-4" />Members Hub</Link>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={signOut}>
-                  <LogOut className="mr-2 h-4 w-4" />Sign out
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          ) : (
-            <>
-              <Button asChild variant="ghost" size="sm">
-                <Link to="/auth">Sign in</Link>
-              </Button>
-              <Button asChild variant="accent" size="sm">
-                <Link to="/auth?mode=signup">Join Hub</Link>
-              </Button>
-            </>
-          )}
+        {/* Right */}
+        <div className="hidden lg:flex items-center gap-2.5 shrink-0">
+          <div className="flex items-center gap-1.5">
+            <span className="h-1.5 w-1.5 rounded-full bg-success pulse-dot" />
+            <span className="text-[11px] text-foreground/30">Updated weekly</span>
+          </div>
+          <Link
+            to="/submit"
+            className="bg-foreground text-background rounded-[9px] px-4 py-2 text-[13px] font-semibold hover:bg-foreground/90 transition-base"
+          >
+            Submit a Tool
+          </Link>
         </div>
 
+        {/* Mobile toggle */}
         <button
-          aria-label="Toggle menu"
-          onClick={() => setMobileOpen((s) => !s)}
-          className="ml-auto inline-flex h-9 w-9 items-center justify-center rounded-md hover:bg-muted lg:hidden"
+          aria-label="Menu"
+          onClick={() => setOpen((o) => !o)}
+          className="lg:hidden h-9 w-9 inline-flex items-center justify-center rounded-md hover:bg-foreground/[0.05]"
         >
-          {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </button>
       </div>
 
-      {mobileOpen && (
-        <div className="border-t border-border/60 bg-background lg:hidden animate-fade-in">
-          <div className="space-y-1 p-4">
-            <div className="relative mb-3">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                onFocus={handleSearchFocus}
-                placeholder="Search tools..."
-                className="h-10 pl-10 bg-muted/50"
-              />
-            </div>
+      {open && (
+        <div className="lg:hidden border-t border-foreground/[0.06] animate-fade-in">
+          <div className="px-6 py-4 space-y-1">
             {navLinks.map((l) => (
               <Link
-                key={l.href}
+                key={l.name}
                 to={l.href}
-                onClick={() => setMobileOpen(false)}
-                className="block rounded-md px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground"
+                onClick={l.href.includes("#newsletter") ? handleNewsletter : () => setOpen(false)}
+                className="block rounded-md px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-foreground/[0.05]"
               >
                 {l.name}
               </Link>
             ))}
-            <div className="flex gap-2 pt-2">
-              {user ? (
-                <Button variant="outline" size="sm" className="flex-1" onClick={signOut}>
-                  Sign out
-                </Button>
-              ) : (
-                <>
-                  <Button asChild variant="outline" size="sm" className="flex-1">
-                    <Link to="/auth">Sign in</Link>
-                  </Button>
-                  <Button asChild variant="accent" size="sm" className="flex-1">
-                    <Link to="/auth?mode=signup">Join Hub</Link>
-                  </Button>
-                </>
-              )}
-            </div>
+            <Link
+              to="/submit"
+              onClick={() => setOpen(false)}
+              className="block mt-3 text-center bg-foreground text-background rounded-[9px] px-4 py-2 text-sm font-semibold"
+            >
+              Submit a Tool
+            </Link>
           </div>
         </div>
       )}
