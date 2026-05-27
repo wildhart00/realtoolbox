@@ -1,0 +1,40 @@
+import { Search } from "lucide-react";
+import { useSearch } from "@/hooks/useSearch";
+
+export function Hero({ toolCount }: { toolCount: number }) {
+  const { query, setQuery } = useSearch();
+
+  return (
+    <section className="px-6 lg:px-10 pt-[88px] pb-14 text-center mx-auto" style={{ maxWidth: 780 }}>
+      <div className="inline-flex items-center gap-2 bg-accent/[0.08] border border-accent/20 rounded-full px-3.5 py-[5px] mb-[26px]">
+        <span className="h-[5px] w-[5px] rounded-full bg-[hsl(229_94%_82%)]" />
+        <span className="text-[12px] text-[hsl(229_94%_82%)] font-medium">
+          {toolCount} curated tools — updated weekly
+        </span>
+      </div>
+
+      <h1
+        className="font-display font-bold text-foreground mb-[18px]"
+        style={{ fontSize: "clamp(38px, 6vw, 62px)", lineHeight: 1.08, letterSpacing: "-0.03em" }}
+      >
+        The AI toolkit built
+        <br />
+        <span className="italic text-[hsl(229_94%_82%)]">for real estate pros</span>
+      </h1>
+
+      <p className="text-[16px] text-muted-foreground leading-[1.65] mx-auto" style={{ maxWidth: 520 }}>
+        Curated tools for agents, investors, property managers, and deal makers — plus the best general AI tools any pro should know about.
+      </p>
+
+      <div className="relative mt-9 mx-auto" style={{ maxWidth: 520 }}>
+        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-foreground/30 h-[17px] w-[17px]" />
+        <input
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Search tools, categories, use cases…"
+          className="w-full bg-foreground/[0.05] border border-foreground/10 rounded-xl py-[14px] pl-[46px] pr-5 text-[15px] text-foreground placeholder:text-foreground/30 outline-none focus:border-accent/40 transition-base"
+        />
+      </div>
+    </section>
+  );
+}
