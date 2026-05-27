@@ -103,6 +103,8 @@ Default: insert into new `newsletter_subscribers` table with `source='homepage'`
 
 After build: deliver Home (`/`) and Bardeen detail (`/tools/bardeen`) for review before any polish pass. (Assumes a Bardeen row exists; if not, I'll seed one via `supabase--insert` using data from the attached `realtoolbox-v4.jsx`.)
 
+*Repo sync triggered after GitHub rename to `realtoolbox`.*
+
 ## Open questions before I build
 
 1. **Seed data**: should I import the tool list from `realtoolbox-v4.jsx` into the `tools` table so the redesign has real content? (Otherwise the new UI will render whatever is currently in the DB, which may be sparse.)
