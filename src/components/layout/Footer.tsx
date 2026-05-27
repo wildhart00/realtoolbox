@@ -1,48 +1,20 @@
-import { Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 
 export function Footer() {
   return (
-    <footer className="border-t border-border/60 bg-muted/30">
-      <div className="mx-auto max-w-[1400px] px-6 py-12">
-        <div className="grid gap-8 md:grid-cols-4">
-          <div className="md:col-span-2">
-            <Link to="/" className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-accent">
-                <Sparkles className="h-4 w-4 text-accent-foreground" />
-              </div>
-              <span className="font-bold">RealToolbox<span className="text-accent">.ai</span></span>
-            </Link>
-            <p className="mt-3 max-w-md text-sm text-muted-foreground">
-              The premium directory of AI tools built for real estate professionals.
-              Discover, compare, and adopt the tech that closes more deals.
-            </p>
-          </div>
-          <div>
-            <h4 className="text-sm font-semibold">Product</h4>
-            <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
-              <li><Link to="/" className="hover:text-foreground">Browse Tools</Link></li>
-              <li><Link to="/submit" className="hover:text-foreground">Submit a Tool</Link></li>
-              <li><Link to="/members" className="hover:text-foreground">Members Hub</Link></li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="text-sm font-semibold">Resources</h4>
-            <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
-              <li><Link to="/blog" className="hover:text-foreground">Blog</Link></li>
-              <li><a href="#" className="hover:text-foreground">Newsletter</a></li>
-              <li><a href="#" className="hover:text-foreground">Contact</a></li>
-            </ul>
-          </div>
-        </div>
-        <div className="mt-10 flex flex-col gap-2 border-t border-border/60 pt-6 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-xs text-muted-foreground">
-            © {new Date().getFullYear()} RealToolbox.ai — Built for the future of real estate.
-          </p>
-          <p className="text-xs text-muted-foreground">
-            Some links are affiliate. We only recommend tools we'd use ourselves.
-          </p>
-        </div>
+    <footer className="border-t border-foreground/[0.06] mt-auto">
+      <div className="mx-auto max-w-[1200px] px-6 lg:px-10 py-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+        <span className="font-display text-base font-bold text-foreground/40">
+          RealToolbox<span className="text-[hsl(229_94%_82%)]/60">.ai</span>
+        </span>
+        <p className="text-[12px] text-foreground/30 max-w-md">
+          Curated for real estate professionals. No sponsored listings.
+        </p>
+        <nav className="flex gap-5 text-[12px] text-foreground/30">
+          <Link to="/privacy" className="hover:text-foreground/60 transition-base">Privacy</Link>
+          <Link to="/terms" className="hover:text-foreground/60 transition-base">Terms</Link>
+          <a href="mailto:hello@realtoolbox.ai" className="hover:text-foreground/60 transition-base">Contact</a>
+        </nav>
       </div>
     </footer>
   );

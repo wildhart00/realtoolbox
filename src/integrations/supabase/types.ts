@@ -95,6 +95,54 @@ export type Database = {
         }
         Relationships: []
       }
+      click_events: {
+        Row: {
+          created_at: string
+          id: string
+          referrer: string | null
+          tool_id: string | null
+          tool_slug: string | null
+          user_agent: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          referrer?: string | null
+          tool_id?: string | null
+          tool_slug?: string | null
+          user_agent?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          referrer?: string | null
+          tool_id?: string | null
+          tool_slug?: string | null
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
+      newsletter_subscribers: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          source: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          source?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          source?: string | null
+        }
+        Relationships: []
+      }
       pending_tools: {
         Row: {
           admin_notes: string | null
@@ -316,8 +364,11 @@ export type Database = {
       }
       tools: {
         Row: {
+          affiliate_url: string | null
+          banner_color: string | null
           created_at: string
           description: string
+          featured_order: number | null
           founder_avatar_url: string | null
           founder_bio: string | null
           founder_name: string | null
@@ -332,15 +383,21 @@ export type Database = {
           name: string
           pricing: Database["public"]["Enums"]["pricing_model"]
           pricing_details: string | null
+          re_only: boolean | null
           slug: string
+          status: string | null
           tagline: string
+          tags: string[] | null
           updated_at: string
           use_cases: string[]
           website_url: string
         }
         Insert: {
+          affiliate_url?: string | null
+          banner_color?: string | null
           created_at?: string
           description: string
+          featured_order?: number | null
           founder_avatar_url?: string | null
           founder_bio?: string | null
           founder_name?: string | null
@@ -355,15 +412,21 @@ export type Database = {
           name: string
           pricing?: Database["public"]["Enums"]["pricing_model"]
           pricing_details?: string | null
+          re_only?: boolean | null
           slug: string
+          status?: string | null
           tagline: string
+          tags?: string[] | null
           updated_at?: string
           use_cases?: string[]
           website_url: string
         }
         Update: {
+          affiliate_url?: string | null
+          banner_color?: string | null
           created_at?: string
           description?: string
+          featured_order?: number | null
           founder_avatar_url?: string | null
           founder_bio?: string | null
           founder_name?: string | null
@@ -378,8 +441,11 @@ export type Database = {
           name?: string
           pricing?: Database["public"]["Enums"]["pricing_model"]
           pricing_details?: string | null
+          re_only?: boolean | null
           slug?: string
+          status?: string | null
           tagline?: string
+          tags?: string[] | null
           updated_at?: string
           use_cases?: string[]
           website_url?: string

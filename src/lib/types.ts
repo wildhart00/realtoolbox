@@ -18,17 +18,24 @@ export interface Tool {
   full_description: string | null;
   hero_image_url: string | null;
   website_url: string;
+  affiliate_url: string | null;
   logo_url: string | null;
+  banner_color: string | null;
   pricing: PricingModel;
   pricing_details: string | null;
   is_featured: boolean;
+  featured_order: number | null;
   is_verified: boolean;
   is_editors_pick: boolean;
+  re_only: boolean;
+  tags: string[];
+  status: string;
   founder_name: string | null;
   founder_bio: string | null;
   founder_avatar_url: string | null;
   key_features: string[];
   use_cases: string[];
+  created_at?: string;
   categories?: Category[];
 }
 

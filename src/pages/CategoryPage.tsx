@@ -1,10 +1,8 @@
 import { useParams, Link } from "react-router-dom";
 import { useMemo } from "react";
-import * as Icons from "lucide-react";
 import { ArrowLeft } from "lucide-react";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { ToolGrid } from "@/components/tools/ToolGrid";
-import { Button } from "@/components/ui/button";
 import { useCategories, useTools } from "@/hooks/useDirectory";
 import { useSearch } from "@/hooks/useSearch";
 
@@ -21,40 +19,37 @@ const CategoryPage = () => {
     if (query.trim()) {
       const q = query.toLowerCase();
       list = list.filter(
-        (t) => t.name.toLowerCase().includes(q) || t.tagline.toLowerCase().includes(q)
+        (t) =>
+          t.name.toLowerCase().includes(q) ||
+          t.tagline?.toLowerCase().includes(q) ||
+          t.tags?.some((tag) => tag.toLowerCase().includes(q)),
       );
     }
     return list;
   }, [tools, slug, query]);
 
-  const IconComp = (category?.icon && (Icons as any)[category.icon]) || Icons.LayoutGrid;
-
   return (
     <AppLayout>
-      <section className="border-b border-border/60 bg-gradient-subtle px-6 py-10 lg:px-10">
-        <Button asChild variant="ghost" size="sm" className="mb-3 -ml-2 text-muted-foreground">
-          <Link to="/">
-            <ArrowLeft className="h-4 w-4" /> All tools
-          </Link>
-        </Button>
-        <div className="flex items-center gap-4">
-          <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-accent-soft text-accent">
-            <IconComp className="h-7 w-7" />
-          </div>
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight">{category?.name ?? "Category"}</h1>
-            <p className="mt-1 text-sm text-muted-foreground">
-              {filtered.length} {filtered.length === 1 ? "tool" : "tools"} in this category
-            </p>
-          </div>
-        </div>
+      <section className="px-6 lg:px-10 pt-10 pb-6 mx-auto" style={{ maxWidth: 1100 }}>
+        <Link
+          to="/"
+          className="inline-flex items-center gap-1.5 text-[13px] text-muted-foreground hover:text-foreground transition-base"
+        >
+          <ArrowLeft className="h-3.5 w-3.5" />
+          All tools
+        </Link>
+        <h1 className="mt-4 font-display text-[40px] text-foreground tracking-[-0.025em]">
+          {category?.name ?? "Category"}
+        </h1>
+        <p className="mt-1 text-[14px] text-muted-foreground">
+          {filtered.length} {filtered.length === 1 ? "tool" : "tools"}
+        </p>
       </section>
-
-      <section className="px-6 py-10 lg:px-10">
+      <section className="px-6 lg:px-10 pb-20 mx-auto" style={{ maxWidth: 1100 }}>
         {isLoading ? (
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <div className="grid gap-3" style={{ gridTemplateColumns: "repeat(auto-fill,minmax(248px,1fr))" }}>
             {Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} className="h-44 animate-pulse rounded-2xl border border-border/60 bg-muted/40" />
+              <div key={i} className="h-44 surface-card rounded-2xl animate-pulse" />
             ))}
           </div>
         ) : (
