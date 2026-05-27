@@ -13,7 +13,7 @@ export function NewsletterCard() {
     if (!email.trim()) return;
     setBusy(true);
     const { error } = await supabase
-      .from("newsletter_subscribers")
+      .from("subscribers")
       .insert({ email: email.trim().toLowerCase(), source: "homepage" });
     setBusy(false);
     if (error && !error.message.toLowerCase().includes("duplicate")) {
