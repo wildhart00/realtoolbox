@@ -8,7 +8,7 @@ export function FeaturedStrip({ tools, onViewAll }: { tools: Tool[]; onViewAll?:
   return (
     <section className="px-6 lg:px-10 pb-11 mx-auto" style={{ maxWidth: 1100 }}>
       <div className="flex items-center justify-between mb-3.5">
-        <p className="text-[11px] uppercase tracking-[0.1em] text-foreground/30 font-semibold">
+        <p className="text-[11px] uppercase tracking-[0.1em] text-foreground/70 font-semibold">
           Featured this week
         </p>
         <button
