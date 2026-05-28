@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { ToolLogo, domainFromUrl } from "@/components/tools/ToolLogo";
 import { getBrandPalette } from "@/lib/brandColor";
 import type { Tool } from "@/lib/types";
@@ -11,6 +12,13 @@ export function MeshGradientBanner({ tool }: Props) {
   const { base, complement, accent } = getBrandPalette(domain);
   const gridId = `grid-${tool.id}`;
   const animId = `mesh-${tool.id.replace(/[^a-z0-9]/gi, "")}`;
+  const [shotFailed, setShotFailed] = useState(false);
+
+  const shotUrl = domain
+    ? `https://s.wordpress.com/mshots/v1/${encodeURIComponent(
+        `https://${domain}`,
+      )}?w=1600&h=900`
+    : null;
 
   const blobs = [
     { color: base, top: "-20%", left: "-10%", size: "70%", anim: `${animId}-a`, dur: "22s" },
@@ -19,9 +27,11 @@ export function MeshGradientBanner({ tool }: Props) {
     { color: base, top: "-10%", left: "60%", size: "55%", anim: `${animId}-d`, dur: "24s" },
   ];
 
+  const showScreenshot = shotUrl && !shotFailed;
+
   return (
     <div
-      className="h-[200px] rounded-2xl border border-foreground/[0.07] relative overflow-hidden flex items-center justify-center"
+      className="h-[220px] sm:h-[280px] lg:h-[340px] rounded-2xl border border-foreground/[0.07] relative overflow-hidden flex items-center justify-center"
       style={{ background: "#0a0b0f" }}
     >
       <style>{`
@@ -44,7 +54,7 @@ export function MeshGradientBanner({ tool }: Props) {
             width: b.size,
             height: b.size,
             background: b.color,
-            opacity: 0.7,
+            opacity: showScreenshot ? 0.5 : 0.7,
             filter: "blur(60px)",
             animation: `${b.anim} ${b.dur} ease-in-out infinite`,
             willChange: "transform",
@@ -61,19 +71,42 @@ export function MeshGradientBanner({ tool }: Props) {
         <rect width="100%" height="100%" fill={`url(#${gridId})`} />
       </svg>
 
-      <div
-        className="absolute inset-x-0 bottom-0 h-24 pointer-events-none"
-        style={{ background: "linear-gradient(to top, rgba(10,11,15,0.6), transparent)" }}
-      />
-
-      <div className="relative z-10 bg-white/90 backdrop-blur-md rounded-2xl p-3 shadow-2xl">
-        <ToolLogo
-          domain={domain}
-          name={tool.name}
-          customUrl={tool.logo_url}
-          size={96}
-        />
-      </div>
+      {showScreenshot ? (
+        <div className="relative z-10 w-[88%] max-w-[760px] aspect-[16/9] rounded-xl overflow-hidden shadow-2xl border border-white/10 bg-white/5 backdrop-blur-sm">
+          {/* Browser chrome */}
+          <div className="absolute top-0 inset-x-0 h-6 bg-[#1a1b22] border-b border-white/10 flex items-center px-3 gap-1.5 z-10">
+            <span className="w-2.5 h-2.5 rounded-full bg-[#ff5f57]" />
+            <span className="w-2.5 h-2.5 rounded-full bg-[#febc2e]" />
+            <span className="w-2.5 h-2.5 rounded-full bg-[#28c840]" />
+            <span className="ml-3 text-[10px] text-white/40 truncate">{domain}</span>
+          </div>
+          <img
+            src={shotUrl}
+            alt={`${tool.name} website screenshot`}
+            loading="lazy"
+            className="absolute inset-0 w-full h-full object-cover object-top pt-6 bg-white"
+            onLoad={(e) => {
+              const img = e.currentTarget;
+              if (img.naturalWidth < 50) {
+                // mShots placeholder — retry once
+                setTimeout(() => {
+                  img.src = shotUrl + `&cb=${Date.now()}`;
+                }, 2500);
+              }
+            }}
+            onError={() => setShotFailed(true)}
+          />
+          {/* Logo badge */}
+          <div className="absolute bottom-3 left-3 z-10 flex items-center gap-2 bg-black/70 backdrop-blur-md rounded-lg pl-1.5 pr-3 py-1.5 border border-white/10">
+            <ToolLogo domain={domain} name={tool.name} customUrl={tool.logo_url} size={28} />
+            <span className="text-[12px] font-semibold text-white">{tool.name}</span>
+          </div>
+        </div>
+      ) : (
+        <div className="relative z-10 bg-white/90 backdrop-blur-md rounded-2xl p-3 shadow-2xl">
+          <ToolLogo domain={domain} name={tool.name} customUrl={tool.logo_url} size={96} />
+        </div>
+      )}
     </div>
   );
 }

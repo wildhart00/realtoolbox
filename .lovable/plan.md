@@ -1,33 +1,38 @@
-## Animated mesh gradient banner
+# Tool Detail Page Refresh
 
-Replace the current radial+linear gradient on the tool detail banner with a slow, looping multi-blob mesh gradient. Each blob is colored from the tool's brand color + a complementary hue, so every tool feels unique. The logo sits centered on a frosted-glass card to pop against the motion behind it.
+## 1. Website screenshot in banner (`MeshGradientBanner.tsx`)
 
-### What changes
+Replace the centered logo over the mesh gradient with a layout that mirrors your reference: gradient stays as ambient background, but a real **screenshot of the tool's website** sits in front as a framed browser-style card.
 
-1. **`src/lib/brandColor.ts`** — add a helper alongside `getBrandColor`:
-   - `getBrandPalette(domain)` returns `{ base, complement, accent }` (3 hex colors). Complement = hue + 180°, accent = hue + 40°, both kept in the 70–90% sat / 50–65% light range.
+- Source the screenshot from a free, no-key thumbnail service: **WordPress mShots** (`https://s.wordpress.com/mshots/v1/{encoded-url}?w=1600&h=900`). It's CORS-free, reliably caches, and used widely for this exact pattern. Fallback to the current logo-only design if the image fails to load (`onError` handler).
+- Frame: rounded-xl, subtle white "browser chrome" bar with three traffic-light dots, drop shadow, soft border. Logo + tool name chip overlays the bottom-left corner of the screenshot so brand identity stays visible.
+- Bump banner height from `200px` → `320px` desktop / `220px` mobile so the screenshot reads at a glance.
+- Keep mesh gradient blobs + grid behind the screenshot card for depth.
+- `loading="lazy"`, explicit width/height to avoid CLS.
 
-2. **New component `src/components/tools/MeshGradientBanner.tsx`**:
-   - 200px tall, `rounded-2xl`, `overflow-hidden`, `relative`.
-   - 4 absolutely-positioned blurred blobs (`filter: blur(60px)`, `opacity` ~0.7) using the 3 palette colors + a dark anchor.
-   - Each blob animates `translate` + `scale` on its own offset keyframe loop (18–26s, `ease-in-out`, infinite) so the gradient drifts continuously without jank.
-   - A faint SVG grid overlay (kept from current design) and a subtle dark vignette at the bottom edge for legibility.
-   - Children slot: renders the centered frosted-glass logo card (`bg-white/90 backdrop-blur-md rounded-2xl p-3 shadow-2xl`) holding `<ToolLogo size={96}>`.
-   - Keyframes defined inline via a `<style>` tag scoped to the component (unique animation names) — avoids touching the global Tailwind config.
-   - `prefers-reduced-motion`: blobs become static (no animation) but still rendered.
+## 2. Reorder + compress detail page (`ToolDetailPage.tsx`)
 
-3. **`src/pages/ToolDetailPage.tsx`**:
-   - Swap the existing banner block (the `radial-gradient` + `linear-gradient` div and the inline logo card) for `<MeshGradientBanner domain={toolDomain} tool={tool} />`.
-   - Keep the title/tagline/badges row underneath exactly as it is now.
+Goal: get the most important info (tagline, CTA, **use cases**) above the fold on a typical 1366×768 desktop and a 390×844 phone.
 
-### Visual feel
+New section order in the main column:
+1. About {tool.name}  *(kept, trimmed visual weight)*
+2. **Real estate use cases**  ← moved up
+3. **Key features & benefits**  ← moved below use cases
+4. Reviews
+5. Related tools
 
-- Slow, premium drift — think Linear/Vercel/Stripe marketing banners, not a lava lamp.
-- Brand color clearly dominant; complement adds depth so it never looks like a flat wash.
-- Logo card stays crisp and readable on every tool.
+Above-the-fold tightening:
+- Reduce banner-to-title spacing (`pt-6 pb-5` → `pt-4 pb-3`).
+- Tighten body section top padding (`py-10 lg:py-12` → `py-6 lg:py-8`).
+- Trim the About block's bottom margin and cap visible paragraphs (show first paragraph at full size; subsequent paragraphs render but with tighter leading) so the use-cases header pulls up.
+- Use-cases list: reduce vertical gap between items (`space-y-3.5` → `space-y-2.5`) and slim the number badge.
 
-### Out of scope
+Mobile order stays identical (single column already stacks About → Use cases → Features), so the same reorder benefits both breakpoints. The sidebar continues to render below content on mobile.
 
-- No external screenshot APIs, no canvas/WebGL.
-- No changes to `banner_color` in the database — color still derived from `getBrandColor(domain)`.
-- No changes to other pages or the tool card grid.
+## Files touched
+- `src/components/tools/MeshGradientBanner.tsx` — add screenshot layer + browser frame, keep gradient fallback.
+- `src/pages/ToolDetailPage.tsx` — swap order of Features / Use cases sections, tighten spacing.
+
+## Technical notes
+- mShots URL pattern: `https://s.wordpress.com/mshots/v1/${encodeURIComponent('https://' + domain)}?w=1600&h=900`. First request may return a placeholder while WP generates the shot — handle via `onLoad` + `naturalWidth < 50` retry once after 2s, then fall back to logo-only banner.
+- No DB or types changes. No new dependencies.
