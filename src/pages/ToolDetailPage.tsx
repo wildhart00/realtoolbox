@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { getBrandColor } from "@/lib/brandColor";
+import { MeshGradientBanner } from "@/components/tools/MeshGradientBanner";
 
 const ToolDetailPage = () => {
   const { slug } = useParams<{ slug: string }>();
