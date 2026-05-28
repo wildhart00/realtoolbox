@@ -40,7 +40,7 @@ export function BrowseSection({ tools, categories }: { tools: Tool[]; categories
 
         <div className="flex-1 min-w-0">
           <div className="flex items-center justify-between mb-[18px]">
-            <span className="text-[12px] text-foreground/30">
+            <span className="text-[12px] text-foreground/70">
               {filtered.length} tool{filtered.length !== 1 ? "s" : ""}
             </span>
             <select
