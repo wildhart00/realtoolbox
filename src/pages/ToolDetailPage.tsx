@@ -112,30 +112,9 @@ const ToolDetailPage = () => {
 
       {/* Hero banner */}
       <div className="px-6 lg:px-10 mt-4 mx-auto" style={{ maxWidth: 1060 }}>
-        <div
-          className="h-[200px] rounded-2xl border border-foreground/[0.07] relative overflow-hidden flex items-center justify-center"
-          style={{
-            background: `radial-gradient(ellipse at 30% 50%, ${brandColor}CC 0%, ${brandColor}44 40%, transparent 70%), linear-gradient(135deg, ${brandColor}99 0%, ${brandColor}22 50%, #0a0b0f 100%)`,
-          }}
-        >
-          <svg className="absolute inset-0 w-full h-full opacity-[0.07]" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <pattern id={gridId} width="32" height="32" patternUnits="userSpaceOnUse">
-                <path d="M 32 0 L 0 0 0 32" fill="none" stroke="white" strokeWidth="0.5" />
-              </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill={`url(#${gridId})`} />
-          </svg>
-          <div className="relative z-10 bg-white/95 rounded-2xl p-3 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.5)] backdrop-blur-sm">
-            <ToolLogo
-              domain={toolDomain}
-              name={tool.name}
-              customUrl={tool.logo_url}
-              size={96}
-            />
-          </div>
-        </div>
+        <MeshGradientBanner tool={tool} />
       </div>
+
 
       {/* Title row */}
       <div
