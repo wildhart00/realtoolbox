@@ -27,12 +27,14 @@ export function Hero({ toolCount }: { toolCount: number }) {
       </p>
 
       <div className="relative mt-9 mx-auto" style={{ maxWidth: 520 }}>
-        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-foreground/30 h-[17px] w-[17px]" />
+        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-foreground/50 h-[17px] w-[17px]" />
         <input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search tools, categories, use cases…"
-          className="w-full bg-foreground/[0.05] border border-foreground/10 rounded-xl py-[14px] pl-[46px] pr-5 text-[15px] text-foreground placeholder:text-foreground/30 outline-none focus:border-accent/40 transition-base"
+          className={`w-full bg-foreground/[0.05] border border-foreground/20 rounded-xl py-[14px] text-[15px] text-foreground placeholder:text-foreground/50 outline-none focus:border-accent/40 transition-base ${
+            query ? "pl-[46px] pr-5 text-left" : "px-[46px] text-center"
+          }`}
         />
       </div>
     </section>
