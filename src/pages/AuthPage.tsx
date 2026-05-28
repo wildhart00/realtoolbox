@@ -15,7 +15,7 @@ const AuthPage = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const initialMode = params.get("mode") === "signup" ? "signup" : "signin";
-  const next = params.get("next") || "/members";
+  const next = params.get("next") || "/";
   const [mode, setMode] = useState<"signin" | "signup" | "forgot">(initialMode);
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
