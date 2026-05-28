@@ -15,6 +15,7 @@ import SubmitPage from "./pages/SubmitPage.tsx";
 import BlogPage from "./pages/BlogPage.tsx";
 import GoRedirectPage from "./pages/GoRedirectPage.tsx";
 import AdminPage from "./pages/AdminPage.tsx";
+import SetupAdminPage from "./pages/SetupAdminPage.tsx";
 import { ScrollToTop } from "./components/ScrollToTop.tsx";
 
 const queryClient = new QueryClient();
@@ -39,6 +40,7 @@ const App = () => (
               <Route path="/auth" element={<AuthPage />} />
               <Route path="/reset-password" element={<ResetPasswordPage />} />
               <Route path="/admin" element={<AdminPage />} />
+              <Route path="/setup-admin" element={<SetupAdminPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </SearchProvider>
