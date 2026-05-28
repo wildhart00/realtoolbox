@@ -1,0 +1,4 @@
+UPDATE public.blog_posts SET cover_image_url = 'https://pcnsuyadfqrmythikwpa.supabase.co/storage/v1/object/public/blog-images/ai-real-estate-leads.jpg' WHERE slug = 'top-5-ai-tools-revolutionizing-real-estate-lead-generation';
+UPDATE public.blog_posts SET cover_image_url = 'https://pcnsuyadfqrmythikwpa.supabase.co/storage/v1/object/public/blog-images/ai-property-management.jpg' WHERE slug = 'how-ai-is-streamlining-property-management';
+UPDATE public.blog_posts SET cover_image_url = 'https://pcnsuyadfqrmythikwpa.supabase.co/storage/v1/object/public/blog-images/ai-property-valuation.jpg' WHERE slug = 'mastering-ai-powered-property-valuation';
+UPDATE public.blog_posts SET cover_image_url = 'https://pcnsuyadfqrmythikwpa.supabase.co/storage/v1/object/public/blog-images/ai-prompts-real-estate.jpg' WHERE slug = 'beyond-chatgpt-advanced-ai-prompts-for-real-estate-agents';
