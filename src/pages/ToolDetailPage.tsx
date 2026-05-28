@@ -19,6 +19,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
+import { getBrandColor } from "@/lib/brandColor";
 
 const ToolDetailPage = () => {
   const { slug } = useParams<{ slug: string }>();
