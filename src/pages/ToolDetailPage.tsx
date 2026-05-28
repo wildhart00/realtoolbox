@@ -119,7 +119,7 @@ const ToolDetailPage = () => {
 
       {/* Title row */}
       <div
-        className="px-6 lg:px-10 pt-6 pb-5 mx-auto flex items-start justify-between gap-4 flex-wrap"
+        className="px-6 lg:px-10 pt-4 pb-3 mx-auto flex items-start justify-between gap-4 flex-wrap"
         style={{ maxWidth: 1060 }}
       >
         <div className="flex-1 min-w-0">
