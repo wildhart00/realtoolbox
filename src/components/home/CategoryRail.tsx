@@ -13,7 +13,7 @@ export function CategoryRail({ categories, active, onChange }: CategoryRailProps
       <p className="hidden lg:block text-[11px] uppercase tracking-[0.1em] text-foreground/70 font-semibold mb-2.5">
         Category
       </p>
-      <div className="flex lg:flex-col gap-2 lg:gap-0.5 overflow-x-auto lg:overflow-y-auto lg:max-h-[600px] pb-1 lg:pb-0 scrollbar-hide">
+      <div className="flex lg:flex-col gap-2 lg:gap-0.5 overflow-x-auto lg:overflow-y-auto lg:max-h-[600px] pb-1 lg:pb-0">
         {items.map((c) => {
           const isActive = active === c.slug;
           return (
