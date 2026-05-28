@@ -143,68 +143,6 @@ export type Database = {
         }
         Relationships: []
       }
-      pending_tools: {
-        Row: {
-          admin_notes: string | null
-          category_id: string | null
-          contact_email: string
-          created_at: string
-          description: string
-          founder_name: string
-          id: string
-          logo_url: string | null
-          name: string
-          status: Database["public"]["Enums"]["submission_status"]
-          submitted_by: string | null
-          tagline: string
-          updated_at: string
-          wants_featured: boolean
-          website_url: string
-        }
-        Insert: {
-          admin_notes?: string | null
-          category_id?: string | null
-          contact_email: string
-          created_at?: string
-          description: string
-          founder_name: string
-          id?: string
-          logo_url?: string | null
-          name: string
-          status?: Database["public"]["Enums"]["submission_status"]
-          submitted_by?: string | null
-          tagline: string
-          updated_at?: string
-          wants_featured?: boolean
-          website_url: string
-        }
-        Update: {
-          admin_notes?: string | null
-          category_id?: string | null
-          contact_email?: string
-          created_at?: string
-          description?: string
-          founder_name?: string
-          id?: string
-          logo_url?: string | null
-          name?: string
-          status?: Database["public"]["Enums"]["submission_status"]
-          submitted_by?: string | null
-          tagline?: string
-          updated_at?: string
-          wants_featured?: boolean
-          website_url?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "pending_tools_category_id_fkey"
-            columns: ["category_id"]
-            isOneToOne: false
-            referencedRelation: "categories"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       premium_resources: {
         Row: {
           cover_emoji: string | null
@@ -328,6 +266,68 @@ export type Database = {
             columns: ["tool_id"]
             isOneToOne: false
             referencedRelation: "tools"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      submissions: {
+        Row: {
+          admin_notes: string | null
+          created_at: string
+          description: string
+          id: string
+          logo_url: string | null
+          name: string
+          status: Database["public"]["Enums"]["submission_status"]
+          submitted_by: string | null
+          submitter_email: string
+          submitter_name: string
+          tagline: string
+          tool_category: string | null
+          updated_at: string
+          wants_featured: boolean
+          website_url: string
+        }
+        Insert: {
+          admin_notes?: string | null
+          created_at?: string
+          description: string
+          id?: string
+          logo_url?: string | null
+          name: string
+          status?: Database["public"]["Enums"]["submission_status"]
+          submitted_by?: string | null
+          submitter_email: string
+          submitter_name: string
+          tagline: string
+          tool_category?: string | null
+          updated_at?: string
+          wants_featured?: boolean
+          website_url: string
+        }
+        Update: {
+          admin_notes?: string | null
+          created_at?: string
+          description?: string
+          id?: string
+          logo_url?: string | null
+          name?: string
+          status?: Database["public"]["Enums"]["submission_status"]
+          submitted_by?: string | null
+          submitter_email?: string
+          submitter_name?: string
+          tagline?: string
+          tool_category?: string | null
+          updated_at?: string
+          wants_featured?: boolean
+          website_url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pending_tools_category_id_fkey"
+            columns: ["tool_category"]
+            isOneToOne: false
+            referencedRelation: "categories"
             referencedColumns: ["id"]
           },
         ]

@@ -49,15 +49,15 @@ const SubmitPage = () => {
     setSubmitting(true);
 
     const fullDesc = `${description}\n\nPricing: ${pricing}`;
-    const { error } = await supabase.from("pending_tools").insert({
+    const { error } = await (supabase.from("submissions" as any) as any).insert({
       submitted_by: user.id,
       name,
       website_url: websiteUrl,
       tagline,
       description: fullDesc,
-      category_id: categoryId,
-      founder_name: founderName || user.email?.split("@")[0] || "Submitter",
-      contact_email: contactEmail || user.email || "",
+      tool_category: categoryId,
+      submitter_name: founderName || user.email?.split("@")[0] || "Submitter",
+      submitter_email: contactEmail || user.email || "",
     });
     setSubmitting(false);
     if (error) return toast.error(error.message);
