@@ -151,26 +151,45 @@ const ToolDetailPage = () => {
 
       {/* Body */}
       <div
-        className="px-6 lg:px-10 py-10 lg:py-12 mx-auto flex flex-col lg:flex-row gap-10 items-start"
+        className="px-6 lg:px-10 py-6 lg:py-8 mx-auto flex flex-col lg:flex-row gap-10 items-start"
         style={{ maxWidth: 1060 }}
       >
-        <div className="flex-1 min-w-0 space-y-10 w-full">
+        <div className="flex-1 min-w-0 space-y-8 w-full">
           {/* About */}
           <section>
-            <h2 className="font-display text-[20px] font-bold text-foreground mb-3.5 tracking-[-0.02em]">
+            <h2 className="font-display text-[20px] font-bold text-foreground mb-3 tracking-[-0.02em]">
               About {tool.name}
             </h2>
-            <div className="space-y-3.5">
+            <div className="space-y-3">
               {(tool.full_description ?? tool.description ?? "")
                 .split(/\n\s*\n/)
                 .filter(Boolean)
                 .map((p, i) => (
-                  <p key={i} className="text-[14px] text-muted-foreground leading-[1.75]">
+                  <p key={i} className="text-[14px] text-muted-foreground leading-[1.7]">
                     {p}
                   </p>
                 ))}
             </div>
           </section>
+
+          {/* Use cases */}
+          {tool.use_cases?.length > 0 && (
+            <section>
+              <h2 className="font-display text-[20px] font-bold text-foreground mb-3.5 tracking-[-0.02em]">
+                Real estate use cases
+              </h2>
+              <div className="space-y-2.5">
+                {tool.use_cases.map((u, i) => (
+                  <div key={i} className="flex items-start gap-3">
+                    <div className="w-[22px] h-[22px] rounded-full bg-gradient-accent text-white text-[11px] font-bold flex items-center justify-center shrink-0 mt-0.5">
+                      {i + 1}
+                    </div>
+                    <p className="text-[14px] text-muted-foreground leading-[1.65]">{u}</p>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
 
           {/* Features */}
           {tool.key_features?.length > 0 && (
@@ -190,25 +209,6 @@ const ToolDetailPage = () => {
                       </svg>
                     </div>
                     <span className="text-[14px] text-foreground/80 leading-[1.55]">{f}</span>
-                  </div>
-                ))}
-              </div>
-            </section>
-          )}
-
-          {/* Use cases */}
-          {tool.use_cases?.length > 0 && (
-            <section>
-              <h2 className="font-display text-[20px] font-bold text-foreground mb-3.5 tracking-[-0.02em]">
-                Real estate use cases
-              </h2>
-              <div className="space-y-3.5">
-                {tool.use_cases.map((u, i) => (
-                  <div key={i} className="flex items-start gap-3.5">
-                    <div className="w-[26px] h-[26px] rounded-full bg-gradient-accent text-white text-[12px] font-bold flex items-center justify-center shrink-0 mt-0.5">
-                      {i + 1}
-                    </div>
-                    <p className="text-[14px] text-muted-foreground leading-[1.7]">{u}</p>
                   </div>
                 ))}
               </div>
