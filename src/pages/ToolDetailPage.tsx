@@ -67,7 +67,8 @@ const ToolDetailPage = () => {
   }
 
   const category = tool.categories?.[0];
-  const bannerColor = tool.banner_color || "#1a1f2e";
+  const toolDomain = domainFromUrl(tool.website_url);
+  const brandColor = getBrandColor(toolDomain);
   const gridId = `grid-${tool.id}`;
 
   const handleWriteReview = () => {
@@ -110,11 +111,11 @@ const ToolDetailPage = () => {
       </div>
 
       {/* Hero banner */}
-      <div className="px-6 lg:px-10 mt-4 mx-auto relative" style={{ maxWidth: 1060 }}>
+      <div className="px-6 lg:px-10 mt-4 mx-auto" style={{ maxWidth: 1060 }}>
         <div
-          className="h-[200px] rounded-2xl border border-foreground/[0.07] relative overflow-hidden"
+          className="h-[200px] rounded-2xl border border-foreground/[0.07] relative overflow-hidden flex items-center justify-center"
           style={{
-            background: `linear-gradient(135deg, ${bannerColor} 0%, hsl(230 22% 6% / 0.95) 100%)`,
+            background: `radial-gradient(ellipse at 30% 50%, ${brandColor}CC 0%, ${brandColor}44 40%, transparent 70%), linear-gradient(135deg, ${brandColor}99 0%, ${brandColor}22 50%, #0a0b0f 100%)`,
           }}
         >
           <svg className="absolute inset-0 w-full h-full opacity-[0.07]" xmlns="http://www.w3.org/2000/svg">
@@ -125,31 +126,23 @@ const ToolDetailPage = () => {
             </defs>
             <rect width="100%" height="100%" fill={`url(#${gridId})`} />
           </svg>
-          <div
-            className="absolute inset-0"
-            style={{
-              background: `radial-gradient(ellipse at 30% 50%, ${bannerColor}cc 0%, transparent 65%)`,
-            }}
-          />
-        </div>
-        <div className="absolute" style={{ bottom: -28, left: "calc(1.5rem + 32px)" }}>
-          <ToolLogo
-            domain={domainFromUrl(tool.website_url)}
-            name={tool.name}
-            customUrl={tool.logo_url}
-            size={80}
-          />
+          <div className="relative z-10 bg-white/95 rounded-2xl p-3 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.5)] backdrop-blur-sm">
+            <ToolLogo
+              domain={toolDomain}
+              name={tool.name}
+              customUrl={tool.logo_url}
+              size={96}
+            />
+          </div>
         </div>
       </div>
 
-      <div className="h-7" />
-
       {/* Title row */}
       <div
-        className="px-6 lg:px-10 py-5 mx-auto flex items-start justify-between gap-4 flex-wrap"
+        className="px-6 lg:px-10 pt-6 pb-5 mx-auto flex items-start justify-between gap-4 flex-wrap"
         style={{ maxWidth: 1060 }}
       >
-        <div className="flex-1 min-w-0" style={{ paddingLeft: 104 }}>
+        <div className="flex-1 min-w-0">
           <h1 className="font-display text-[28px] font-bold text-foreground tracking-[-0.025em] mb-1.5">
             {tool.name}
           </h1>
