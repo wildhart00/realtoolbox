@@ -55,15 +55,57 @@ function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" });
 }
 
+function renderInline(text: string) {
+  // Support **bold** and `code` inline
+  const parts: Array<string | JSX.Element> = [];
+  const regex = /(\*\*[^*]+\*\*|`[^`]+`)/g;
+  let lastIndex = 0;
+  let match;
+  let key = 0;
+  while ((match = regex.exec(text)) !== null) {
+    if (match.index > lastIndex) parts.push(text.slice(lastIndex, match.index));
+    const token = match[0];
+    if (token.startsWith("**")) {
+      parts.push(<strong key={key++} className="font-semibold text-foreground">{token.slice(2, -2)}</strong>);
+    } else {
+      parts.push(<code key={key++} className="rounded bg-muted px-1.5 py-0.5 font-mono text-[0.85em] text-foreground">{token.slice(1, -1)}</code>);
+    }
+    lastIndex = match.index + token.length;
+  }
+  if (lastIndex < text.length) parts.push(text.slice(lastIndex));
+  return parts;
+}
+
 function renderBody(body: string) {
-  // Lightweight markdown-ish renderer: ## heading, blank-line paragraphs, - lists
+  // Lightweight markdown-ish renderer: ##/### headings, > blockquotes, - lists, paragraphs
   const blocks = body.trim().split(/\n\n+/);
   return blocks.map((block, i) => {
+    if (block.startsWith("### ")) {
+      return (
+        <h3 key={i} className="mt-8 text-xl font-semibold tracking-tight text-foreground">
+          {renderInline(block.slice(4))}
+        </h3>
+      );
+    }
     if (block.startsWith("## ")) {
       return (
-        <h2 key={i} className="mt-10 text-2xl font-bold tracking-tight">
-          {block.slice(3)}
+        <h2 key={i} className="mt-10 text-2xl font-bold tracking-tight text-foreground">
+          {renderInline(block.slice(3))}
         </h2>
+      );
+    }
+    if (block.startsWith("> ")) {
+      const content = block
+        .split("\n")
+        .map((l) => l.replace(/^>\s?/, ""))
+        .join("\n");
+      return (
+        <blockquote
+          key={i}
+          className="mt-6 whitespace-pre-wrap rounded-xl border-l-4 border-accent bg-muted/40 px-5 py-4 font-mono text-sm leading-relaxed text-foreground/90"
+        >
+          {renderInline(content)}
+        </blockquote>
       );
     }
     if (block.startsWith("- ")) {
@@ -73,7 +115,7 @@ function renderBody(body: string) {
           {items.map((it, j) => (
             <li key={j} className="flex gap-3 text-muted-foreground">
               <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
-              <span>{it}</span>
+              <span>{renderInline(it)}</span>
             </li>
           ))}
         </ul>
@@ -81,11 +123,12 @@ function renderBody(body: string) {
     }
     return (
       <p key={i} className="mt-5 leading-relaxed text-muted-foreground">
-        {block}
+        {renderInline(block)}
       </p>
     );
   });
 }
+
 
 const BlogPage = () => {
   const { slug } = useParams<{ slug: string }>();
