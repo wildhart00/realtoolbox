@@ -31,6 +31,7 @@ export default function ToolsAdmin() {
   const [loading, setLoading] = useState(true);
   const [q, setQ] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [quickAddOpen, setQuickAddOpen] = useState(false);
   const [editing, setEditing] = useState<ToolRow | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
