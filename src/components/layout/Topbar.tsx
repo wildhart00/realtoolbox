@@ -67,7 +67,7 @@ export function Topbar() {
     >
       <div className="mx-auto max-w-[1200px] flex items-center justify-between gap-4 h-[60px] px-6 lg:px-10">
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-[9px] shrink-0">
+        <Link to="/" onClick={handleHomeClick} className="flex items-center gap-[9px] shrink-0">
           <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-accent">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5">
               <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
