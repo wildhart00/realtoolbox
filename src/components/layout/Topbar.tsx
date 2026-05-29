@@ -44,6 +44,15 @@ export function Topbar() {
     setOpen(false);
   };
 
+  const handleHomeClick = (e: React.MouseEvent) => {
+    if (location.pathname === "/") {
+      e.preventDefault();
+      window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+    }
+    setOpen(false);
+  };
+
+
   const handleSignOut = async () => {
     await signOut();
     navigate("/");
