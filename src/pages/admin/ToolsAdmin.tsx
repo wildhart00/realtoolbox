@@ -74,15 +74,24 @@ export default function ToolsAdmin() {
     <div className="space-y-4 max-w-7xl">
       <div className="flex items-center justify-between gap-4">
         <h1 className="text-2xl font-bold tracking-tight">Tools</h1>
-        <Button
-          onClick={() => {
-            setEditing(null);
-            setDialogOpen(true);
-          }}
-          className="gap-2"
-        >
-          <Plus className="h-4 w-4" /> Add tool
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            onClick={() => setQuickAddOpen(true)}
+            className="gap-2"
+          >
+            <Sparkles className="h-4 w-4" /> Quick add
+          </Button>
+          <Button
+            onClick={() => {
+              setEditing(null);
+              setDialogOpen(true);
+            }}
+            className="gap-2"
+          >
+            <Plus className="h-4 w-4" /> Add tool
+          </Button>
+        </div>
       </div>
 
       <div className="relative max-w-sm">
