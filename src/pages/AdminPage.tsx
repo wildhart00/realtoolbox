@@ -6,6 +6,15 @@ import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
+interface BatchResult {
+  processed: number;
+  succeeded: number;
+  results: Array<{ slug: string; ok: boolean; error?: string }>;
+  total: number;
+  nextOffset: number;
+  hasMore: boolean;
+}
+
 interface RunResult {
   processed: number;
   succeeded: number;
@@ -18,6 +27,7 @@ const AdminPage = () => {
   const [running, setRunning] = useState(false);
   const [onlyMissing, setOnlyMissing] = useState(false);
   const [result, setResult] = useState<RunResult | null>(null);
+  const [progress, setProgress] = useState<{ done: number; total: number } | null>(null);
 
   useEffect(() => {
     if (!user) return;
@@ -34,14 +44,31 @@ const AdminPage = () => {
   const runRefresh = async () => {
     setRunning(true);
     setResult(null);
+    setProgress(null);
+    const aggregated: RunResult = { processed: 0, succeeded: 0, results: [] };
+    const BATCH = 8;
+    let offset = 0;
     try {
-      const { data, error } = await supabase.functions.invoke("refresh-tool-images", {
-        body: { onlyMissing },
-      });
-      if (error) throw error;
-      setResult(data as RunResult);
+      // Loop in small batches to stay under the edge function timeout
+      while (true) {
+        const { data, error } = await supabase.functions.invoke("refresh-tool-images", {
+          body: { onlyMissing, limit: BATCH, offset },
+        });
+        if (error) throw error;
+        const batch = data as BatchResult;
+        aggregated.processed += batch.processed;
+        aggregated.succeeded += batch.succeeded;
+        aggregated.results.push(...batch.results);
+        setResult({ ...aggregated });
+        setProgress({
+          done: aggregated.processed,
+          total: onlyMissing ? aggregated.processed + (batch.hasMore ? batch.total : 0) : batch.total,
+        });
+        if (!batch.hasMore || batch.processed === 0) break;
+        offset = batch.nextOffset;
+      }
       toast.success(
-        `Refreshed ${(data as RunResult).succeeded}/${(data as RunResult).processed} tool images`,
+        `Refreshed ${aggregated.succeeded}/${aggregated.processed} tool images`,
       );
     } catch (e) {
       const msg = e instanceof Error ? e.message : String(e);
@@ -110,7 +137,11 @@ const AdminPage = () => {
             ) : (
               <RefreshCw className="h-4 w-4" />
             )}
-            {running ? "Refreshing... this can take several minutes" : "Refresh all tool images"}
+            {running
+              ? progress
+                ? `Refreshing... ${progress.done}${progress.total ? ` / ${progress.total}` : ""}`
+                : "Starting..."
+              : "Refresh all tool images"}
           </Button>
 
           {result && (
