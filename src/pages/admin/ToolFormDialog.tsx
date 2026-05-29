@@ -111,7 +111,7 @@ export function ToolFormDialog({ open, onOpenChange, initial, onSaved, approving
         full_description: form.full_description || null,
         website_url: form.website_url,
         affiliate_url: form.affiliate_url || null,
-        pricing: form.pricing as "free" | "freemium" | "paid" | "trial",
+        pricing: form.pricing as "free" | "freemium" | "paid",
         pricing_details: form.pricing_details || null,
         tags: form.tags,
         logo_url: form.logo_url || null,
@@ -211,7 +211,6 @@ export function ToolFormDialog({ open, onOpenChange, initial, onSaved, approving
                 <SelectItem value="free">free</SelectItem>
                 <SelectItem value="freemium">freemium</SelectItem>
                 <SelectItem value="paid">paid</SelectItem>
-                <SelectItem value="trial">trial</SelectItem>
               </SelectContent>
             </Select>
           </div>
