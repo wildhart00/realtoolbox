@@ -27,6 +27,7 @@ const AdminPage = () => {
   const [running, setRunning] = useState(false);
   const [onlyMissing, setOnlyMissing] = useState(false);
   const [result, setResult] = useState<RunResult | null>(null);
+  const [progress, setProgress] = useState<{ done: number; total: number } | null>(null);
 
   useEffect(() => {
     if (!user) return;
