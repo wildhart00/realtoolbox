@@ -1,60 +1,52 @@
-# Sync Notion with current RealToolbox state
+## Quick Add for Tools
 
-Goal: Update the RealToolbox.ai Notion page (`35690958-a71e-8197-814f-ce3c5b89df17`) so another AI agent can read it and have a complete picture of the app — features, routes, backend schema, integrations, and admin workflows.
+Add a fast path for adding tools to the admin so you don't have to fill out every field manually.
 
-## What I'll add / refresh on the Notion page
+### What gets built
 
-I'll add (or replace) a structured **"Project Snapshot — 5/29/2026"** section with the following blocks:
+**1. New "Quick Add" button** on the Tools admin page, next to the existing "Add tool" button. The full form stays exactly as it is for editing/polishing later.
 
-### 1. Product overview
-- One-paragraph description of RealToolbox.ai
-- Live URLs: realtoolbox.ai, www.realtoolbox.ai, Lovable preview
-- Tech stack: React 18 + Vite + Tailwind + shadcn/ui, Lovable Cloud (Supabase) backend, GitHub-synced
+**2. Quick Add dialog with only these fields:**
+- Name *
+- Website URL *
+- Pricing (free / freemium / paid)
+- Category (multi-select dropdown from existing categories)
+- Affiliate status: `Not signed up` / `Application pending` / `Approved`
+  - If `Approved` → show an inline "Affiliate URL" input
+- **[Generate]** button
 
-### 2. Public features (with routes)
-- `/` Home — Hero, Featured strip, Category rail, Browse section, Newsletter
-- `/category/:slug` — Category browse pages
-- `/tool/:slug` — Tool detail (founder bio, key features, use cases, reviews, save)
-- `/blog` — Blog index + posts
-- `/submit` — Public tool submission form
-- `/members` — Premium resources (auth-gated)
-- `/auth`, `/reset-password` — Authentication
-- `/go/:slug` — Affiliate click-tracking redirect
+**3. What happens on Generate:**
+- Firecrawl scrapes the URL (markdown + branding format) → pulls page content, brand colors, logo, favicon
+- Lovable AI (`google/gemini-2.5-flash`) takes the scraped content and returns structured JSON: `tagline`, `short description`, `full description`, `tags[]`, `use_cases[]`, `key_features[]`
+- Banner color comes from Firecrawl's branding extraction (primary color)
+- Logo URL comes from Firecrawl's branding
+- Hero image: use the page's OG image from Firecrawl branding (no AI image gen needed, faster + cheaper)
+- Slug: auto-generated from name (lowercase, hyphens)
 
-### 3. Admin features (`/admin/*`)
-- Dashboard, Tools (with ToolFormDialog), Categories, Submissions review, Reviews, Subscribers, Blog editor, Analytics, **Affiliates** (programs + monthly earnings), Maintenance, Setup admin
+**4. Preview step** — show the generated fields in the dialog so you can eyeball/edit before saving. Click **Save** → inserts into `tools` table with `status: published`, `re_only: true` (defaults).
 
-### 4. Featured tools workflow
-- How `is_featured` + `featured_order` drive the homepage strip
-- Where to edit (Admin → Tools)
+**5. Affiliate side effect:**
+- If status = `Application pending` → create row in `affiliate_programs` linked to the new tool, status `pending`
+- If status = `Approved` → create row with status `approved` and the affiliate URL, and also write `affiliate_url` onto the tool row
 
-### 5. Backend schema (Lovable Cloud)
-Table-by-table summary of: `tools`, `categories`, `tool_categories`, `submissions`, `reviews`, `saved_tools`, `profiles`, `user_roles` (admin/member), `blog_posts`, `newsletter_subscribers`, `click_events`, `premium_resources`, `affiliate_programs`, `affiliate_earnings` — including key columns and RLS posture (public-read vs admin-only vs owner-only).
+**6. "Re-fetch from website" button** in the existing full edit form — re-runs the same scrape + AI fill on demand, useful if a tool rebrands.
 
-### 6. Auth & roles
-- Email/password auth, `profiles` auto-created on signup
-- `user_roles` table with `admin` / `member` enum
-- `has_role()` security-definer function used by all RLS policies
-- `claim_first_admin()` RPC for bootstrap
+### Technical bits (for reference)
 
-### 7. Storage buckets
-- `tool-logos` (public), `avatars` (public), `blog-images` (public), `premium-resources` (private)
+- New edge function: `supabase/functions/quick-add-tool/index.ts`
+  - Input: `{ url, name }`
+  - Steps: Firecrawl scrape (formats: markdown, branding) → Lovable AI structured output via tool calling → return `{ tagline, description, full_description, tags, use_cases, key_features, logo_url, banner_color, hero_image_url }`
+  - Auth: requires admin (verify JWT + check `has_role(uid, 'admin')`)
+- Frontend: new `QuickAddDialog.tsx` in `src/pages/admin/`
+- ToolsAdmin gets a second button; existing `ToolFormDialog` is untouched
+- `affiliate_programs` insert logic in the same client-side save handler (no schema changes needed — table already exists)
+- Firecrawl key (`FIRECRAWL_API_KEY`) and `LOVABLE_API_KEY` are already configured
 
-### 8. Edge functions & integrations
-- `refresh-tool-images` edge function
-- Firecrawl connector (FIRECRAWL_API_KEY)
-- Lovable AI Gateway available (LOVABLE_API_KEY)
-- GitHub sync active
+### What you'll do per tool after this
 
-### 9. Known next actions
-Carry forward open items from the existing Next Actions list, marking what's done.
+1. Click Quick Add
+2. Paste name + URL, pick pricing + category + affiliate status (≈15 seconds)
+3. Click Generate, wait ~5-10 seconds
+4. Glance at preview, click Save
 
-## How I'll do it
-
-One `mcp_notion_xvlm2--notion-update-page` call using `replace_content` with `allow_deleting_content: false` so the "🚀 Full Execution Plan" child page is preserved. I'll fetch the page first to get the exact current markdown for the `old_str` anchor.
-
-## Out of scope
-
-- No code changes
-- Won't touch the child "Full Execution Plan" page
-- Won't add screenshots or embeds (text-only snapshot for agent consumption)
+That's it. Everything else stays editable in the full form whenever you want to polish.
