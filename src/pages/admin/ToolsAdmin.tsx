@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { Plus, Pencil, Trash2, ExternalLink, Search } from "lucide-react";
+import { Plus, Pencil, Trash2, ExternalLink, Search, Sparkles } from "lucide-react";
+import { QuickAddToolDialog } from "./QuickAddToolDialog";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -30,6 +31,7 @@ export default function ToolsAdmin() {
   const [loading, setLoading] = useState(true);
   const [q, setQ] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [quickAddOpen, setQuickAddOpen] = useState(false);
   const [editing, setEditing] = useState<ToolRow | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
@@ -72,15 +74,24 @@ export default function ToolsAdmin() {
     <div className="space-y-4 max-w-7xl">
       <div className="flex items-center justify-between gap-4">
         <h1 className="text-2xl font-bold tracking-tight">Tools</h1>
-        <Button
-          onClick={() => {
-            setEditing(null);
-            setDialogOpen(true);
-          }}
-          className="gap-2"
-        >
-          <Plus className="h-4 w-4" /> Add tool
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            onClick={() => setQuickAddOpen(true)}
+            className="gap-2"
+          >
+            <Sparkles className="h-4 w-4" /> Quick add
+          </Button>
+          <Button
+            onClick={() => {
+              setEditing(null);
+              setDialogOpen(true);
+            }}
+            className="gap-2"
+          >
+            <Plus className="h-4 w-4" /> Add tool
+          </Button>
+        </div>
       </div>
 
       <div className="relative max-w-sm">
@@ -168,6 +179,12 @@ export default function ToolsAdmin() {
         open={dialogOpen}
         onOpenChange={setDialogOpen}
         initial={editing}
+        onSaved={load}
+      />
+
+      <QuickAddToolDialog
+        open={quickAddOpen}
+        onOpenChange={setQuickAddOpen}
         onSaved={load}
       />
 

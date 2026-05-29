@@ -154,12 +154,53 @@ export function ToolFormDialog({ open, onOpenChange, initial, onSaved, approving
     }
   };
 
+  const refetchFromWebsite = async () => {
+    if (!form.website_url || !form.name) {
+      toast.error("Name and website URL are required to re-fetch");
+      return;
+    }
+    setSaving(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("quick-add-tool", {
+        body: { name: form.name, url: form.website_url },
+      });
+      if (error) throw error;
+      const d = data as any;
+      if (d?.error) throw new Error(d.error);
+      setForm((f) => ({
+        ...f,
+        tagline: d.tagline ?? f.tagline,
+        description: d.description ?? f.description,
+        full_description: d.full_description ?? f.full_description,
+        tags: d.tags ?? f.tags,
+        use_cases: d.use_cases ?? f.use_cases,
+        key_features: d.key_features ?? f.key_features,
+        logo_url: d.logo_url ?? f.logo_url,
+        banner_color: d.banner_color ?? f.banner_color,
+        hero_image_url: d.hero_image_url ?? f.hero_image_url,
+      }));
+      toast.success("Re-fetched from website");
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Failed to re-fetch");
+    } finally {
+      setSaving(false);
+    }
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{isEdit ? "Edit tool" : "Add tool"}</DialogTitle>
         </DialogHeader>
+
+        {isEdit && (
+          <div className="flex justify-end">
+            <Button variant="outline" size="sm" onClick={refetchFromWebsite} disabled={saving}>
+              🔄 Re-fetch from website
+            </Button>
+          </div>
+        )}
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
