@@ -103,8 +103,18 @@ export default function AnalyticsAdmin() {
                 <CartesianGrid strokeDasharray="3 3" opacity={0.3} />
                 <XAxis type="number" />
                 <YAxis type="category" dataKey="slug" width={120} />
-                <Tooltip />
-                <Bar dataKey="count" fill="hsl(var(--primary))" />
+                <Tooltip
+                  cursor={{ fill: "hsl(var(--muted) / 0.3)" }}
+                  contentStyle={{
+                    backgroundColor: "hsl(var(--popover))",
+                    border: "1px solid hsl(var(--border) / 0.2)",
+                    borderRadius: "0.5rem",
+                    color: "hsl(var(--popover-foreground))",
+                  }}
+                  labelStyle={{ color: "hsl(var(--popover-foreground))", fontWeight: 600 }}
+                  itemStyle={{ color: "hsl(var(--popover-foreground))" }}
+                />
+                <Bar dataKey="count" fill="hsl(var(--accent))" />
               </BarChart>
             </ResponsiveContainer>
           )}
