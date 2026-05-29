@@ -182,6 +182,12 @@ export default function ToolsAdmin() {
         onSaved={load}
       />
 
+      <QuickAddToolDialog
+        open={quickAddOpen}
+        onOpenChange={setQuickAddOpen}
+        onSaved={load}
+      />
+
       <AlertDialog open={!!deletingId} onOpenChange={(v) => !v && setDeletingId(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
