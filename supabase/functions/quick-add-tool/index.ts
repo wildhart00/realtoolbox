@@ -30,22 +30,42 @@ serve(async (req) => {
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY not configured");
 
     // 1) Firecrawl scrape (markdown + branding)
-    const fcRes = await fetch(FIRECRAWL_URL, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${FIRECRAWL_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        url,
-        formats: ["markdown", "branding"],
-        onlyMainContent: true,
-      }),
-    });
-    const fcData = await fcRes.json();
-    if (!fcRes.ok) {
-      console.error("Firecrawl error:", fcRes.status, fcData);
-      throw new Error(`Firecrawl failed: ${fcRes.status}`);
+    // Retry Firecrawl up to 3 times on transient network errors
+    let fcRes: Response | null = null;
+    let fcData: any = null;
+    let lastErr: unknown = null;
+    for (let attempt = 1; attempt <= 3; attempt++) {
+      try {
+        fcRes = await fetch(FIRECRAWL_URL, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${FIRECRAWL_API_KEY}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            url,
+            formats: ["markdown", "branding"],
+            onlyMainContent: true,
+          }),
+        });
+        fcData = await fcRes.json();
+        if (fcRes.ok) break;
+        console.error(`Firecrawl attempt ${attempt} failed:`, fcRes.status, fcData);
+        if (fcRes.status < 500 && fcRes.status !== 429) {
+          throw new Error(`Firecrawl failed (${fcRes.status}): ${fcData?.error || "unknown"}`);
+        }
+      } catch (e) {
+        lastErr = e;
+        console.error(`Firecrawl attempt ${attempt} error:`, e);
+      }
+      if (attempt < 3) await new Promise((r) => setTimeout(r, 1000 * attempt));
+    }
+    if (!fcRes || !fcRes.ok) {
+      throw new Error(
+        `Firecrawl unreachable after 3 attempts: ${
+          lastErr instanceof Error ? lastErr.message : `status ${fcRes?.status}`
+        }`,
+      );
     }
 
     // v2 SDK shape: top-level markdown/branding; REST may wrap in data
