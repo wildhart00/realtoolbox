@@ -6,6 +6,15 @@ import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
+interface BatchResult {
+  processed: number;
+  succeeded: number;
+  results: Array<{ slug: string; ok: boolean; error?: string }>;
+  total: number;
+  nextOffset: number;
+  hasMore: boolean;
+}
+
 interface RunResult {
   processed: number;
   succeeded: number;
