@@ -16,8 +16,6 @@ import {
 
 const navLinks = [
   { name: "Browse", href: "/" },
-  { name: "MCPs", href: "/category/mcps" },
-  { name: "Skills", href: "/category/skills" },
   { name: "Blog", href: "/blog" },
   { name: "Newsletter", href: "/#newsletter" },
 ];
