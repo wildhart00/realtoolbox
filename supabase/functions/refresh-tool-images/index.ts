@@ -99,12 +99,25 @@ Deno.serve(async (req) => {
     const body = await req.json().catch(() => ({}));
     const onlyMissing: boolean = !!body.onlyMissing;
     const toolIds: string[] | undefined = body.toolIds;
+    const limit: number = Math.max(1, Math.min(50, Number(body.limit) || 8));
+    const offset: number = Math.max(0, Number(body.offset) || 0);
 
     const admin = createClient(SUPABASE_URL, SERVICE_ROLE);
+
+    let countQuery = admin
+      .from("tools")
+      .select("id", { count: "exact", head: true })
+      .eq("status", "published");
+    if (toolIds?.length) countQuery = countQuery.in("id", toolIds);
+    if (onlyMissing) countQuery = countQuery.is("hero_image_url", null);
+    const { count: totalCount } = await countQuery;
+
     let query = admin
       .from("tools")
       .select("id,slug,website_url,logo_url,hero_image_url")
-      .eq("status", "published");
+      .eq("status", "published")
+      .order("slug", { ascending: true })
+      .range(offset, offset + limit - 1);
     if (toolIds?.length) query = query.in("id", toolIds);
     if (onlyMissing) query = query.is("hero_image_url", null);
     const { data: tools, error } = await query;
