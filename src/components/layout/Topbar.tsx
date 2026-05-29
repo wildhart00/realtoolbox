@@ -16,8 +16,6 @@ import {
 
 const navLinks = [
   { name: "Browse", href: "/" },
-  { name: "MCPs", href: "/category/mcps" },
-  { name: "Skills", href: "/category/skills" },
   { name: "Blog", href: "/blog" },
   { name: "Newsletter", href: "/#newsletter" },
 ];
@@ -46,6 +44,15 @@ export function Topbar() {
     setOpen(false);
   };
 
+  const handleHomeClick = (e: React.MouseEvent) => {
+    if (location.pathname === "/") {
+      e.preventDefault();
+      window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+    }
+    setOpen(false);
+  };
+
+
   const handleSignOut = async () => {
     await signOut();
     navigate("/");
@@ -60,7 +67,7 @@ export function Topbar() {
     >
       <div className="mx-auto max-w-[1200px] flex items-center justify-between gap-4 h-[60px] px-6 lg:px-10">
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-[9px] shrink-0">
+        <Link to="/" onClick={handleHomeClick} className="flex items-center gap-[9px] shrink-0">
           <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-accent">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5">
               <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
@@ -82,11 +89,12 @@ export function Topbar() {
                   ? false
                   : location.pathname.startsWith(l.href.replace("/#", "/"));
             const isNewsletter = l.href.includes("#newsletter");
+            const isHome = l.href === "/";
             return (
               <Link
                 key={l.name}
                 to={l.href}
-                onClick={isNewsletter ? handleNewsletter : undefined}
+                onClick={isNewsletter ? handleNewsletter : isHome ? handleHomeClick : undefined}
                 className={cn(
                   "text-[13.5px] font-medium px-2.5 py-1.5 rounded-md transition-base",
                   active ? "text-foreground" : "text-muted-foreground hover:text-foreground hover:bg-foreground/[0.05]",
