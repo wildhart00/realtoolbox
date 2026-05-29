@@ -25,7 +25,7 @@ export function NewsletterCard() {
 
   return (
     <section id="newsletter" className="px-6 lg:px-10 py-16">
-      <div className="mx-auto surface-card rounded-2xl p-8 lg:p-10 text-center" style={{ maxWidth: 540 }}>
+      <div className="mx-auto surface-card rounded-2xl p-8 lg:p-10 text-center" style={{ maxWidth: 640 }}>
         <div className="mx-auto h-11 w-11 rounded-xl bg-accent/15 border border-accent/25 flex items-center justify-center mb-5">
           <Mail className="h-5 w-5 text-[hsl(229_94%_82%)]" />
         </div>
