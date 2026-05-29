@@ -14,6 +14,103 @@ export type Database = {
   }
   public: {
     Tables: {
+      affiliate_earnings: {
+        Row: {
+          created_at: string
+          id: string
+          month: string
+          notes: string | null
+          payment_date: string | null
+          payment_received: number | null
+          program_id: string
+          reported_earnings: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          month: string
+          notes?: string | null
+          payment_date?: string | null
+          payment_received?: number | null
+          program_id: string
+          reported_earnings?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          month?: string
+          notes?: string | null
+          payment_date?: string | null
+          payment_received?: number | null
+          program_id?: string
+          reported_earnings?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "affiliate_earnings_program_id_fkey"
+            columns: ["program_id"]
+            isOneToOne: false
+            referencedRelation: "affiliate_programs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      affiliate_programs: {
+        Row: {
+          affiliate_url: string
+          approval_date: string | null
+          commission_rate: string
+          created_at: string
+          id: string
+          network: string
+          notes: string | null
+          program_name: string
+          signup_date: string | null
+          status: Database["public"]["Enums"]["affiliate_status"]
+          tool_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          affiliate_url?: string
+          approval_date?: string | null
+          commission_rate?: string
+          created_at?: string
+          id?: string
+          network?: string
+          notes?: string | null
+          program_name: string
+          signup_date?: string | null
+          status?: Database["public"]["Enums"]["affiliate_status"]
+          tool_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          affiliate_url?: string
+          approval_date?: string | null
+          commission_rate?: string
+          created_at?: string
+          id?: string
+          network?: string
+          notes?: string | null
+          program_name?: string
+          signup_date?: string | null
+          status?: Database["public"]["Enums"]["affiliate_status"]
+          tool_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "affiliate_programs_tool_id_fkey"
+            columns: ["tool_id"]
+            isOneToOne: false
+            referencedRelation: "tools"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       blog_posts: {
         Row: {
           author_name: string
@@ -488,6 +585,12 @@ export type Database = {
       }
     }
     Enums: {
+      affiliate_status:
+        | "applied"
+        | "pending"
+        | "approved"
+        | "declined"
+        | "paused"
       app_role: "admin" | "member"
       pricing_model: "free" | "freemium" | "paid"
       submission_status: "pending" | "approved" | "rejected"
@@ -618,6 +721,13 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      affiliate_status: [
+        "applied",
+        "pending",
+        "approved",
+        "declined",
+        "paused",
+      ],
       app_role: ["admin", "member"],
       pricing_model: ["free", "freemium", "paid"],
       submission_status: ["pending", "approved", "rejected"],

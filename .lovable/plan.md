@@ -1,57 +1,56 @@
-# Full Admin Dashboard
+# Affiliate program tracker
 
-Turn `/admin` into a real control panel so you never need to touch the database directly. Everything below is admin-only (gated by the existing `has_role(auth.uid(), 'admin')` check already in place).
+New admin-only section at `/admin/affiliates` for tracking every affiliate program you've signed up for, with live click counts and monthly earnings history.
 
-## Layout
+## Database
 
-A new admin shell with a collapsible left sidebar and a top header. The current "Refresh tool card images" panel moves under **Tools → Maintenance**.
+Two new tables (both admin-only via RLS — only `has_role(auth.uid(), 'admin')` can read/write):
 
-```text
-/admin
-├── Dashboard          (quick stats: tools, pending submissions, subscribers, clicks)
-├── Tools              (list, search, add, edit, delete, featured/editor's pick toggles)
-├── Submissions        (review /submit entries: approve → creates tool, or reject)
-├── Blog               (list, create, edit, publish/unpublish posts)
-├── Reviews            (moderate user reviews, delete abusive ones)
-├── Categories         (add/rename/reorder categories)
-├── Analytics          (click_events: top tools, recent clicks, time range)
-├── Subscribers        (newsletter list + CSV export)
-└── Maintenance        (the existing Firecrawl image refresh tool)
-```
+**`affiliate_programs`**
+- `tool_id` (uuid, nullable — links to existing tool so we can auto-count clicks)
+- `program_name` (text)
+- `network` (text — Impact / PartnerStack / Own / ShareASale / etc.)
+- `affiliate_url` (text)
+- `status` (enum: applied / pending / approved / declined / paused)
+- `commission_rate` (text — free-form like "30% recurring")
+- `signup_date`, `approval_date` (date, nullable)
+- `notes` (text, nullable)
 
-## Sections in detail
+**`affiliate_earnings`**
+- `program_id` → affiliate_programs (cascade delete)
+- `month` (date — first of month)
+- `reported_earnings` (numeric)
+- `payment_received` (numeric, nullable)
+- `payment_date` (date, nullable)
+- `notes` (text, nullable)
+- Unique on (program_id, month)
 
-**Dashboard** — at-a-glance counts and the 5 most recent submissions / reviews / signups.
+## UI
 
-**Tools** — table of every tool with inline edit dialog: name, slug, tagline, description, full description, website URL, affiliate URL, pricing, tags, categories, hero/logo images, founder info, and the `is_featured` / `is_editors_pick` / `is_verified` / `re_only` toggles. "Add tool" button opens the same dialog blank. Delete with confirm.
+**Summary cards** at top: clicks this month, reported earnings this month, payments received YTD, program counts by status.
 
-**Submissions** — pending queue first. Each row shows submitter info, the proposed tool, and three actions:
-- **Approve** → opens a pre-filled tool form, saving creates the tool and marks submission `approved`
-- **Reject** → marks `rejected` with optional admin note
-- **Delete** → removes the submission
+**Main table** — one row per program:
+- Tool / program name
+- Network (badge)
+- Status (color-coded badge)
+- Commission rate
+- Clicks (live from `click_events`, toggle: last 30d / all time)
+- Latest reported earnings (most recent month)
+- Last payment (date + amount)
+- Affiliate link (copy + open)
+- Actions: Edit, View history, Delete
 
-**Blog** — list of posts with publish toggle. Create/edit dialog for title, slug, excerpt, body (textarea — markdown rendered on the public side), tags, cover image, reading minutes.
+**Program dialog** — add/edit all program fields.
 
-**Reviews** — list all reviews with tool name + user, rating, body, date. Delete button for moderation.
+**History drawer** — opens when clicking a program row, lists monthly entries with inline add for new month.
 
-**Categories** — add/rename/reorder, edit icon and description.
+## Sidebar
 
-**Analytics** — total clicks, clicks per tool (top 20), filter by 7/30/90 days. Charts using recharts.
+Add "Affiliates" item (DollarSign icon) to `AdminLayout` sidebar between Submissions and Blog.
 
-**Subscribers** — list of `newsletter_subscribers` with email, source, signup date. "Export CSV" button.
+## Out of scope
 
-**Maintenance** — keeps the existing batch image-refresh UI as-is.
-
-## Technical notes
-
-- All pages are subroutes of `/admin/*` rendered inside an `AdminLayout` with shadcn `Sidebar`.
-- Access is already protected — the `AdminPage` checks `has_role` and existing RLS policies allow admins full CRUD on every relevant table, so **no database changes are needed**.
-- Image uploads for tool logos/hero/blog covers use the existing `tool-logos` and `blog-images` storage buckets.
-- Submission approval is a client-side flow: read submission → insert into `tools` → update submission status. No edge function needed.
-- Charts via `recharts` (already in the project).
-
-## Out of scope (can add later)
-
-- Editing other users' profiles / promoting users to admin from the UI
-- Email notifications to submitters on approve/reject
-- Audit log of admin actions
+- Auto-importing earnings from network APIs
+- Currency conversion
+- CSV export
+- Per-program click charts over time
