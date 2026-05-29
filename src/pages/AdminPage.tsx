@@ -137,7 +137,11 @@ const AdminPage = () => {
             ) : (
               <RefreshCw className="h-4 w-4" />
             )}
-            {running ? "Refreshing... this can take several minutes" : "Refresh all tool images"}
+            {running
+              ? progress
+                ? `Refreshing... ${progress.done}${progress.total ? ` / ${progress.total}` : ""}`
+                : "Starting..."
+              : "Refresh all tool images"}
           </Button>
 
           {result && (
