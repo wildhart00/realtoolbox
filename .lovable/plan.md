@@ -1,52 +1,53 @@
-## Quick Add for Tools
+## Goal
 
-Add a fast path for adding tools to the admin so you don't have to fill out every field manually.
+Make every tool card logo look as crisp as Bardeen's — no more dim, washed-out marks on the dark cards.
 
-### What gets built
+## Why the current logos look bad
 
-**1. New "Quick Add" button** on the Tools admin page, next to the existing "Add tool" button. The full form stays exactly as it is for editing/polishing later.
+- ReSimpli/ListedKit's `logo_url` came from Firecrawl branding, which sometimes returns a small/transparent dark mark.
+- `ToolLogo` tries `customUrl` first, then Clearbit, then a tiny Google favicon. If the custom URL "loads" (even badly), Clearbit never gets a chance.
+- All logos render directly on the dark card background, so dark-on-transparent logos disappear.
 
-**2. Quick Add dialog with only these fields:**
-- Name *
-- Website URL *
-- Pricing (free / freemium / paid)
-- Category (multi-select dropdown from existing categories)
-- Affiliate status: `Not signed up` / `Application pending` / `Approved`
-  - If `Approved` → show an inline "Affiliate URL" input
-- **[Generate]** button
+## Changes
 
-**3. What happens on Generate:**
-- Firecrawl scrapes the URL (markdown + branding format) → pulls page content, brand colors, logo, favicon
-- Lovable AI (`google/gemini-2.5-flash`) takes the scraped content and returns structured JSON: `tagline`, `short description`, `full description`, `tags[]`, `use_cases[]`, `key_features[]`
-- Banner color comes from Firecrawl's branding extraction (primary color)
-- Logo URL comes from Firecrawl's branding
-- Hero image: use the page's OG image from Firecrawl branding (no AI image gen needed, faster + cheaper)
-- Slug: auto-generated from name (lowercase, hyphens)
+### 1. Smarter logo source order (`src/components/tools/ToolLogo.tsx`)
 
-**4. Preview step** — show the generated fields in the dialog so you can eyeball/edit before saving. Click **Save** → inserts into `tools` table with `status: published`, `re_only: true` (defaults).
+New priority:
+1. `customUrl` (only if it looks like a real brand asset — not a 16/32px favicon)
+2. `https://logo.clearbit.com/{domain}` — best square brand icons
+3. `https://{domain}/apple-touch-icon.png` — usually 180px, full-color app icon
+4. `https://www.google.com/s2/favicons?domain={domain}&sz=128`
+5. Letter initial fallback
 
-**5. Affiliate side effect:**
-- If status = `Application pending` → create row in `affiliate_programs` linked to the new tool, status `pending`
-- If status = `Approved` → create row with status `approved` and the affiliate URL, and also write `affiliate_url` onto the tool row
+Heuristic for "skip customUrl": URL contains `favicon`, ends in `.ico`, or query/path indicates ≤32px.
 
-**6. "Re-fetch from website" button** in the existing full edit form — re-runs the same scrape + AI fill on demand, useful if a tool rebrands.
+### 2. Light tile background for logos that need it
 
-### Technical bits (for reference)
+Wrap the `<img>` so dark/transparent logos sit on a subtle white tile (like an iOS app icon):
 
-- New edge function: `supabase/functions/quick-add-tool/index.ts`
-  - Input: `{ url, name }`
-  - Steps: Firecrawl scrape (formats: markdown, branding) → Lovable AI structured output via tool calling → return `{ tagline, description, full_description, tags, use_cases, key_features, logo_url, banner_color, hero_image_url }`
-  - Auth: requires admin (verify JWT + check `has_role(uid, 'admin')`)
-- Frontend: new `QuickAddDialog.tsx` in `src/pages/admin/`
-- ToolsAdmin gets a second button; existing `ToolFormDialog` is untouched
-- `affiliate_programs` insert logic in the same client-side save handler (no schema changes needed — table already exists)
-- Firecrawl key (`FIRECRAWL_API_KEY`) and `LOVABLE_API_KEY` are already configured
+- Default tile: `bg-white/95` with a tiny inner shadow, same rounded radius as today.
+- Applied to ALL logos by default — Bardeen-style colorful icons still look great on white, and dark monochrome logos finally pop.
+- Keeps the existing outer border so it matches the card aesthetic.
 
-### What you'll do per tool after this
+### 3. Quick Add edge function tweak (`supabase/functions/quick-add-tool/index.ts`)
 
-1. Click Quick Add
-2. Paste name + URL, pick pricing + category + affiliate status (≈15 seconds)
-3. Click Generate, wait ~5-10 seconds
-4. Glance at preview, click Save
+When Firecrawl's `branding.images.logo` is missing or obviously a favicon, fall back in this order before returning `logo_url`:
+1. `branding.images.logo`
+2. `branding.logo`
+3. `branding.images.ogImage` (often a full brand graphic)
+4. `null` → let `ToolLogo` resolve via Clearbit/apple-touch-icon at render time
 
-That's it. Everything else stays editable in the full form whenever you want to polish.
+## Files touched
+
+- `src/components/tools/ToolLogo.tsx` — reorder sources, add favicon heuristic, add light tile.
+- `supabase/functions/quick-add-tool/index.ts` — better logo selection fallback.
+
+## Out of scope
+
+- No manual logo upload field (can add later if needed).
+- No changes to ToolCard/FeaturedStrip layout — fix is contained to the logo component.
+
+## Verification
+
+- Refresh the home page and confirm ReSimpli, ListedKit, and other previously-dim logos now render clearly on a light tile.
+- Bardeen and other already-good logos should still look great (just on a white tile instead of dark).
