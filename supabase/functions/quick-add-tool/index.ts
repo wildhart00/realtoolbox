@@ -72,8 +72,12 @@ serve(async (req) => {
     const doc = fcData.data ?? fcData;
     const markdown: string = doc.markdown ?? "";
     const branding = doc.branding ?? {};
-    const logoUrl =
-      branding.images?.logo || branding.logo || null;
+    // Skip obvious favicons so ToolLogo can fall back to Clearbit / apple-touch-icon
+    const isFavicon = (u: string | null | undefined) =>
+      !!u && (/\.ico($|\?)/i.test(u) || /favicon/i.test(u));
+    const candidate =
+      branding.images?.logo || branding.logo || branding.images?.ogImage || null;
+    const logoUrl = isFavicon(candidate) ? null : candidate;
     const bannerColor =
       branding.colors?.primary || branding.colors?.accent || null;
     const heroImageUrl =
