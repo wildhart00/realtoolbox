@@ -89,11 +89,12 @@ export function Topbar() {
                   ? false
                   : location.pathname.startsWith(l.href.replace("/#", "/"));
             const isNewsletter = l.href.includes("#newsletter");
+            const isHome = l.href === "/";
             return (
               <Link
                 key={l.name}
                 to={l.href}
-                onClick={isNewsletter ? handleNewsletter : undefined}
+                onClick={isNewsletter ? handleNewsletter : isHome ? handleHomeClick : undefined}
                 className={cn(
                   "text-[13.5px] font-medium px-2.5 py-1.5 rounded-md transition-base",
                   active ? "text-foreground" : "text-muted-foreground hover:text-foreground hover:bg-foreground/[0.05]",
