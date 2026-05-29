@@ -1,21 +1,57 @@
-## Fix post-signup UX on `/auth`
+# Full Admin Dashboard
 
-Make it obvious that the user must confirm their email before signing in.
+Turn `/admin` into a real control panel so you never need to touch the database directly. Everything below is admin-only (gated by the existing `has_role(auth.uid(), 'admin')` check already in place).
 
-### Changes to `src/pages/AuthPage.tsx`
+## Layout
 
-1. Add a new `mode` value `"check-email"` and a `pendingEmail` state.
-2. In `handleSignUp`, on success: set `pendingEmail = email`, switch to `mode = "check-email"` (instead of `setMode("signin")`). Keep the toast.
-3. Render a "Check your email" panel when `mode === "check-email"`:
-   - Heading: "Confirm your email"
-   - Body: "We sent a confirmation link to **{pendingEmail}**. Click the link to activate your account, then come back and sign in."
-   - Note about checking spam / link expiry
-   - **Resend email** button → `supabase.auth.resend({ type: 'signup', email: pendingEmail })` with loading state + toast
-   - **Back to sign in** link → switches to `signin` tab
-4. In `handleSignIn`, detect the `"Email not confirmed"` error from Supabase and instead of a plain toast, show an inline alert above the form with a **Resend confirmation email** button (reuses the same resend handler).
+A new admin shell with a collapsible left sidebar and a top header. The current "Refresh tool card images" panel moves under **Tools → Maintenance**.
 
-### Files touched
+```text
+/admin
+├── Dashboard          (quick stats: tools, pending submissions, subscribers, clicks)
+├── Tools              (list, search, add, edit, delete, featured/editor's pick toggles)
+├── Submissions        (review /submit entries: approve → creates tool, or reject)
+├── Blog               (list, create, edit, publish/unpublish posts)
+├── Reviews            (moderate user reviews, delete abusive ones)
+├── Categories         (add/rename/reorder categories)
+├── Analytics          (click_events: top tools, recent clicks, time range)
+├── Subscribers        (newsletter list + CSV export)
+└── Maintenance        (the existing Firecrawl image refresh tool)
+```
 
-- **edit** `src/pages/AuthPage.tsx` — only file changed
+## Sections in detail
 
-No DB, no auth-config, no new routes.
+**Dashboard** — at-a-glance counts and the 5 most recent submissions / reviews / signups.
+
+**Tools** — table of every tool with inline edit dialog: name, slug, tagline, description, full description, website URL, affiliate URL, pricing, tags, categories, hero/logo images, founder info, and the `is_featured` / `is_editors_pick` / `is_verified` / `re_only` toggles. "Add tool" button opens the same dialog blank. Delete with confirm.
+
+**Submissions** — pending queue first. Each row shows submitter info, the proposed tool, and three actions:
+- **Approve** → opens a pre-filled tool form, saving creates the tool and marks submission `approved`
+- **Reject** → marks `rejected` with optional admin note
+- **Delete** → removes the submission
+
+**Blog** — list of posts with publish toggle. Create/edit dialog for title, slug, excerpt, body (textarea — markdown rendered on the public side), tags, cover image, reading minutes.
+
+**Reviews** — list all reviews with tool name + user, rating, body, date. Delete button for moderation.
+
+**Categories** — add/rename/reorder, edit icon and description.
+
+**Analytics** — total clicks, clicks per tool (top 20), filter by 7/30/90 days. Charts using recharts.
+
+**Subscribers** — list of `newsletter_subscribers` with email, source, signup date. "Export CSV" button.
+
+**Maintenance** — keeps the existing batch image-refresh UI as-is.
+
+## Technical notes
+
+- All pages are subroutes of `/admin/*` rendered inside an `AdminLayout` with shadcn `Sidebar`.
+- Access is already protected — the `AdminPage` checks `has_role` and existing RLS policies allow admins full CRUD on every relevant table, so **no database changes are needed**.
+- Image uploads for tool logos/hero/blog covers use the existing `tool-logos` and `blog-images` storage buckets.
+- Submission approval is a client-side flow: read submission → insert into `tools` → update submission status. No edge function needed.
+- Charts via `recharts` (already in the project).
+
+## Out of scope (can add later)
+
+- Editing other users' profiles / promoting users to admin from the UI
+- Email notifications to submitters on approve/reject
+- Audit log of admin actions
