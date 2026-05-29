@@ -24,6 +24,7 @@ import CategoriesAdmin from "./pages/admin/CategoriesAdmin.tsx";
 import AnalyticsAdmin from "./pages/admin/AnalyticsAdmin.tsx";
 import SubscribersAdmin from "./pages/admin/SubscribersAdmin.tsx";
 import MaintenanceAdmin from "./pages/admin/MaintenanceAdmin.tsx";
+import AffiliatesAdmin from "./pages/admin/AffiliatesAdmin.tsx";
 import SetupAdminPage from "./pages/SetupAdminPage.tsx";
 import { ScrollToTop } from "./components/ScrollToTop.tsx";
 
