@@ -1,56 +1,60 @@
-# Affiliate program tracker
+# Sync Notion with current RealToolbox state
 
-New admin-only section at `/admin/affiliates` for tracking every affiliate program you've signed up for, with live click counts and monthly earnings history.
+Goal: Update the RealToolbox.ai Notion page (`35690958-a71e-8197-814f-ce3c5b89df17`) so another AI agent can read it and have a complete picture of the app — features, routes, backend schema, integrations, and admin workflows.
 
-## Database
+## What I'll add / refresh on the Notion page
 
-Two new tables (both admin-only via RLS — only `has_role(auth.uid(), 'admin')` can read/write):
+I'll add (or replace) a structured **"Project Snapshot — 5/29/2026"** section with the following blocks:
 
-**`affiliate_programs`**
-- `tool_id` (uuid, nullable — links to existing tool so we can auto-count clicks)
-- `program_name` (text)
-- `network` (text — Impact / PartnerStack / Own / ShareASale / etc.)
-- `affiliate_url` (text)
-- `status` (enum: applied / pending / approved / declined / paused)
-- `commission_rate` (text — free-form like "30% recurring")
-- `signup_date`, `approval_date` (date, nullable)
-- `notes` (text, nullable)
+### 1. Product overview
+- One-paragraph description of RealToolbox.ai
+- Live URLs: realtoolbox.ai, www.realtoolbox.ai, Lovable preview
+- Tech stack: React 18 + Vite + Tailwind + shadcn/ui, Lovable Cloud (Supabase) backend, GitHub-synced
 
-**`affiliate_earnings`**
-- `program_id` → affiliate_programs (cascade delete)
-- `month` (date — first of month)
-- `reported_earnings` (numeric)
-- `payment_received` (numeric, nullable)
-- `payment_date` (date, nullable)
-- `notes` (text, nullable)
-- Unique on (program_id, month)
+### 2. Public features (with routes)
+- `/` Home — Hero, Featured strip, Category rail, Browse section, Newsletter
+- `/category/:slug` — Category browse pages
+- `/tool/:slug` — Tool detail (founder bio, key features, use cases, reviews, save)
+- `/blog` — Blog index + posts
+- `/submit` — Public tool submission form
+- `/members` — Premium resources (auth-gated)
+- `/auth`, `/reset-password` — Authentication
+- `/go/:slug` — Affiliate click-tracking redirect
 
-## UI
+### 3. Admin features (`/admin/*`)
+- Dashboard, Tools (with ToolFormDialog), Categories, Submissions review, Reviews, Subscribers, Blog editor, Analytics, **Affiliates** (programs + monthly earnings), Maintenance, Setup admin
 
-**Summary cards** at top: clicks this month, reported earnings this month, payments received YTD, program counts by status.
+### 4. Featured tools workflow
+- How `is_featured` + `featured_order` drive the homepage strip
+- Where to edit (Admin → Tools)
 
-**Main table** — one row per program:
-- Tool / program name
-- Network (badge)
-- Status (color-coded badge)
-- Commission rate
-- Clicks (live from `click_events`, toggle: last 30d / all time)
-- Latest reported earnings (most recent month)
-- Last payment (date + amount)
-- Affiliate link (copy + open)
-- Actions: Edit, View history, Delete
+### 5. Backend schema (Lovable Cloud)
+Table-by-table summary of: `tools`, `categories`, `tool_categories`, `submissions`, `reviews`, `saved_tools`, `profiles`, `user_roles` (admin/member), `blog_posts`, `newsletter_subscribers`, `click_events`, `premium_resources`, `affiliate_programs`, `affiliate_earnings` — including key columns and RLS posture (public-read vs admin-only vs owner-only).
 
-**Program dialog** — add/edit all program fields.
+### 6. Auth & roles
+- Email/password auth, `profiles` auto-created on signup
+- `user_roles` table with `admin` / `member` enum
+- `has_role()` security-definer function used by all RLS policies
+- `claim_first_admin()` RPC for bootstrap
 
-**History drawer** — opens when clicking a program row, lists monthly entries with inline add for new month.
+### 7. Storage buckets
+- `tool-logos` (public), `avatars` (public), `blog-images` (public), `premium-resources` (private)
 
-## Sidebar
+### 8. Edge functions & integrations
+- `refresh-tool-images` edge function
+- Firecrawl connector (FIRECRAWL_API_KEY)
+- Lovable AI Gateway available (LOVABLE_API_KEY)
+- GitHub sync active
 
-Add "Affiliates" item (DollarSign icon) to `AdminLayout` sidebar between Submissions and Blog.
+### 9. Known next actions
+Carry forward open items from the existing Next Actions list, marking what's done.
+
+## How I'll do it
+
+One `mcp_notion_xvlm2--notion-update-page` call using `replace_content` with `allow_deleting_content: false` so the "🚀 Full Execution Plan" child page is preserved. I'll fetch the page first to get the exact current markdown for the `old_str` anchor.
 
 ## Out of scope
 
-- Auto-importing earnings from network APIs
-- Currency conversion
-- CSV export
-- Per-program click charts over time
+- No code changes
+- Won't touch the child "Full Execution Plan" page
+- Won't add screenshots or embeds (text-only snapshot for agent consumption)
