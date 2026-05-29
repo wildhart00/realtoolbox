@@ -162,8 +162,19 @@ Deno.serve(async (req) => {
     }
 
     const ok = results.filter((r) => r.ok).length;
+    const nextOffset = onlyMissing ? offset : offset + results.length;
+    const hasMore = onlyMissing
+      ? (totalCount ?? 0) > 0 && results.length > 0
+      : nextOffset < (totalCount ?? 0);
     return new Response(
-      JSON.stringify({ processed: results.length, succeeded: ok, results }),
+      JSON.stringify({
+        processed: results.length,
+        succeeded: ok,
+        results,
+        total: totalCount ?? 0,
+        nextOffset,
+        hasMore,
+      }),
       { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } },
     );
   } catch (e) {
