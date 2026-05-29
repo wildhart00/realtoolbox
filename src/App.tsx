@@ -14,7 +14,16 @@ import ResetPasswordPage from "./pages/ResetPasswordPage.tsx";
 import SubmitPage from "./pages/SubmitPage.tsx";
 import BlogPage from "./pages/BlogPage.tsx";
 import GoRedirectPage from "./pages/GoRedirectPage.tsx";
-import AdminPage from "./pages/AdminPage.tsx";
+import AdminLayout from "./components/admin/AdminLayout.tsx";
+import AdminDashboard from "./pages/admin/Dashboard.tsx";
+import ToolsAdmin from "./pages/admin/ToolsAdmin.tsx";
+import SubmissionsAdmin from "./pages/admin/SubmissionsAdmin.tsx";
+import BlogAdmin from "./pages/admin/BlogAdmin.tsx";
+import ReviewsAdmin from "./pages/admin/ReviewsAdmin.tsx";
+import CategoriesAdmin from "./pages/admin/CategoriesAdmin.tsx";
+import AnalyticsAdmin from "./pages/admin/AnalyticsAdmin.tsx";
+import SubscribersAdmin from "./pages/admin/SubscribersAdmin.tsx";
+import MaintenanceAdmin from "./pages/admin/MaintenanceAdmin.tsx";
 import SetupAdminPage from "./pages/SetupAdminPage.tsx";
 import { ScrollToTop } from "./components/ScrollToTop.tsx";
 
@@ -39,7 +48,17 @@ const App = () => (
               <Route path="/submit" element={<SubmitPage />} />
               <Route path="/auth" element={<AuthPage />} />
               <Route path="/reset-password" element={<ResetPasswordPage />} />
-              <Route path="/admin" element={<AdminPage />} />
+              <Route path="/admin" element={<AdminLayout />}>
+                <Route index element={<AdminDashboard />} />
+                <Route path="tools" element={<ToolsAdmin />} />
+                <Route path="submissions" element={<SubmissionsAdmin />} />
+                <Route path="blog" element={<BlogAdmin />} />
+                <Route path="reviews" element={<ReviewsAdmin />} />
+                <Route path="categories" element={<CategoriesAdmin />} />
+                <Route path="analytics" element={<AnalyticsAdmin />} />
+                <Route path="subscribers" element={<SubscribersAdmin />} />
+                <Route path="maintenance" element={<MaintenanceAdmin />} />
+              </Route>
               <Route path="/setup-admin" element={<SetupAdminPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
