@@ -44,14 +44,31 @@ const AdminPage = () => {
   const runRefresh = async () => {
     setRunning(true);
     setResult(null);
+    setProgress(null);
+    const aggregated: RunResult = { processed: 0, succeeded: 0, results: [] };
+    const BATCH = 8;
+    let offset = 0;
     try {
-      const { data, error } = await supabase.functions.invoke("refresh-tool-images", {
-        body: { onlyMissing },
-      });
-      if (error) throw error;
-      setResult(data as RunResult);
+      // Loop in small batches to stay under the edge function timeout
+      while (true) {
+        const { data, error } = await supabase.functions.invoke("refresh-tool-images", {
+          body: { onlyMissing, limit: BATCH, offset },
+        });
+        if (error) throw error;
+        const batch = data as BatchResult;
+        aggregated.processed += batch.processed;
+        aggregated.succeeded += batch.succeeded;
+        aggregated.results.push(...batch.results);
+        setResult({ ...aggregated });
+        setProgress({
+          done: aggregated.processed,
+          total: onlyMissing ? aggregated.processed + (batch.hasMore ? batch.total : 0) : batch.total,
+        });
+        if (!batch.hasMore || batch.processed === 0) break;
+        offset = batch.nextOffset;
+      }
       toast.success(
-        `Refreshed ${(data as RunResult).succeeded}/${(data as RunResult).processed} tool images`,
+        `Refreshed ${aggregated.succeeded}/${aggregated.processed} tool images`,
       );
     } catch (e) {
       const msg = e instanceof Error ? e.message : String(e);
