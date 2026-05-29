@@ -11,6 +11,7 @@ import {
   Mail,
   RefreshCw,
   ShieldAlert,
+  DollarSign,
 } from "lucide-react";
 import {
   Sidebar,
@@ -32,6 +33,7 @@ const items = [
   { title: "Dashboard", url: "/admin", icon: LayoutDashboard, end: true },
   { title: "Tools", url: "/admin/tools", icon: Wrench },
   { title: "Submissions", url: "/admin/submissions", icon: Inbox },
+  { title: "Affiliates", url: "/admin/affiliates", icon: DollarSign },
   { title: "Blog", url: "/admin/blog", icon: FileText },
   { title: "Reviews", url: "/admin/reviews", icon: Star },
   { title: "Categories", url: "/admin/categories", icon: Folder },
