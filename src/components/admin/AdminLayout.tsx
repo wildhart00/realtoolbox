@@ -46,7 +46,7 @@ function AdminSidebar() {
   const { pathname } = useLocation();
   return (
     <Sidebar collapsible="icon">
-      <SidebarContent>
+      <SidebarContent className="pt-4">
         <SidebarGroup>
           <SidebarGroupLabel>Admin</SidebarGroupLabel>
           <SidebarGroupContent>
