@@ -1,89 +1,89 @@
 ## Goal
-Replace `/resources` ComingSoon stub with a full directory page that reads from the `resources` Supabase table, filterable by type, with an empty state and a newsletter callout.
+Build `/skills` page (hero + waitlist email capture + "what's coming" preview + submit callout), and add a Claude Skills announcement strip on the homepage between BrowseSection and NewsletterCard.
 
 ## Files
 
-### New: `src/pages/ResourcesPage.tsx`
+### New: `src/pages/SkillsPage.tsx`
 Wrapped in `AppLayout`, centered `max-w-[1200px]`. Sections:
 
 1. **Hero**
-   - Eyebrow chip: "RESOURCES"
-   - H1 (`font-display`, 5–6xl, tracking-tight): "Tools for the serious real estate operator" — gradient accent on the last 2–3 words
-   - Sub (`text-muted-foreground`, lg, max-w-3xl): supplied verbatim
+   - Eyebrow chip: "SKILLS"
+   - H1 (`font-display`, 5–6xl, tracking-tight): "Real estate skills for Claude" with gradient accent on "Claude"
+   - Subheadline paragraph (`text-muted-foreground`, lg, max-w-3xl) verbatim
+   - **3-step row** below subheadline (md:grid-cols-3, surface-card styling, numbered accent badges + arrow between cards — mirror the visual pattern from `MCPsPage` "How it works"):
+     - 1. Download the .md file (icon: `Download`)
+     - 2. Upload to your Claude Project (icon: `Upload`)
+     - 3. Reference it in any prompt (icon: `Sparkles`)
 
-2. **Filter row**
-   - Pill buttons in a single flex-wrap row: `All · Guides · Prompt Libraries · Templates · Downloads · Videos`
-   - Active pill: `bg-foreground text-background`; inactive: `bg-foreground/[0.04] border border-foreground/10 text-foreground/70 hover:bg-foreground/[0.08]`
-   - Selection drives client-side filter on the fetched array (no refetch per click)
+2. **Launching Soon — Email capture block**
+   - Centered card, `rounded-2xl`, subtle gradient border + gradient bg using `from-foreground/[0.05] to-foreground/[0.01]`, with a top accent line `bg-gradient-to-r from-transparent via-[hsl(229_94%_82%)]/40 to-transparent`
+   - Eyebrow: "EARLY ACCESS"
+   - H2 (`font-display`, 2xl–3xl): "First skills launching soon — get early access"
+   - Subhead: verbatim copy
+   - Inline form: single email input + "Get Early Access" submit button (`variant="hero"`)
+   - On submit: `supabase.from('newsletter_subscribers').insert({ email, source: 'skills_waitlist' })`
+   - Use the existing `source` field on `newsletter_subscribers` (default `'homepage'`) — overriding to `'skills_waitlist'` segments these signups
+   - Client-side validation with zod: trimmed email, valid format, max 255 chars
+   - Loading/success/error states via the existing `toast` hook (`useToast` from `@/components/ui/use-toast` — check actual export); show success toast and replace form with "You're on the list ✓" inline message; on duplicate (Postgres unique violation or other error), show a friendly toast
 
-3. **Card grid**
-   - `md:grid-cols-2 lg:grid-cols-3` (4-col at xl optional — keep 3 to match the rest of the site)
-   - Loading: 6 skeleton cards (rounded-2xl, animated bg)
-   - Empty state (no rows OR filter result empty):
-     - Friendly card spanning full grid width: copy supplied verbatim, primary button "Subscribe to newsletter" → `Link to="/#newsletter"` (anchor to homepage newsletter section)
-     - For filter-with-no-matches case, use a lighter variant: "No {type} yet — check back soon." with a "Clear filter" button
+3. **What's Coming — preview cards**
+   - SectionLabel: "WHAT'S COMING"
+   - `md:grid-cols-3` of 3 hard-coded `<SkillPreviewCard>` items:
+     - Listing Description Writer — "Input property details, get MLS-ready copy in your voice" — audience pill "For Agents"
+     - Deal Analyzer — "Input purchase price, rents and expenses, get a full investment scorecard" — "For Investors"
+     - Weekly Market Report — "Input your MLS data, get a client-ready market update narrative" — "For Agents + Investors"
+   - Each card displays a "Coming Soon" badge (top-right) instead of a CTA button; no fake pricing
 
 4. **Bottom callout**
-   - Single featured callout: "Get resource drop alerts" / "Be the first to know when a new guide, template or prompt pack ships." / button → `/#newsletter`
-   - Same visual treatment as the MCPs/Agents bottom callout (rounded-2xl, gradient border highlight)
+   - Same visual pattern as MCPs/Agents/Resources bottom callout
+   - "Built your own real estate skill?" / "Share it with the community" / button "Share it" → Link to `/submit`
 
-### New: `src/components/resources/ResourceCard.tsx`
-Props: `resource: ResourceRow`. Layout:
-- Top: type badge (color-coded, see below) on its own row
-- Title (`font-display`, text-xl, semibold, tracking-tight, line-clamp-2)
-- Description (`text-[14px] text-muted-foreground leading-[1.6] line-clamp-3 min-h-[66px]`)
-- Footer pinned to bottom: access badge on the left, CTA button on the right
-- Optional `cover_image_url` rendered as a 16:9 image at top with `object-cover rounded-t-2xl`; if absent, render a subtle gradient banner using `bg-gradient-to-br from-foreground/[0.08] to-foreground/[0.02]` with the type icon centered
+### New: `src/components/skills/SkillPreviewCard.tsx`
+Static card. Props: `title`, `description`, `audience`. Layout:
+- Top row: small audience pill on the left (`bg-accent/10 text-[hsl(229_94%_82%)] border-accent/25`), "Coming Soon" badge on the right (`bg-foreground/[0.06] text-foreground/60 border-foreground/15`)
+- Title (`font-display`, text-xl, semibold, tracking-tight)
+- Description (`text-[14px] text-muted-foreground leading-[1.6]`)
+- Footer: muted hint text "Drop your email above to be notified" (small, italic-feel, no button)
 
-Type badge styles + labels + icons (Lucide):
-- `guide` → "Guide" — `bg-accent/12 text-[hsl(229_94%_82%)] border-accent/25` — `BookOpen`
-- `prompt-library` → "Prompt Library" — `bg-[hsl(265_84%_75%)/0.12] text-[hsl(265_84%_82%)] border-[hsl(265_84%_75%)/0.25]` — `Sparkles`
-- `template` → "Template" — `bg-success/15 text-success border-success/25` — `FileText`
-- `video` → "Video" — `bg-orange-400/12 text-orange-300 border-orange-400/25` — `Video`
-- `download` → "Download" — `bg-yellow-400/12 text-yellow-300 border-yellow-400/25` — `Download`
+### New: `src/components/home/SkillsAnnouncementStrip.tsx`
+Used on the homepage. Visually distinct full-width announcement (not a card-in-grid).
 
-Access badge styles + labels:
-- `free` → "Free" — `bg-success/15 text-success border-success/25`
-- `email-gated` → "Free with email" — `bg-accent/10 text-[hsl(229_94%_82%)] border-accent/25`
-- `premium` → "Premium" — `bg-foreground/[0.06] text-foreground/70 border-foreground/15`
+Structure:
+- Outer wrapper `w-full px-6 lg:px-10 py-14`
+- Inner: `mx-auto max-w-[1200px] rounded-2xl px-8 py-10 lg:px-14 lg:py-12` with **bold indigo→purple gradient** background using existing tokens: `bg-gradient-to-br from-[hsl(239_84%_67%)] via-[hsl(252_84%_70%)] to-[hsl(265_84%_67%)]`, plus subtle radial highlight (`before:` pseudo via inline style or a layered absolute div) and a `shadow-glow`/`shadow-elevated`-style shadow
+- Layout: flex row on `lg`, column on mobile. Left side text; right side CTA button.
+- Left:
+  - Small uppercase eyebrow chip "NEW" — `bg-white/15 text-white border border-white/25 backdrop-blur-sm rounded-full px-2.5 py-0.5 text-[10px] font-semibold tracking-[0.16em]`
+  - H2 (`font-display`, 2xl–3xl, white): "Claude Skills for Real Estate — coming soon"
+  - Description (white/80, max-w-2xl): supplied verbatim
+- Right:
+  - `Button` styled `bg-white text-[hsl(239_84%_55%)] hover:bg-white/90` with `asChild` linking to `/skills`, label "Join the Waitlist" + `ArrowRight` icon
+- Use white text against the saturated gradient — this is the one place we deviate from semantic muted tones intentionally to make it pop as an announcement
 
-CTA button (right-aligned in footer, uses existing `Button` component variants):
-- `free` → label "Download", `variant="default"`, links external `file_url` (target=_blank, rel=noreferrer). If `file_url` is null, disabled with title "Coming soon".
-- `email-gated` → label "Get with email", `variant="outline"`. For now, links to `/#newsletter` (form integration out of scope for this send).
-- `premium` → label "Unlock", `variant="hero"`, links to `/#newsletter` as the conversion path (member/paywall flow not built yet).
+### Edit: `src/pages/Index.tsx`
+Import and insert `SkillsAnnouncementStrip` between `BrowseSection` and the next divider/NewsletterCard. Specifically:
+- Add `import { SkillsAnnouncementStrip } from "@/components/home/SkillsAnnouncementStrip";`
+- Place it after `<BrowseSection .../>` and before the divider that precedes `<NewsletterCard />`
 
-### Data fetch
-Inside `ResourcesPage`, use `@tanstack/react-query` (already in `App.tsx`):
-```ts
-useQuery({
-  queryKey: ["resources", "published"],
-  queryFn: async () => {
-    const { data, error } = await supabase
-      .from("resources")
-      .select("id, title, slug, type, description, access_level, file_url, cover_image_url, created_at")
-      .eq("is_published", true)
-      .order("created_at", { ascending: false });
-    if (error) throw error;
-    return data ?? [];
-  },
-});
-```
-Client-side filter by `type` based on the active pill. No RLS changes needed — existing policy already allows public SELECT where `is_published = true`.
-
-### Routing: `src/App.tsx`
-- `import ResourcesPage from "./pages/ResourcesPage.tsx"`
-- Replace `/resources` route element from `<ComingSoonPage />` to `<ResourcesPage />`
+### Edit: `src/App.tsx`
+- Add `import SkillsPage from "./pages/SkillsPage.tsx"`
+- Replace `/skills` route element from `<ComingSoonPage />` to `<SkillsPage />`
 
 ### SEO
-`useEffect` sets `document.title` to "Resources for Real Estate Pros — RealToolbox.ai" and meta description.
+`useEffect` in `SkillsPage`: sets `document.title` to "Claude Skills for Real Estate — RealToolbox.ai" and meta description.
+
+## Data / Database
+- Insert path: `supabase.from('newsletter_subscribers').insert({ email, source: 'skills_waitlist' })`
+- Existing RLS already allows `anon`/`authenticated` INSERT with email format check — no migration needed
+- No schema changes
 
 ## Technical notes
-- Newsletter anchor: the homepage already has a NewsletterCard section. Link target uses hash `/#newsletter`. Verify the existing section has `id="newsletter"`; if it doesn't, add the id to the section wrapper in `src/pages/Index.tsx` (or the NewsletterCard's parent). This is a one-line change and within scope.
-- All colors via existing tokens. The purple `[hsl(265_84%_75%)]` is already used on MCPs/Agents pages.
-- The `resources` table type is already in `src/integrations/supabase/types.ts` (regenerated after the foundation migration). Use the generated `Row` type if available.
+- `SectionLabel` re-inlined (same as MCPs/Agents/Resources) — keep until we have a 4th use, then extract
+- For the gradient strip's accent button hover, use existing `transition-base` token
+- Reuse the existing `NewsletterCard` form behavior as a reference for client-side validation + toast — but the skills form is a self-contained component (do NOT modify `NewsletterCard`)
 
 ## Out of scope
-- No actual email-gating flow (the "Get with email" CTA points at newsletter for now)
-- No premium paywall / Stripe — "Unlock" routes to newsletter signup
-- No per-resource detail page; cards link to `file_url` directly or to newsletter
-- No admin UI for managing resources in this send
+- No actual Skills products/downloads (everything is teaser)
+- No new `skills` table — entries are hard-coded as 3 preview cards
+- No admin filter UI for segmenting `newsletter_subscribers` by source
+- No changes to `Topbar` (Skills nav link already points at `/skills`)

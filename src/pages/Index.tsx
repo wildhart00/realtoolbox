@@ -3,6 +3,7 @@ import { Hero } from "@/components/home/Hero";
 import { FeaturedStrip } from "@/components/home/FeaturedStrip";
 import { BrowseSection } from "@/components/home/BrowseSection";
 import { NewsletterCard } from "@/components/home/NewsletterCard";
+import { SkillsAnnouncementStrip } from "@/components/home/SkillsAnnouncementStrip";
 import { useTools, useFeaturedTools, useCategories } from "@/hooks/useDirectory";
 import { useSearch } from "@/hooks/useSearch";
 
@@ -24,6 +25,7 @@ const Index = () => {
       />
       <div className="mx-auto h-px bg-foreground/[0.06]" style={{ maxWidth: 1100 }} />
       <BrowseSection tools={tools} categories={categories} />
+      <SkillsAnnouncementStrip />
       <div className="mx-auto h-px bg-foreground/[0.06]" style={{ maxWidth: 1100 }} />
       <NewsletterCard />
     </AppLayout>
