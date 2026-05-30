@@ -8,6 +8,7 @@ import { SearchProvider } from "@/hooks/useSearch";
 import Index from "./pages/Index.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import CategoryPage from "./pages/CategoryPage.tsx";
+import SpecialtyPage from "./pages/SpecialtyPage.tsx";
 import ToolDetailPage from "./pages/ToolDetailPage.tsx";
 import AuthPage from "./pages/AuthPage.tsx";
 import ResetPasswordPage from "./pages/ResetPasswordPage.tsx";
@@ -47,6 +48,7 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/category/:slug" element={<CategoryPage />} />
+              <Route path="/specialty/:slug" element={<SpecialtyPage />} />
               <Route path="/tools/:slug" element={<ToolDetailPage />} />
               <Route path="/go/:slug" element={<GoRedirectPage />} />
               <Route path="/blog" element={<BlogPage />} />
