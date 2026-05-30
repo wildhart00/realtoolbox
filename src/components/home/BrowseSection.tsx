@@ -6,14 +6,24 @@ import { useSearch } from "@/hooks/useSearch";
 
 type SortKey = "relevant" | "newest" | "az";
 
-export function BrowseSection({ tools, categories }: { tools: Tool[]; categories: Category[] }) {
+export function BrowseSection({
+  tools,
+  categories,
+  initialCategory,
+  lockCategory = false,
+}: {
+  tools: Tool[];
+  categories: Category[];
+  initialCategory?: string;
+  lockCategory?: boolean;
+}) {
   const { query } = useSearch();
-  const [activeSlug, setActiveSlug] = useState("all");
-  const [sort, setSort] = useState<SortKey>("relevant");
+  const [activeSlug, setActiveSlug] = useState(initialCategory ?? "all");
+  const [sort, setSort] = useState<SortKey>(query.trim() ? "relevant" : "newest");
 
   const filtered = useMemo(() => {
     let list = tools;
-    if (activeSlug !== "all") {
+    if (!lockCategory && activeSlug !== "all") {
       list = list.filter((t) => t.categories?.some((c) => c.slug === activeSlug));
     }
     if (query.trim()) {
@@ -31,12 +41,14 @@ export function BrowseSection({ tools, categories }: { tools: Tool[]; categories
     else if (sort === "newest")
       list = [...list].sort((a, b) => (b.created_at ?? "").localeCompare(a.created_at ?? ""));
     return list;
-  }, [tools, activeSlug, query, sort]);
+  }, [tools, activeSlug, query, sort, lockCategory]);
 
   return (
     <section id="browse" className="px-6 lg:px-10 py-10 lg:py-12 mx-auto" style={{ maxWidth: 1100 }}>
       <div className="flex flex-col lg:flex-row gap-6 lg:gap-9">
-        <CategoryRail categories={categories} active={activeSlug} onChange={setActiveSlug} />
+        {!lockCategory && (
+          <CategoryRail categories={categories} active={activeSlug} onChange={setActiveSlug} />
+        )}
 
         <div className="flex-1 min-w-0">
           <div className="flex items-center justify-between mb-[18px]">
@@ -49,7 +61,7 @@ export function BrowseSection({ tools, categories }: { tools: Tool[]; categories
               className="bg-foreground/[0.05] border border-foreground/[0.09] rounded-lg px-3 py-1.5 text-[12px] text-muted-foreground outline-none cursor-pointer"
             >
               <option value="relevant">Most relevant</option>
-              <option value="newest">Newest</option>
+              <option value="newest">Newest first</option>
               <option value="az">A–Z</option>
             </select>
           </div>
