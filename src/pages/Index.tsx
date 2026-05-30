@@ -3,6 +3,7 @@ import { Hero } from "@/components/home/Hero";
 import { FeaturedTabsSection } from "@/components/home/FeaturedTabsSection";
 import { BrowseSection } from "@/components/home/BrowseSection";
 import { NewsletterCard } from "@/components/home/NewsletterCard";
+import { BrowseByTagSection } from "@/components/home/BrowseByTagSection";
 import { SkillsAnnouncementStrip } from "@/components/home/SkillsAnnouncementStrip";
 import {
   useTools,
@@ -23,6 +24,7 @@ const Index = () => {
       <FeaturedTabsSection featured={featured} justLaunched={justLaunched} />
       <div className="mx-auto h-px bg-foreground/[0.06]" style={{ maxWidth: 1100 }} />
       <BrowseSection tools={tools} categories={categories} />
+      <BrowseByTagSection />
       <SkillsAnnouncementStrip />
       <div className="mx-auto h-px bg-foreground/[0.06]" style={{ maxWidth: 1100 }} />
       <NewsletterCard />
