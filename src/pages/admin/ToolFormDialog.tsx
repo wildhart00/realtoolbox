@@ -89,6 +89,7 @@ function parseCsv(s: string): string[] {
 export function ToolFormDialog({ open, onOpenChange, initial, onSaved, approvingSubmissionId }: Props) {
   const [form, setForm] = useState<ToolRow>(empty);
   const [saving, setSaving] = useState(false);
+  const [uploadingShot, setUploadingShot] = useState(false);
   const isEdit = !!initial?.id;
 
   useEffect(() => {
