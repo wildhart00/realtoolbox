@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 const navLinks = [
-  { name: "Browse", href: "/" },
+  { name: "Browse", href: "/browse" },
   { name: "MCPs", href: "/mcps" },
   { name: "Skills", href: "/skills" },
   { name: "Agents", href: "/agents" },
@@ -86,12 +86,14 @@ export function Topbar() {
         {/* Center nav */}
         <nav className="hidden lg:flex items-center gap-0.5">
           {navLinks.map((l) => {
-            const active =
-              l.href === "/"
+            const isBrowse = l.href === "/browse";
+            const active = isBrowse
+              ? location.pathname === "/browse" ||
+                location.pathname.startsWith("/category/") ||
+                location.pathname.startsWith("/specialty/")
+              : l.href === "/"
                 ? location.pathname === "/"
-                : l.href.startsWith("/category")
-                  ? false
-                  : location.pathname.startsWith(l.href.replace("/#", "/"));
+                : location.pathname.startsWith(l.href.replace("/#", "/"));
             const isNewsletter = l.href.includes("#newsletter");
             const isHome = l.href === "/";
             return (
