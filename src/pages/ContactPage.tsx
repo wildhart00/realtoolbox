@@ -1,6 +1,6 @@
 import { FormEvent, useState } from "react";
 import { z } from "zod";
-import { Mail, Check } from "lucide-react";
+import { Check } from "lucide-react";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -51,13 +51,6 @@ export default function ContactPage() {
           Tool to recommend? Feedback? Partnership idea? Drop a note.
         </p>
 
-        <a
-          href="mailto:patwilder@midwestinvestqc.com"
-          className="mt-6 inline-flex items-center gap-2 text-[14px] text-[hsl(229_94%_82%)] hover:underline"
-        >
-          <Mail className="h-4 w-4" />
-          patwilder@midwestinvestqc.com
-        </a>
 
         <div className="mt-10 surface-card rounded-2xl p-7 lg:p-8">
           {done ? (

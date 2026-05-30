@@ -68,9 +68,9 @@ export default function PrivacyPage() {
             <h2 className="font-display text-[20px] font-bold text-foreground mb-2">Your rights</h2>
             <p>
               You can request your data, unsubscribe, or ask us to delete your account at any time
-              by emailing{" "}
-              <a href="mailto:patwilder@midwestinvestqc.com" className="text-[hsl(229_94%_82%)] hover:underline">
-                patwilder@midwestinvestqc.com
+              by using our{" "}
+              <a href="/contact" className="text-[hsl(229_94%_82%)] hover:underline">
+                contact page
               </a>.
             </p>
           </section>

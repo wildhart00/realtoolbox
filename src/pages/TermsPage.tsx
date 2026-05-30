@@ -62,9 +62,9 @@ export default function TermsPage() {
             <h2 className="font-display text-[20px] font-bold text-foreground mb-2">Changes</h2>
             <p>
               We may update these terms from time to time. Continued use of the site after changes
-              means you accept the updated terms. Questions? Email{" "}
-              <a href="mailto:patwilder@midwestinvestqc.com" className="text-[hsl(229_94%_82%)] hover:underline">
-                patwilder@midwestinvestqc.com
+              means you accept the updated terms. Questions? Reach out via our{" "}
+              <a href="/contact" className="text-[hsl(229_94%_82%)] hover:underline">
+                contact page
               </a>.
             </p>
           </section>
