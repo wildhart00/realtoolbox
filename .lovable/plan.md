@@ -1,52 +1,100 @@
 ## Goal
-Slim the homepage down to Featured/Just Launched tabs only and move the full category-sidebar + tool-grid directory experience to a dedicated `/browse` page. Wire search + nav to it. Make `/category/:slug` and `/specialty/:slug` share the same browse layout.
+Replace the current minimal footer with a fuller, premium footer (3-col links + newsletter band + legal bar), move the homepage newsletter into the footer, and add `/privacy`, `/terms`, `/contact` pages plus a `contact_messages` table and admin view.
 
 ## Changes
 
-### 1. New `/browse` page — `src/pages/BrowsePage.tsx`
-Reuses the existing `BrowseSection` component (which already contains `CategoryRail` + `ToolGrid` + count + sort dropdown — exactly the layout that lives on the homepage today).
+### 1. New footer — `src/components/layout/Footer.tsx` (rewrite)
+Three stacked sections, all in `surface-card`/dark aesthetic with hairline `border-foreground/[0.06]` dividers.
 
-- Loads `useTools()` + `useCategories()`.
-- Reads `?q=` from the URL on mount and pushes it into `SearchContext` (so the existing search bar + `BrowseSection` filter logic just work).
-- Reads `?cat=` (optional) to pre-select a category in the rail.
-- Page header: small `BROWSE` eyebrow + h1 "All tools" + dynamic count subline.
-- Renders `<BrowseSection tools={tools} categories={categories} />` wrapped in `AppLayout`.
+**Section 1 — three-column links** (`max-w-[1200px]`, `grid-cols-1 md:grid-cols-3`, py-14):
+- **Brand column**: existing home-icon SVG + "RealToolbox.ai" wordmark (same markup as `Topbar`). Tagline below: "The AI toolkit built for real estate professionals. Curated weekly. No sponsored listings."
+- **Quick Links column** (header "Quick Links", uppercase eyebrow style): MCPs, Skills, Agents, Resources, Blog, Submit a Tool.
+- **Popular Categories column** (header "Popular Categories"): Image Generation, Video Creation, Automation, AI Writers, Virtual Staging, Commercial Real Estate — each linking to `/category/<slug>`.
+- Link hover state: `hover:text-[hsl(229_94%_82%)]` (indigo accent already used in topbar).
 
-Minor enhancement to `BrowseSection`:
-- Accept an optional `initialCategory` prop and an optional `lockCategory` prop (used by `/category/:slug` and `/specialty/:slug` to hide the rail and pre-filter).
-- Add a "Newest first" option (currently has "Most relevant / Newest / A–Z" — already covered, just rename label to "Newest first").
-- Default sort becomes `newest` when no search query is active (per spec "ordered by created_at desc"); falls back to relevance when a query is present.
+**Section 2 — newsletter band**: render existing `<NewsletterCard />` inside the footer (top border separator). NewsletterCard's `source` prop defaults to `"homepage"`; add an optional `source?: string` prop and pass `source="footer"` here so submissions tag correctly. (Spec says `newsletter` — will use `"newsletter"` per spec.)
+
+**Section 3 — legal bar**: thin row with `border-t border-foreground/[0.06]`, `py-5`, flex justify-between:
+- Left: "© 2026 RealToolbox.ai. All rights reserved."
+- Right: `Privacy Policy · Terms of Service · Contact` (middle-dot separators, each a Link).
 
 ### 2. Homepage cleanup — `src/pages/Index.tsx`
-Remove `<BrowseSection />` and the divider above it. Remove the unused `useTools`/`useCategories` calls (keep `useTools().length` only if Hero still needs the count — it does, so keep `useTools()` for the count).
+Remove `<NewsletterCard />` from the page body (it now lives in the footer on every page).
 
-Final order: Hero → FeaturedTabsSection → BrowseByTagSection → BuiltForSpecialtySection → SkillsAnnouncementStrip → NewsletterCard.
+### 3. NewsletterCard — `src/components/home/NewsletterCard.tsx`
+Add optional `source` prop (default `"homepage"`) used in the insert payload, so the footer can pass `"newsletter"`.
 
-### 3. Homepage search bar — `src/components/home/Hero.tsx`
-Change the input from a controlled `SearchContext` input to a local-state input with an `onSubmit` (wrap in `<form>`) that calls `navigate('/browse?q=' + encodeURIComponent(query))`. Pressing Enter or clicking the search icon navigates.
+### 4. New pages
+- **`src/pages/PrivacyPage.tsx`** at route `/privacy` — `AppLayout` wrapper, max-w prose layout. Standard real-estate-friendly copy: collects email for newsletter signup, anonymous analytics, doesn't sell data, cookies for basic functionality, third-party tool links go to external sites, contact email for questions.
+- **`src/pages/TermsPage.tsx`** at route `/terms` — same layout. Standard "use at own risk, third-party tools, we curate but don't endorse, no warranties, may update terms" copy.
+- **`src/pages/ContactPage.tsx`** at route `/contact`:
+  - Headline "Get in touch", subhead "Tool to recommend? Feedback? Partnership idea? Drop a note."
+  - Display email `patwilder@midwestinvestqc.com` (mailto link).
+  - Form: Name, Email, Message — validated with zod (trim, max lengths, email format). Submits to `contact_messages` via supabase insert; on success show inline confirmation, clear form.
 
-### 4. Routing — `src/App.tsx`
-Add `<Route path="/browse" element={<BrowsePage />} />`.
+### 5. Routing — `src/App.tsx`
+Add three routes: `/privacy`, `/terms`, `/contact`. Add `/admin/contact-messages` nested under `AdminLayout`.
 
-### 5. Nav link — `src/components/layout/Topbar.tsx`
-Change `{ name: "Browse", href: "/" }` → `{ name: "Browse", href: "/browse" }`. Update `handleHomeClick` usage so it no longer applies to the Browse link (only the logo). Active-state logic updated to highlight Browse on `/browse`, `/category/*`, and `/specialty/*`.
+### 6. Admin — contact messages
+- **`src/pages/admin/ContactMessagesAdmin.tsx`** — same Table pattern as `SubmissionsAdmin`. Columns: created_at, name, email, message preview, read/unread badge. Row actions: "Mark read"/"Mark unread", "Delete". Loads `contact_messages` ordered by `created_at desc`.
+- **`src/components/admin/AdminLayout.tsx`** — add `{ title: "Contact", url: "/admin/contact-messages", icon: MessageSquare }` to the sidebar `items` array.
 
-### 6. Category & Specialty pages share browse layout
-- `src/pages/CategoryPage.tsx`: replace the current bespoke grid with `<BrowseSection tools={allTools} categories={categories} initialCategory={slug} lockCategory />` so the rail is hidden and only that category's tools are shown — keeps sort dropdown, count, search filtering, and the screenshot card design consistent. Keeps the existing page header (category name + count).
-- `src/pages/SpecialtyPage.tsx`: same pattern but pre-filters the `tools` prop by tag before passing in, and passes `lockCategory` to hide the rail. Sort dropdown + count remain.
+### 7. Topbar tweak — `src/components/layout/Topbar.tsx`
+Remove the "Newsletter" nav link (it lived as `/#newsletter` anchor; section is gone from homepage and now lives in the footer on every page). Remove the now-unused `handleNewsletter` helper.
 
-### 7. Verification
-After build:
-- `/` shows only: Hero, Featured tabs, Browse by Tag, Built for Specialty, Skills strip, Newsletter.
-- `/browse` shows full directory with sidebar, all 60 tools by default.
-- `/browse?q=foo` lands with the search prefilled and filtered.
-- Sidebar category clicks update grid without route change.
-- `/category/automation` shows only automation tools with the same card design.
-- `/specialty/investors` shows only investor-tagged tools with the same card design.
-- Nav "Browse" link goes to `/browse` and is highlighted on `/browse`, `/category/*`, `/specialty/*`.
-- Mobile: rail becomes horizontal pill row (already handled by `CategoryRail`).
+### 8. Database migration
+New table `contact_messages` with public insert + admin read, in the same migration that grants Data API access.
+
+```sql
+CREATE TABLE public.contact_messages (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  name text NOT NULL,
+  email text NOT NULL,
+  message text NOT NULL,
+  is_read boolean NOT NULL DEFAULT false,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+
+GRANT INSERT ON public.contact_messages TO anon, authenticated;
+GRANT SELECT, UPDATE, DELETE ON public.contact_messages TO authenticated;
+GRANT ALL ON public.contact_messages TO service_role;
+
+ALTER TABLE public.contact_messages ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Anyone can send a message"
+  ON public.contact_messages FOR INSERT
+  TO anon, authenticated
+  WITH CHECK (
+    name <> '' AND length(name) <= 100
+    AND email ~* '^[^@]+@[^@]+\.[^@]+$' AND length(email) <= 255
+    AND message <> '' AND length(message) <= 5000
+  );
+
+CREATE POLICY "Admins read contact messages"
+  ON public.contact_messages FOR SELECT
+  TO authenticated
+  USING (has_role(auth.uid(), 'admin'));
+
+CREATE POLICY "Admins update contact messages"
+  ON public.contact_messages FOR UPDATE
+  TO authenticated
+  USING (has_role(auth.uid(), 'admin'));
+
+CREATE POLICY "Admins delete contact messages"
+  ON public.contact_messages FOR DELETE
+  TO authenticated
+  USING (has_role(auth.uid(), 'admin'));
+```
+
+### 9. Verification
+- Every page renders the new footer (it's already inside `AppLayout`).
+- Homepage no longer shows the standalone newsletter section above the footer.
+- All footer links route correctly; category links land on existing `/category/<slug>` pages.
+- `/privacy`, `/terms`, `/contact` render with `AppLayout`.
+- Contact form submits a row, anon users can insert, admins can read in `/admin/contact-messages`.
+- Mobile: footer collapses to single column stack; legal bar wraps cleanly.
 
 ## Out of scope
-- Moving newsletter into footer (explicitly deferred).
-- Re-tagging tools.
-- Changing `ToolCard`, `BrowseByTagSection`, `BuiltForSpecialtySection`, or `FeaturedTabsSection`.
+- Email notifications on contact submission.
+- Real legal review of privacy/terms copy (placeholder only).
+- Replacing the `NewsletterCard` visual design.
