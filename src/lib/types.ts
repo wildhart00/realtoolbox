@@ -17,6 +17,7 @@ export interface Tool {
   description: string;
   full_description: string | null;
   hero_image_url: string | null;
+  screenshot_url: string | null;
   website_url: string;
   affiliate_url: string | null;
   logo_url: string | null;
@@ -25,6 +26,8 @@ export interface Tool {
   pricing_details: string | null;
   is_featured: boolean;
   featured_order: number | null;
+  is_just_launched: boolean;
+  just_launched_date: string | null;
   is_verified: boolean;
   is_editors_pick: boolean;
   re_only: boolean;

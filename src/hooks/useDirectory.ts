@@ -60,6 +60,23 @@ export function useFeaturedTools() {
   });
 }
 
+export function useJustLaunchedTools() {
+  return useQuery({
+    queryKey: ["tools-just-launched"],
+    queryFn: async (): Promise<Tool[]> => {
+      const { data, error } = await supabase
+        .from("tools")
+        .select(toolSelect)
+        .eq("status", "published")
+        .eq("is_just_launched", true)
+        .order("just_launched_date", { ascending: false })
+        .limit(6);
+      if (error) throw error;
+      return (data ?? []).map(shapeTool);
+    },
+  });
+}
+
 export function useTool(slug: string | undefined) {
   return useQuery({
     queryKey: ["tool", slug],
