@@ -246,6 +246,51 @@ export type Database = {
         }
         Relationships: []
       }
+      integrations: {
+        Row: {
+          category: string
+          created_at: string
+          difficulty: string
+          id: string
+          is_published: boolean
+          logo_url: string | null
+          name: string
+          setup_url: string
+          slug: string
+          sort_order: number
+          tagline: string
+          updated_at: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          difficulty?: string
+          id?: string
+          is_published?: boolean
+          logo_url?: string | null
+          name: string
+          setup_url: string
+          slug: string
+          sort_order?: number
+          tagline: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          difficulty?: string
+          id?: string
+          is_published?: boolean
+          logo_url?: string | null
+          name?: string
+          setup_url?: string
+          slug?: string
+          sort_order?: number
+          tagline?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       newsletter_subscribers: {
         Row: {
           created_at: string
