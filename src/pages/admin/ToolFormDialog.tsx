@@ -35,10 +35,13 @@ export interface ToolRow {
   tags: string[];
   logo_url?: string | null;
   hero_image_url?: string | null;
+  screenshot_url?: string | null;
   banner_color?: string | null;
   is_featured: boolean;
   is_editors_pick: boolean;
   is_verified: boolean;
+  is_just_launched: boolean;
+  just_launched_date?: string | null;
   re_only: boolean;
   featured_order?: number | null;
   status?: string | null;
@@ -60,6 +63,7 @@ const empty: ToolRow = {
   is_featured: false,
   is_editors_pick: false,
   is_verified: false,
+  is_just_launched: false,
   re_only: true,
   status: "published",
   use_cases: [],
@@ -85,6 +89,7 @@ function parseCsv(s: string): string[] {
 export function ToolFormDialog({ open, onOpenChange, initial, onSaved, approvingSubmissionId }: Props) {
   const [form, setForm] = useState<ToolRow>(empty);
   const [saving, setSaving] = useState(false);
+  const [uploadingShot, setUploadingShot] = useState(false);
   const isEdit = !!initial?.id;
 
   useEffect(() => {
@@ -116,10 +121,13 @@ export function ToolFormDialog({ open, onOpenChange, initial, onSaved, approving
         tags: form.tags,
         logo_url: form.logo_url || null,
         hero_image_url: form.hero_image_url || null,
+        screenshot_url: form.screenshot_url || null,
         banner_color: form.banner_color || "#1a1f2e",
         is_featured: form.is_featured,
         is_editors_pick: form.is_editors_pick,
         is_verified: form.is_verified,
+        is_just_launched: form.is_just_launched,
+        just_launched_date: form.is_just_launched ? (form.just_launched_date ?? new Date().toISOString()) : null,
         re_only: form.re_only,
         featured_order: form.featured_order ?? 0,
         status: form.status || "published",
@@ -291,6 +299,61 @@ export function ToolFormDialog({ open, onOpenChange, initial, onSaved, approving
               onChange={(e) => update("hero_image_url", e.target.value)}
             />
           </div>
+          <div className="md:col-span-2">
+            <Label>Screenshot</Label>
+            <div className="flex items-start gap-3">
+              {form.screenshot_url && (
+                <img
+                  src={form.screenshot_url}
+                  alt="Tool screenshot"
+                  className="h-20 w-32 object-cover rounded border"
+                />
+              )}
+              <div className="flex-1 space-y-2">
+                <Input
+                  type="file"
+                  accept="image/*"
+                  disabled={uploadingShot}
+                  onChange={async (e) => {
+                    const file = e.target.files?.[0];
+                    if (!file) return;
+                    setUploadingShot(true);
+                    try {
+                      const ext = file.name.split(".").pop() || "png";
+                      const path = `${form.slug || "tool"}-${Date.now()}.${ext}`;
+                      const { error } = await supabase.storage
+                        .from("tool-screenshots")
+                        .upload(path, file, { upsert: true, contentType: file.type });
+                      if (error) throw error;
+                      const { data } = supabase.storage.from("tool-screenshots").getPublicUrl(path);
+                      update("screenshot_url", data.publicUrl);
+                      toast.success("Screenshot uploaded");
+                    } catch (err) {
+                      toast.error(err instanceof Error ? err.message : "Upload failed");
+                    } finally {
+                      setUploadingShot(false);
+                      e.target.value = "";
+                    }
+                  }}
+                />
+                <Input
+                  placeholder="Or paste image URL"
+                  value={form.screenshot_url ?? ""}
+                  onChange={(e) => update("screenshot_url", e.target.value)}
+                />
+                {form.screenshot_url && (
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="outline"
+                    onClick={() => update("screenshot_url", "")}
+                  >
+                    Remove screenshot
+                  </Button>
+                )}
+              </div>
+            </div>
+          </div>
           <div>
             <Label>Banner color</Label>
             <Input
@@ -354,6 +417,28 @@ export function ToolFormDialog({ open, onOpenChange, initial, onSaved, approving
             <label className="flex items-center justify-between rounded-md border p-3">
               <span className="text-sm">RE-only</span>
               <Switch checked={form.re_only} onCheckedChange={(v) => update("re_only", v)} />
+            </label>
+            <label className="flex items-center justify-between rounded-md border p-3 md:col-span-2">
+              <div>
+                <div className="text-sm">Just Launched</div>
+                {form.is_just_launched && form.just_launched_date && (
+                  <div className="text-xs text-muted-foreground mt-0.5">
+                    Stamped {new Date(form.just_launched_date).toLocaleDateString()} · auto-expires after 30 days
+                  </div>
+                )}
+              </div>
+              <Switch
+                checked={form.is_just_launched}
+                onCheckedChange={(v) => {
+                  setForm((f) => ({
+                    ...f,
+                    is_just_launched: v,
+                    just_launched_date: v
+                      ? (f.just_launched_date ?? new Date().toISOString())
+                      : null,
+                  }));
+                }}
+              />
             </label>
           </div>
         </div>

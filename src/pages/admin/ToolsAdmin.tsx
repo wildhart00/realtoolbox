@@ -135,7 +135,8 @@ export default function ToolsAdmin() {
                   <TableCell className="font-mono text-xs">{t.slug}</TableCell>
                   <TableCell>{t.pricing}</TableCell>
                   <TableCell className="space-x-1">
-                    {t.is_featured && <Badge variant="secondary">Featured</Badge>}
+                    {t.is_featured && <Badge className="bg-amber-500/15 text-amber-300 border-amber-500/30 hover:bg-amber-500/20">Featured</Badge>}
+                    {t.is_just_launched && <Badge className="bg-emerald-500/15 text-emerald-300 border-emerald-500/30 hover:bg-emerald-500/20">Just Launched</Badge>}
                     {t.is_editors_pick && <Badge variant="secondary">Editor's pick</Badge>}
                     {t.is_verified && <Badge variant="secondary">Verified</Badge>}
                   </TableCell>
