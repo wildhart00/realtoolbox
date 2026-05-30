@@ -298,6 +298,61 @@ export function ToolFormDialog({ open, onOpenChange, initial, onSaved, approving
               onChange={(e) => update("hero_image_url", e.target.value)}
             />
           </div>
+          <div className="md:col-span-2">
+            <Label>Screenshot</Label>
+            <div className="flex items-start gap-3">
+              {form.screenshot_url && (
+                <img
+                  src={form.screenshot_url}
+                  alt="Tool screenshot"
+                  className="h-20 w-32 object-cover rounded border"
+                />
+              )}
+              <div className="flex-1 space-y-2">
+                <Input
+                  type="file"
+                  accept="image/*"
+                  disabled={uploadingShot}
+                  onChange={async (e) => {
+                    const file = e.target.files?.[0];
+                    if (!file) return;
+                    setUploadingShot(true);
+                    try {
+                      const ext = file.name.split(".").pop() || "png";
+                      const path = `${form.slug || "tool"}-${Date.now()}.${ext}`;
+                      const { error } = await supabase.storage
+                        .from("tool-screenshots")
+                        .upload(path, file, { upsert: true, contentType: file.type });
+                      if (error) throw error;
+                      const { data } = supabase.storage.from("tool-screenshots").getPublicUrl(path);
+                      update("screenshot_url", data.publicUrl);
+                      toast.success("Screenshot uploaded");
+                    } catch (err) {
+                      toast.error(err instanceof Error ? err.message : "Upload failed");
+                    } finally {
+                      setUploadingShot(false);
+                      e.target.value = "";
+                    }
+                  }}
+                />
+                <Input
+                  placeholder="Or paste image URL"
+                  value={form.screenshot_url ?? ""}
+                  onChange={(e) => update("screenshot_url", e.target.value)}
+                />
+                {form.screenshot_url && (
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="outline"
+                    onClick={() => update("screenshot_url", "")}
+                  >
+                    Remove screenshot
+                  </Button>
+                )}
+              </div>
+            </div>
+          </div>
           <div>
             <Label>Banner color</Label>
             <Input
