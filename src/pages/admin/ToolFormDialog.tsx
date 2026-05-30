@@ -418,6 +418,28 @@ export function ToolFormDialog({ open, onOpenChange, initial, onSaved, approving
               <span className="text-sm">RE-only</span>
               <Switch checked={form.re_only} onCheckedChange={(v) => update("re_only", v)} />
             </label>
+            <label className="flex items-center justify-between rounded-md border p-3 md:col-span-2">
+              <div>
+                <div className="text-sm">Just Launched</div>
+                {form.is_just_launched && form.just_launched_date && (
+                  <div className="text-xs text-muted-foreground mt-0.5">
+                    Stamped {new Date(form.just_launched_date).toLocaleDateString()} · auto-expires after 30 days
+                  </div>
+                )}
+              </div>
+              <Switch
+                checked={form.is_just_launched}
+                onCheckedChange={(v) => {
+                  setForm((f) => ({
+                    ...f,
+                    is_just_launched: v,
+                    just_launched_date: v
+                      ? (f.just_launched_date ?? new Date().toISOString())
+                      : null,
+                  }));
+                }}
+              />
+            </label>
           </div>
         </div>
 
