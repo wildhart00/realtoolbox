@@ -1,6 +1,6 @@
 import { FormEvent, useState } from "react";
 import { z } from "zod";
-import { Mail, Check } from "lucide-react";
+import { Check } from "lucide-react";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
