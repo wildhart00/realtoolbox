@@ -1,8 +1,16 @@
+import { useState } from "react";
 import { Search } from "lucide-react";
-import { useSearch } from "@/hooks/useSearch";
+import { useNavigate } from "react-router-dom";
 
 export function Hero({ toolCount }: { toolCount: number }) {
-  const { query, setQuery } = useSearch();
+  const navigate = useNavigate();
+  const [value, setValue] = useState("");
+
+  const submit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const q = value.trim();
+    navigate(q ? `/browse?q=${encodeURIComponent(q)}` : "/browse");
+  };
 
   return (
     <section className="px-6 lg:px-10 pt-[88px] pb-14 text-center mx-auto" style={{ maxWidth: 780 }}>
@@ -26,17 +34,23 @@ export function Hero({ toolCount }: { toolCount: number }) {
         Curated tools for agents, investors, property managers, and deal makers — plus the best general AI tools any pro should know about.
       </p>
 
-      <div className="relative mt-9 mx-auto" style={{ maxWidth: 520 }}>
-        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-foreground/50 h-[17px] w-[17px]" />
+      <form onSubmit={submit} className="relative mt-9 mx-auto" style={{ maxWidth: 520 }}>
+        <button
+          type="submit"
+          aria-label="Search"
+          className="absolute left-4 top-1/2 -translate-y-1/2 text-foreground/50 hover:text-foreground transition-base"
+        >
+          <Search className="h-[17px] w-[17px]" />
+        </button>
         <input
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
           placeholder="Search tools, categories, use cases…"
           className={`w-full bg-foreground/[0.05] border border-foreground/20 rounded-xl py-[14px] text-[15px] text-foreground placeholder:text-foreground/50 outline-none focus:border-accent/40 transition-base ${
-            query ? "pl-[46px] pr-5 text-left" : "px-[46px] text-center"
+            value ? "pl-[46px] pr-5 text-left" : "px-[46px] text-center"
           }`}
         />
-      </div>
+      </form>
     </section>
   );
 }

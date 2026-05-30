@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/hooks/useAuth";
 import { SearchProvider } from "@/hooks/useSearch";
 import Index from "./pages/Index.tsx";
+import BrowsePage from "./pages/BrowsePage.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import CategoryPage from "./pages/CategoryPage.tsx";
 import SpecialtyPage from "./pages/SpecialtyPage.tsx";
@@ -47,6 +48,7 @@ const App = () => (
           <SearchProvider>
             <Routes>
               <Route path="/" element={<Index />} />
+              <Route path="/browse" element={<BrowsePage />} />
               <Route path="/category/:slug" element={<CategoryPage />} />
               <Route path="/specialty/:slug" element={<SpecialtyPage />} />
               <Route path="/tools/:slug" element={<ToolDetailPage />} />
