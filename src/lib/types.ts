@@ -26,6 +26,8 @@ export interface Tool {
   pricing_details: string | null;
   is_featured: boolean;
   featured_order: number | null;
+  is_just_launched: boolean;
+  just_launched_date: string | null;
   is_verified: boolean;
   is_editors_pick: boolean;
   re_only: boolean;
