@@ -1,66 +1,65 @@
 ## Goal
-Replace `/mcps` "Coming soon" stub with a full content page using static, hard-coded MCP data (no DB).
+Build `/agents` page mirroring the `/mcps` structure with two distinct card styles for platforms and workflows.
 
 ## Files
 
-### New: `src/pages/MCPsPage.tsx`
-Sections, top to bottom, wrapped in `AppLayout` and centered with `max-w-[1200px]` like other pages:
+### New: `src/pages/AgentsPage.tsx`
+Wrapped in `AppLayout`, centered `max-w-[1200px]`. Sections:
 
 1. **Hero**
-   - "Coming from Claude?" style small eyebrow chip: "MCP DIRECTORY"
-   - H1 (`font-display`, ~5–6xl, tracking-tight): "Connect Claude to anything"
-   - Sub: full paragraph supplied by user, `text-muted-foreground` lg, max-w-3xl
+   - Eyebrow chip: "AGENTS"
+   - H1 (`font-display`, 5–6xl): "Agentic AI for real estate" with gradient accent on "real estate"
+   - Subheadline paragraph (`text-muted-foreground`, max-w-3xl, supplied verbatim)
+   - Three pill badges row beneath: "No code required" · "Works with Claude" · "Real workflows" — small rounded-full chips with subtle border/bg, separator dots between or as discrete pills
 
-2. **How it works — 3-column row**
-   - Three steps with numbered circle (accent), title, short line
-   - Grid `md:grid-cols-3`, surface-card-lite styling (border + subtle bg)
-   - "Install an MCP server" → "Connect it to Claude" → "Talk to your tools in plain English"
-   - Arrow separators on `md+` (chevron between cards)
+2. **Section 1 — "AGENT PLATFORMS"**
+   - `SectionLabel` reused (extract to shared or inline-duplicate from MCPsPage — see Technical)
+   - 5 cards in `md:grid-cols-2 lg:grid-cols-3` using a new `AgentPlatformCard` matching `MCPCard` style
+   - Difficulty slot replaced with "pricing" badge (Open Source/Freemium/Paid) using the same color system:
+     - Open Source: green (`bg-success/15 text-success border-success/20`)
+     - Freemium: blue (`bg-accent/10 text-[hsl(229_94%_82%)] border-accent/25`)
+     - Paid: neutral (`bg-foreground/[0.05] text-muted-foreground border-foreground/10`)
+   - "Visit →" link footer (opens external)
 
-3. **Section 1 — "PURPOSE-BUILT FOR REAL ESTATE"**
-   - Section label: uppercase tracking-wider, muted, with a small accent dot
-   - 6 cards in `md:grid-cols-2 lg:grid-cols-3`
+3. **Section 2 — "REAL ESTATE AGENT WORKFLOWS"**
+   - `SectionLabel`
+   - 5 cards in `md:grid-cols-2` using a **different** card layout — `WorkflowCard`:
+     - Larger horizontal-feeling card, rounded-2xl, surface-card
+     - Top: workflow name (`font-display`, text-xl, semibold)
+     - Tool stack as small pill badges in a flex-wrap row (each pill: `bg-foreground/[0.05] text-foreground/60 border border-foreground/10`, small monospace-ish)
+     - Description paragraph (`text-[14px] text-muted-foreground leading-relaxed`)
+     - Footer: "View Guide" button linking to `/blog` (uses `Button` variant outline or a custom inline anchor matching site style with ArrowRight icon)
 
-4. **Section 2 — "CONNECT YOUR EXISTING STACK"**
-   - Same label style, 8 cards same grid
+4. **Bottom callout** — copy of MCPs callout pattern: "Running an agent workflow we should feature?" with "Tell us →" link to `/submit`
 
-5. **Submit callout**
-   - Centered rounded card, "Know an MCP we missed?" + "Submit it →" linking to `/submit`
+### New: `src/components/agents/AgentPlatformCard.tsx`
+Mirrors `MCPCard` but accepts `pricing: "Open Source" | "Freemium" | "Paid"` instead of `difficulty`. Same Lucide icon tile + name + category subtext + description + footer with category badge + pricing badge + "Visit →" link.
 
-### New: `src/components/mcps/MCPCard.tsx`
-Reusable card matching `ToolCard` visual language (rounded-2xl, surface-card, hover lift). Layout:
-- Top row: icon tile (40px, gradient-accent bg with a Lucide icon — pick per category) + name + small category text underneath
-- Description paragraph (`text-[13px] muted, line-clamp-2`)
-- Footer row: category badge (`bg-foreground/[0.05]`) + difficulty badge (color-coded) + spacer + "Install →" link (external, opens new tab)
-
-Difficulty colors via inline classes:
-- Beginner: `bg-success/15 text-success border-success/20` (or green-tinted hsl)
-- Intermediate: `bg-yellow-500/15 text-yellow-400 border-yellow-500/25`
-- Advanced: `bg-orange-500/15 text-orange-400 border-orange-500/25`
-
-Icon mapping (Lucide) by category fallback per MCP name:
-- Real Estate / Property Data → `Home`
-- Prospecting → `Target`
-- Analytics → `BarChart3`
-- Investing → `TrendingUp`
-- CRM → `Users`
-- Communication → `Mail` (Gmail/Slack)
-- Productivity → `Calendar`
-- Storage → `FolderOpen`
-- Organization → `LayoutGrid`
-- Automation → `Zap`
+### New: `src/components/agents/WorkflowCard.tsx`
+New component. Props: `name`, `stack: string[]`, `description`, `guideHref` (defaults to `/blog`).
 
 ### Routing: `src/App.tsx`
-- Add `import MCPsPage from "./pages/MCPsPage.tsx"`
-- Replace `/mcps` route element from `<ComingSoonPage />` to `<MCPsPage />`. Leave the other three (`/skills`, `/agents`, `/resources`) on `ComingSoonPage`.
+- Add `import AgentsPage from "./pages/AgentsPage.tsx"`
+- Replace `/agents` route element `<ComingSoonPage />` → `<AgentsPage />`
 
 ### SEO
-Inside `MCPsPage`, set `document.title` to "MCPs for Real Estate — RealToolbox.ai" and a meta description via simple `useEffect`. Single H1 already covered.
+`useEffect` sets `document.title` to "AI Agents for Real Estate — RealToolbox.ai" and meta description.
 
 ## Data
-All MCP entries hard-coded in `MCPsPage.tsx` as two typed arrays (`realEstateMcps`, `stackMcps`). No DB writes; the `resources` table isn't used here since this isn't a "resource" — it's the MCPs directory.
+All entries hard-coded in `AgentsPage.tsx` as typed arrays `agentPlatforms` and `workflows`. Icons per platform:
+- n8n → `Zap`
+- Make.com → `Workflow` (Lucide)
+- Zapier Agents → `Zap`
+- Lindy → `Bot`
+- Claude Code → `Terminal`
+
+## Technical notes
+- `SectionLabel` is currently local to `MCPsPage.tsx`. Inline-duplicate it in `AgentsPage.tsx` to avoid premature extraction (one more usage doesn't justify a shared module yet; if a 3rd page lands, extract to `src/components/shared/SectionLabel.tsx`).
+- All colors via existing design tokens (`surface-card`, `gradient-accent`, `text-muted-foreground`, accent HSLs already used in MCPsPage). No new tokens needed.
+- External links open in new tab with `rel="noreferrer noopener"`.
 
 ## Out of scope
-- No database table for MCPs (keeping it static and editable in code for now; can migrate to DB later if needed)
-- No filtering/search on this page
-- `/skills`, `/agents`, `/resources` stay as the existing ComingSoon stubs
+- No DB tables — static content only
+- No filtering/search
+- `/skills` and `/resources` stay as ComingSoon stubs
+- No real `/blog/<slug>` routing for workflow guides — all "View Guide" links go to `/blog` index
