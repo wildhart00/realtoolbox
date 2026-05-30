@@ -35,10 +35,13 @@ export interface ToolRow {
   tags: string[];
   logo_url?: string | null;
   hero_image_url?: string | null;
+  screenshot_url?: string | null;
   banner_color?: string | null;
   is_featured: boolean;
   is_editors_pick: boolean;
   is_verified: boolean;
+  is_just_launched: boolean;
+  just_launched_date?: string | null;
   re_only: boolean;
   featured_order?: number | null;
   status?: string | null;
