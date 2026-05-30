@@ -63,6 +63,7 @@ const empty: ToolRow = {
   is_featured: false,
   is_editors_pick: false,
   is_verified: false,
+  is_just_launched: false,
   re_only: true,
   status: "published",
   use_cases: [],
