@@ -80,6 +80,7 @@ const App = () => (
                 <Route path="analytics" element={<AnalyticsAdmin />} />
                 <Route path="subscribers" element={<SubscribersAdmin />} />
                 <Route path="maintenance" element={<MaintenanceAdmin />} />
+                <Route path="contact-messages" element={<ContactMessagesAdmin />} />
               </Route>
               <Route path="/setup-admin" element={<SetupAdminPage />} />
               <Route path="*" element={<NotFound />} />
