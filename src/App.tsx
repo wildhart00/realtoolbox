@@ -30,6 +30,7 @@ import ComingSoonPage from "./pages/ComingSoonPage.tsx";
 import MCPsPage from "./pages/MCPsPage.tsx";
 import AgentsPage from "./pages/AgentsPage.tsx";
 import ResourcesPage from "./pages/ResourcesPage.tsx";
+import SkillsPage from "./pages/SkillsPage.tsx";
 import { ScrollToTop } from "./components/ScrollToTop.tsx";
 
 const queryClient = new QueryClient();
@@ -51,7 +52,7 @@ const App = () => (
               <Route path="/blog" element={<BlogPage />} />
               <Route path="/blog/:slug" element={<BlogPage />} />
               <Route path="/mcps" element={<MCPsPage />} />
-              <Route path="/skills" element={<ComingSoonPage />} />
+              <Route path="/skills" element={<SkillsPage />} />
               <Route path="/agents" element={<AgentsPage />} />
               <Route path="/resources" element={<ResourcesPage />} />
               <Route path="/submit" element={<SubmitPage />} />
