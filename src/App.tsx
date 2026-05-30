@@ -33,6 +33,10 @@ import MCPsPage from "./pages/MCPsPage.tsx";
 import AgentsPage from "./pages/AgentsPage.tsx";
 import ResourcesPage from "./pages/ResourcesPage.tsx";
 import SkillsPage from "./pages/SkillsPage.tsx";
+import PrivacyPage from "./pages/PrivacyPage.tsx";
+import TermsPage from "./pages/TermsPage.tsx";
+import ContactPage from "./pages/ContactPage.tsx";
+import ContactMessagesAdmin from "./pages/admin/ContactMessagesAdmin.tsx";
 import { ScrollToTop } from "./components/ScrollToTop.tsx";
 
 const queryClient = new QueryClient();
@@ -60,6 +64,9 @@ const App = () => (
               <Route path="/agents" element={<AgentsPage />} />
               <Route path="/resources" element={<ResourcesPage />} />
               <Route path="/submit" element={<SubmitPage />} />
+              <Route path="/privacy" element={<PrivacyPage />} />
+              <Route path="/terms" element={<TermsPage />} />
+              <Route path="/contact" element={<ContactPage />} />
               <Route path="/auth" element={<AuthPage />} />
               <Route path="/reset-password" element={<ResetPasswordPage />} />
               <Route path="/admin" element={<AdminLayout />}>

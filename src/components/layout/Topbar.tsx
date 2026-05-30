@@ -178,7 +178,7 @@ export function Topbar() {
               <Link
                 key={l.name}
                 to={l.href}
-                onClick={l.href.includes("#newsletter") ? handleNewsletter : () => setOpen(false)}
+                onClick={() => setOpen(false)}
                 className="block rounded-md px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-foreground/[0.05]"
               >
                 {l.name}
