@@ -303,6 +303,48 @@ export type Database = {
         }
         Relationships: []
       }
+      resources: {
+        Row: {
+          access_level: string
+          cover_image_url: string | null
+          created_at: string
+          description: string
+          file_url: string | null
+          id: string
+          is_published: boolean
+          slug: string
+          title: string
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          access_level?: string
+          cover_image_url?: string | null
+          created_at?: string
+          description?: string
+          file_url?: string | null
+          id?: string
+          is_published?: boolean
+          slug: string
+          title: string
+          type: string
+          updated_at?: string
+        }
+        Update: {
+          access_level?: string
+          cover_image_url?: string | null
+          created_at?: string
+          description?: string
+          file_url?: string | null
+          id?: string
+          is_published?: boolean
+          slug?: string
+          title?: string
+          type?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       reviews: {
         Row: {
           body: string | null
