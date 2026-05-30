@@ -24,6 +24,7 @@ const Index = () => {
       <FeaturedTabsSection featured={featured} justLaunched={justLaunched} />
       <div className="mx-auto h-px bg-foreground/[0.06]" style={{ maxWidth: 1100 }} />
       <BrowseSection tools={tools} categories={categories} />
+      <BrowseByTagSection />
       <SkillsAnnouncementStrip />
       <div className="mx-auto h-px bg-foreground/[0.06]" style={{ maxWidth: 1100 }} />
       <NewsletterCard />
