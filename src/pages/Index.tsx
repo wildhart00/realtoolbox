@@ -3,6 +3,7 @@ import { Hero } from "@/components/home/Hero";
 import { FeaturedTabsSection } from "@/components/home/FeaturedTabsSection";
 import { BrowseSection } from "@/components/home/BrowseSection";
 import { NewsletterCard } from "@/components/home/NewsletterCard";
+import { BrowseByTagSection } from "@/components/home/BrowseByTagSection";
 import { SkillsAnnouncementStrip } from "@/components/home/SkillsAnnouncementStrip";
 import {
   useTools,
