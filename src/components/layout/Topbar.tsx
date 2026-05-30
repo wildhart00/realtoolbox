@@ -21,7 +21,6 @@ const navLinks = [
   { name: "Agents", href: "/agents" },
   { name: "Resources", href: "/resources" },
   { name: "Blog", href: "/blog" },
-  { name: "Newsletter", href: "/#newsletter" },
 ];
 
 export function Topbar() {
