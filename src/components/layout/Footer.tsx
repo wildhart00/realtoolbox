@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { NewsletterCard } from "@/components/home/NewsletterCard";
 
 const quickLinks = [
-  { name: "MCPs", href: "/mcps" },
+  { name: "Integrations", href: "/integrations" },
   { name: "Skills", href: "/skills" },
   { name: "Agents", href: "/agents" },
   { name: "Resources", href: "/resources" },

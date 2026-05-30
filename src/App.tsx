@@ -29,7 +29,9 @@ import MaintenanceAdmin from "./pages/admin/MaintenanceAdmin.tsx";
 import AffiliatesAdmin from "./pages/admin/AffiliatesAdmin.tsx";
 import SetupAdminPage from "./pages/SetupAdminPage.tsx";
 import ComingSoonPage from "./pages/ComingSoonPage.tsx";
-import MCPsPage from "./pages/MCPsPage.tsx";
+import IntegrationsPage from "./pages/IntegrationsPage.tsx";
+import IntegrationsAdmin from "./pages/admin/IntegrationsAdmin.tsx";
+import { Navigate } from "react-router-dom";
 import AgentsPage from "./pages/AgentsPage.tsx";
 import ResourcesPage from "./pages/ResourcesPage.tsx";
 import SkillsPage from "./pages/SkillsPage.tsx";
@@ -59,7 +61,8 @@ const App = () => (
               <Route path="/go/:slug" element={<GoRedirectPage />} />
               <Route path="/blog" element={<BlogPage />} />
               <Route path="/blog/:slug" element={<BlogPage />} />
-              <Route path="/mcps" element={<MCPsPage />} />
+              <Route path="/integrations" element={<IntegrationsPage />} />
+              <Route path="/mcps" element={<Navigate to="/integrations" replace />} />
               <Route path="/skills" element={<SkillsPage />} />
               <Route path="/agents" element={<AgentsPage />} />
               <Route path="/resources" element={<ResourcesPage />} />
@@ -81,6 +84,7 @@ const App = () => (
                 <Route path="subscribers" element={<SubscribersAdmin />} />
                 <Route path="maintenance" element={<MaintenanceAdmin />} />
                 <Route path="contact-messages" element={<ContactMessagesAdmin />} />
+                <Route path="integrations" element={<IntegrationsAdmin />} />
               </Route>
               <Route path="/setup-admin" element={<SetupAdminPage />} />
               <Route path="*" element={<NotFound />} />

@@ -16,7 +16,7 @@ import {
 
 const navLinks = [
   { name: "Browse", href: "/browse" },
-  { name: "MCPs", href: "/mcps" },
+  { name: "Integrations", href: "/integrations" },
   { name: "Skills", href: "/skills" },
   { name: "Agents", href: "/agents" },
   { name: "Resources", href: "/resources" },
