@@ -27,6 +27,7 @@ import MaintenanceAdmin from "./pages/admin/MaintenanceAdmin.tsx";
 import AffiliatesAdmin from "./pages/admin/AffiliatesAdmin.tsx";
 import SetupAdminPage from "./pages/SetupAdminPage.tsx";
 import ComingSoonPage from "./pages/ComingSoonPage.tsx";
+import MCPsPage from "./pages/MCPsPage.tsx";
 import { ScrollToTop } from "./components/ScrollToTop.tsx";
 
 const queryClient = new QueryClient();
@@ -47,7 +48,7 @@ const App = () => (
               <Route path="/go/:slug" element={<GoRedirectPage />} />
               <Route path="/blog" element={<BlogPage />} />
               <Route path="/blog/:slug" element={<BlogPage />} />
-              <Route path="/mcps" element={<ComingSoonPage />} />
+              <Route path="/mcps" element={<MCPsPage />} />
               <Route path="/skills" element={<ComingSoonPage />} />
               <Route path="/agents" element={<ComingSoonPage />} />
               <Route path="/resources" element={<ComingSoonPage />} />
