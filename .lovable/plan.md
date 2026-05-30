@@ -1,89 +1,97 @@
 ## Goal
-Build `/skills` page (hero + waitlist email capture + "what's coming" preview + submit callout), and add a Claude Skills announcement strip on the homepage between BrowseSection and NewsletterCard.
 
-## Files
+Add `screenshot_url`, `is_just_launched`, `just_launched_date` to `tools`, create a `tool-screenshots` storage bucket, wire admin UI for both, and schedule a daily auto-expire job. Existing `is_featured` / `featured_order` logic stays untouched.
 
-### New: `src/pages/SkillsPage.tsx`
-Wrapped in `AppLayout`, centered `max-w-[1200px]`. Sections:
+## 1. Database migration
 
-1. **Hero**
-   - Eyebrow chip: "SKILLS"
-   - H1 (`font-display`, 5–6xl, tracking-tight): "Real estate skills for Claude" with gradient accent on "Claude"
-   - Subheadline paragraph (`text-muted-foreground`, lg, max-w-3xl) verbatim
-   - **3-step row** below subheadline (md:grid-cols-3, surface-card styling, numbered accent badges + arrow between cards — mirror the visual pattern from `MCPsPage` "How it works"):
-     - 1. Download the .md file (icon: `Download`)
-     - 2. Upload to your Claude Project (icon: `Upload`)
-     - 3. Reference it in any prompt (icon: `Sparkles`)
+Single migration:
 
-2. **Launching Soon — Email capture block**
-   - Centered card, `rounded-2xl`, subtle gradient border + gradient bg using `from-foreground/[0.05] to-foreground/[0.01]`, with a top accent line `bg-gradient-to-r from-transparent via-[hsl(229_94%_82%)]/40 to-transparent`
-   - Eyebrow: "EARLY ACCESS"
-   - H2 (`font-display`, 2xl–3xl): "First skills launching soon — get early access"
-   - Subhead: verbatim copy
-   - Inline form: single email input + "Get Early Access" submit button (`variant="hero"`)
-   - On submit: `supabase.from('newsletter_subscribers').insert({ email, source: 'skills_waitlist' })`
-   - Use the existing `source` field on `newsletter_subscribers` (default `'homepage'`) — overriding to `'skills_waitlist'` segments these signups
-   - Client-side validation with zod: trimmed email, valid format, max 255 chars
-   - Loading/success/error states via the existing `toast` hook (`useToast` from `@/components/ui/use-toast` — check actual export); show success toast and replace form with "You're on the list ✓" inline message; on duplicate (Postgres unique violation or other error), show a friendly toast
+```sql
+ALTER TABLE public.tools
+  ADD COLUMN screenshot_url text,
+  ADD COLUMN is_just_launched boolean NOT NULL DEFAULT false,
+  ADD COLUMN just_launched_date timestamptz;
 
-3. **What's Coming — preview cards**
-   - SectionLabel: "WHAT'S COMING"
-   - `md:grid-cols-3` of 3 hard-coded `<SkillPreviewCard>` items:
-     - Listing Description Writer — "Input property details, get MLS-ready copy in your voice" — audience pill "For Agents"
-     - Deal Analyzer — "Input purchase price, rents and expenses, get a full investment scorecard" — "For Investors"
-     - Weekly Market Report — "Input your MLS data, get a client-ready market update narrative" — "For Agents + Investors"
-   - Each card displays a "Coming Soon" badge (top-right) instead of a CTA button; no fake pricing
+CREATE INDEX idx_tools_just_launched
+  ON public.tools (just_launched_date DESC)
+  WHERE is_just_launched = true;
 
-4. **Bottom callout**
-   - Same visual pattern as MCPs/Agents/Resources bottom callout
-   - "Built your own real estate skill?" / "Share it with the community" / button "Share it" → Link to `/submit`
+-- Storage bucket: public read, admin write
+INSERT INTO storage.buckets (id, name, public)
+VALUES ('tool-screenshots', 'tool-screenshots', true)
+ON CONFLICT (id) DO NOTHING;
 
-### New: `src/components/skills/SkillPreviewCard.tsx`
-Static card. Props: `title`, `description`, `audience`. Layout:
-- Top row: small audience pill on the left (`bg-accent/10 text-[hsl(229_94%_82%)] border-accent/25`), "Coming Soon" badge on the right (`bg-foreground/[0.06] text-foreground/60 border-foreground/15`)
-- Title (`font-display`, text-xl, semibold, tracking-tight)
-- Description (`text-[14px] text-muted-foreground leading-[1.6]`)
-- Footer: muted hint text "Drop your email above to be notified" (small, italic-feel, no button)
+CREATE POLICY "Tool screenshots publicly readable"
+  ON storage.objects FOR SELECT
+  USING (bucket_id = 'tool-screenshots');
 
-### New: `src/components/home/SkillsAnnouncementStrip.tsx`
-Used on the homepage. Visually distinct full-width announcement (not a card-in-grid).
+CREATE POLICY "Admins upload tool screenshots"
+  ON storage.objects FOR INSERT
+  WITH CHECK (bucket_id = 'tool-screenshots' AND has_role(auth.uid(), 'admin'));
 
-Structure:
-- Outer wrapper `w-full px-6 lg:px-10 py-14`
-- Inner: `mx-auto max-w-[1200px] rounded-2xl px-8 py-10 lg:px-14 lg:py-12` with **bold indigo→purple gradient** background using existing tokens: `bg-gradient-to-br from-[hsl(239_84%_67%)] via-[hsl(252_84%_70%)] to-[hsl(265_84%_67%)]`, plus subtle radial highlight (`before:` pseudo via inline style or a layered absolute div) and a `shadow-glow`/`shadow-elevated`-style shadow
-- Layout: flex row on `lg`, column on mobile. Left side text; right side CTA button.
-- Left:
-  - Small uppercase eyebrow chip "NEW" — `bg-white/15 text-white border border-white/25 backdrop-blur-sm rounded-full px-2.5 py-0.5 text-[10px] font-semibold tracking-[0.16em]`
-  - H2 (`font-display`, 2xl–3xl, white): "Claude Skills for Real Estate — coming soon"
-  - Description (white/80, max-w-2xl): supplied verbatim
-- Right:
-  - `Button` styled `bg-white text-[hsl(239_84%_55%)] hover:bg-white/90` with `asChild` linking to `/skills`, label "Join the Waitlist" + `ArrowRight` icon
-- Use white text against the saturated gradient — this is the one place we deviate from semantic muted tones intentionally to make it pop as an announcement
+CREATE POLICY "Admins update tool screenshots"
+  ON storage.objects FOR UPDATE
+  USING (bucket_id = 'tool-screenshots' AND has_role(auth.uid(), 'admin'));
 
-### Edit: `src/pages/Index.tsx`
-Import and insert `SkillsAnnouncementStrip` between `BrowseSection` and the next divider/NewsletterCard. Specifically:
-- Add `import { SkillsAnnouncementStrip } from "@/components/home/SkillsAnnouncementStrip";`
-- Place it after `<BrowseSection .../>` and before the divider that precedes `<NewsletterCard />`
+CREATE POLICY "Admins delete tool screenshots"
+  ON storage.objects FOR DELETE
+  USING (bucket_id = 'tool-screenshots' AND has_role(auth.uid(), 'admin'));
+```
 
-### Edit: `src/App.tsx`
-- Add `import SkillsPage from "./pages/SkillsPage.tsx"`
-- Replace `/skills` route element from `<ComingSoonPage />` to `<SkillsPage />`
+No new tables → no extra GRANTs needed. Existing `tools` grants cover the new columns.
 
-### SEO
-`useEffect` in `SkillsPage`: sets `document.title` to "Claude Skills for Real Estate — RealToolbox.ai" and meta description.
+## 2. Admin — `ToolFormDialog.tsx`
 
-## Data / Database
-- Insert path: `supabase.from('newsletter_subscribers').insert({ email, source: 'skills_waitlist' })`
-- Existing RLS already allows `anon`/`authenticated` INSERT with email format check — no migration needed
-- No schema changes
+- Extend `ToolRow` with `screenshot_url`, `is_just_launched`, `just_launched_date`.
+- Add a **Screenshot** field: file `<input type="file" accept="image/*">` → `supabase.storage.from('tool-screenshots').upload(\`${slug}-${Date.now()}.${ext}\`, file, { upsert: true })` → `getPublicUrl()` → store in `screenshot_url`. Show current image preview with a "Remove" button (sets `screenshot_url = null`).
+- Add a **Just Launched** toggle in the flag grid (next to Featured / Editor's pick / Verified / RE-only).
+  - On save: if toggle ON and previously OFF → set `is_just_launched=true`, `just_launched_date=new Date().toISOString()`. If OFF → set `is_just_launched=false` (leave `just_launched_date` for audit, or null it — set to null for cleanliness).
+- Include all three new fields in the `payload` for both insert and update.
+- Do **not** touch existing `is_featured` / `featured_order` controls.
 
-## Technical notes
-- `SectionLabel` re-inlined (same as MCPs/Agents/Resources) — keep until we have a 4th use, then extract
-- For the gradient strip's accent button hover, use existing `transition-base` token
-- Reuse the existing `NewsletterCard` form behavior as a reference for client-side validation + toast — but the skills form is a self-contained component (do NOT modify `NewsletterCard`)
+## 3. Admin — `ToolsAdmin.tsx`
 
-## Out of scope
-- No actual Skills products/downloads (everything is teaser)
-- No new `skills` table — entries are hard-coded as 3 preview cards
-- No admin filter UI for segmenting `newsletter_subscribers` by source
-- No changes to `Topbar` (Skills nav link already points at `/skills`)
+In the **Flags** column, add a green `Just Launched` badge alongside the existing `Featured` badge so admins can see both at a glance. No other table changes.
+
+## 4. Scheduled auto-expire
+
+New edge function `supabase/functions/expire-just-launched/index.ts`:
+
+```ts
+const { error } = await admin.from('tools')
+  .update({ is_just_launched: false })
+  .lt('just_launched_date', new Date(Date.now() - 30*24*60*60*1000).toISOString())
+  .eq('is_just_launched', true);
+```
+
+Uses `SUPABASE_SERVICE_ROLE_KEY`, returns counts. CORS headers, `verify_jwt = false` (default).
+
+Schedule via `supabase--insert` (not migration — contains project-specific URL/key):
+
+```sql
+CREATE EXTENSION IF NOT EXISTS pg_cron;
+CREATE EXTENSION IF NOT EXISTS pg_net;
+
+SELECT cron.schedule(
+  'expire-just-launched-daily',
+  '0 3 * * *',  -- 03:00 UTC daily
+  $$ SELECT net.http_post(
+       url := 'https://pcnsuyadfqrmythikwpa.supabase.co/functions/v1/expire-just-launched',
+       headers := '{"Content-Type":"application/json","apikey":"<ANON_KEY>"}'::jsonb,
+       body := '{}'::jsonb
+     ); $$
+);
+```
+
+## 5. Out of scope
+
+- The homepage "Just Launched" tab itself — not requested in this message, only the data model + admin + cron. I'll note it as a follow-up so the new flag actually surfaces on the homepage when you're ready.
+- `ToolCard` / `FeaturedStrip` rendering of `screenshot_url` — also a follow-up unless you want it now.
+
+## Order of execution
+
+1. Run migration (schema + bucket + storage policies).
+2. Write edge function + add cron via `supabase--insert`.
+3. Edit `ToolFormDialog.tsx` and `ToolsAdmin.tsx`.
+
+Want me to also include the homepage "Just Launched" tab and screenshot rendering in tool cards as part of this same build, or keep this scoped to schema + admin + cron only?

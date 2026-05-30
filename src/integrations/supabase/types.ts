@@ -516,13 +516,16 @@ export type Database = {
           id: string
           is_editors_pick: boolean
           is_featured: boolean
+          is_just_launched: boolean
           is_verified: boolean
+          just_launched_date: string | null
           key_features: string[]
           logo_url: string | null
           name: string
           pricing: Database["public"]["Enums"]["pricing_model"]
           pricing_details: string | null
           re_only: boolean | null
+          screenshot_url: string | null
           slug: string
           status: string | null
           tagline: string
@@ -545,13 +548,16 @@ export type Database = {
           id?: string
           is_editors_pick?: boolean
           is_featured?: boolean
+          is_just_launched?: boolean
           is_verified?: boolean
+          just_launched_date?: string | null
           key_features?: string[]
           logo_url?: string | null
           name: string
           pricing?: Database["public"]["Enums"]["pricing_model"]
           pricing_details?: string | null
           re_only?: boolean | null
+          screenshot_url?: string | null
           slug: string
           status?: string | null
           tagline: string
@@ -574,13 +580,16 @@ export type Database = {
           id?: string
           is_editors_pick?: boolean
           is_featured?: boolean
+          is_just_launched?: boolean
           is_verified?: boolean
+          just_launched_date?: string | null
           key_features?: string[]
           logo_url?: string | null
           name?: string
           pricing?: Database["public"]["Enums"]["pricing_model"]
           pricing_details?: string | null
           re_only?: boolean | null
+          screenshot_url?: string | null
           slug?: string
           status?: string | null
           tagline?: string
