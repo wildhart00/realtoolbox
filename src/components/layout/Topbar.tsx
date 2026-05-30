@@ -21,7 +21,6 @@ const navLinks = [
   { name: "Agents", href: "/agents" },
   { name: "Resources", href: "/resources" },
   { name: "Blog", href: "/blog" },
-  { name: "Newsletter", href: "/#newsletter" },
 ];
 
 export function Topbar() {
@@ -41,12 +40,6 @@ export function Topbar() {
       .then(({ data }) => setIsAdmin(!!data));
   }, [user]);
 
-  const handleNewsletter = (e: React.MouseEvent) => {
-    e.preventDefault();
-    if (location.pathname !== "/") navigate("/#newsletter");
-    else document.getElementById("newsletter")?.scrollIntoView({ behavior: "smooth" });
-    setOpen(false);
-  };
 
   const handleHomeClick = (e: React.MouseEvent) => {
     if (location.pathname === "/") {
@@ -93,14 +86,13 @@ export function Topbar() {
                 location.pathname.startsWith("/specialty/")
               : l.href === "/"
                 ? location.pathname === "/"
-                : location.pathname.startsWith(l.href.replace("/#", "/"));
-            const isNewsletter = l.href.includes("#newsletter");
+                : location.pathname.startsWith(l.href);
             const isHome = l.href === "/";
             return (
               <Link
                 key={l.name}
                 to={l.href}
-                onClick={isNewsletter ? handleNewsletter : isHome ? handleHomeClick : undefined}
+                onClick={isHome ? handleHomeClick : undefined}
                 className={cn(
                   "text-[13.5px] font-medium px-2.5 py-1.5 rounded-md transition-base",
                   active ? "text-foreground" : "text-muted-foreground hover:text-foreground hover:bg-foreground/[0.05]",
@@ -186,7 +178,7 @@ export function Topbar() {
               <Link
                 key={l.name}
                 to={l.href}
-                onClick={l.href.includes("#newsletter") ? handleNewsletter : () => setOpen(false)}
+                onClick={() => setOpen(false)}
                 className="block rounded-md px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-foreground/[0.05]"
               >
                 {l.name}

@@ -3,7 +3,7 @@ import { Mail, Check } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
-export function NewsletterCard() {
+export function NewsletterCard({ source = "homepage" }: { source?: string } = {}) {
   const [email, setEmail] = useState("");
   const [done, setDone] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -14,7 +14,7 @@ export function NewsletterCard() {
     setBusy(true);
     const { error } = await supabase
       .from("subscribers" as any)
-      .insert({ email: email.trim().toLowerCase(), source: "homepage" } as any);
+      .insert({ email: email.trim().toLowerCase(), source } as any);
     setBusy(false);
     if (error && !error.message.toLowerCase().includes("duplicate")) {
       toast.error(error.message);
