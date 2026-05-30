@@ -40,12 +40,6 @@ export function Topbar() {
       .then(({ data }) => setIsAdmin(!!data));
   }, [user]);
 
-  const handleNewsletter = (e: React.MouseEvent) => {
-    e.preventDefault();
-    if (location.pathname !== "/") navigate("/#newsletter");
-    else document.getElementById("newsletter")?.scrollIntoView({ behavior: "smooth" });
-    setOpen(false);
-  };
 
   const handleHomeClick = (e: React.MouseEvent) => {
     if (location.pathname === "/") {
@@ -92,14 +86,13 @@ export function Topbar() {
                 location.pathname.startsWith("/specialty/")
               : l.href === "/"
                 ? location.pathname === "/"
-                : location.pathname.startsWith(l.href.replace("/#", "/"));
-            const isNewsletter = l.href.includes("#newsletter");
+                : location.pathname.startsWith(l.href);
             const isHome = l.href === "/";
             return (
               <Link
                 key={l.name}
                 to={l.href}
-                onClick={isNewsletter ? handleNewsletter : isHome ? handleHomeClick : undefined}
+                onClick={isHome ? handleHomeClick : undefined}
                 className={cn(
                   "text-[13.5px] font-medium px-2.5 py-1.5 rounded-md transition-base",
                   active ? "text-foreground" : "text-muted-foreground hover:text-foreground hover:bg-foreground/[0.05]",
