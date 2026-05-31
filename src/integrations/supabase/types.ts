@@ -481,6 +481,60 @@ export type Database = {
           },
         ]
       }
+      skills: {
+        Row: {
+          access_level: string
+          audience: string
+          created_at: string
+          description: string | null
+          download_count: number
+          file_url: string | null
+          id: string
+          is_published: boolean
+          name: string
+          price: number
+          slug: string
+          sort_order: number
+          tagline: string | null
+          tier: string
+          updated_at: string
+        }
+        Insert: {
+          access_level: string
+          audience: string
+          created_at?: string
+          description?: string | null
+          download_count?: number
+          file_url?: string | null
+          id?: string
+          is_published?: boolean
+          name: string
+          price?: number
+          slug: string
+          sort_order?: number
+          tagline?: string | null
+          tier: string
+          updated_at?: string
+        }
+        Update: {
+          access_level?: string
+          audience?: string
+          created_at?: string
+          description?: string | null
+          download_count?: number
+          file_url?: string | null
+          id?: string
+          is_published?: boolean
+          name?: string
+          price?: number
+          slug?: string
+          sort_order?: number
+          tagline?: string | null
+          tier?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       submissions: {
         Row: {
           admin_notes: string | null
@@ -705,6 +759,10 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      increment_skill_download: {
+        Args: { skill_slug: string }
+        Returns: number
       }
     }
     Enums: {
