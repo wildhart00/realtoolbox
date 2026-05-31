@@ -31,6 +31,7 @@ import SetupAdminPage from "./pages/SetupAdminPage.tsx";
 import ComingSoonPage from "./pages/ComingSoonPage.tsx";
 import IntegrationsPage from "./pages/IntegrationsPage.tsx";
 import IntegrationsAdmin from "./pages/admin/IntegrationsAdmin.tsx";
+import SkillsAdmin from "./pages/admin/SkillsAdmin.tsx";
 import { Navigate } from "react-router-dom";
 import AgentsPage from "./pages/AgentsPage.tsx";
 import ResourcesPage from "./pages/ResourcesPage.tsx";
@@ -85,6 +86,7 @@ const App = () => (
                 <Route path="maintenance" element={<MaintenanceAdmin />} />
                 <Route path="contact-messages" element={<ContactMessagesAdmin />} />
                 <Route path="integrations" element={<IntegrationsAdmin />} />
+                <Route path="skills" element={<SkillsAdmin />} />
               </Route>
               <Route path="/setup-admin" element={<SetupAdminPage />} />
               <Route path="*" element={<NotFound />} />
