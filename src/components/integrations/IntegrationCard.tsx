@@ -36,7 +36,12 @@ const categoryTints: Record<string, string> = {
   developer: "from-slate-400/30 to-slate-700/10",
 };
 
+const CATEGORY_DISPLAY_OVERRIDES: Record<string, string> = {
+  crm: "CRM",
+};
+
 export function categoryLabel(slug: string): string {
+  if (CATEGORY_DISPLAY_OVERRIDES[slug]) return CATEGORY_DISPLAY_OVERRIDES[slug];
   return slug
     .split("-")
     .map((s) => s.charAt(0).toUpperCase() + s.slice(1))
