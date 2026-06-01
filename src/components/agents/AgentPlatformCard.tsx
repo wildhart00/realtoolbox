@@ -20,7 +20,7 @@ const pricingStyles: Record<Pricing, string> = {
 export function AgentPlatformCard({ item }: { item: AgentPlatformItem }) {
   const Icon = item.icon;
   return (
-    <div className="group flex flex-col h-full rounded-2xl p-[22px] surface-card hover:surface-card-hover hover:-translate-y-0.5 transition-base">
+    <div className="group flex flex-col w-full h-full rounded-2xl p-[22px] surface-card hover:surface-card-hover hover:-translate-y-0.5 transition-base">
       <div className="flex items-start justify-between gap-3 mb-[14px]">
         <div className="flex items-center gap-[11px] min-w-0">
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-accent shadow-[0_4px_14px_-4px_hsl(239_84%_67%/0.5)]">
