@@ -297,18 +297,21 @@ export type Database = {
           email: string
           id: string
           source: string | null
+          workflow_name: string | null
         }
         Insert: {
           created_at?: string
           email: string
           id?: string
           source?: string | null
+          workflow_name?: string | null
         }
         Update: {
           created_at?: string
           email?: string
           id?: string
           source?: string | null
+          workflow_name?: string | null
         }
         Relationships: []
       }
