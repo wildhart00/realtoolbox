@@ -1,5 +1,6 @@
-import { Link } from "react-router-dom";
-import { ArrowRight } from "lucide-react";
+import { useState } from "react";
+import { Bell } from "lucide-react";
+import { WorkflowNotifyDialog } from "./WorkflowNotifyDialog";
 
 export interface WorkflowItem {
   name: string;
@@ -9,6 +10,8 @@ export interface WorkflowItem {
 }
 
 export function WorkflowCard({ item }: { item: WorkflowItem }) {
+  const [open, setOpen] = useState(false);
+
   return (
     <div className="flex flex-col w-full h-full rounded-2xl p-7 surface-card hover:surface-card-hover transition-base">
       <h3 className="font-display text-xl font-semibold tracking-[-0.01em] text-foreground">
@@ -30,14 +33,22 @@ export function WorkflowCard({ item }: { item: WorkflowItem }) {
         {item.description}
       </p>
 
-      <div className="mt-auto pt-5">
-        <Link
-          to={item.guideHref ?? "/blog"}
+      <div className="mt-auto pt-5 flex items-center gap-3 flex-wrap">
+        <button
+          type="button"
+          onClick={() => setOpen(true)}
           className="inline-flex items-center gap-1.5 rounded-[10px] border border-foreground/15 px-4 py-2 text-[12.5px] font-semibold text-foreground hover:bg-foreground/[0.04] transition-base"
         >
-          View Guide <ArrowRight className="h-3.5 w-3.5" />
-        </Link>
+          <Bell className="h-3.5 w-3.5" /> Notify me
+        </button>
+        <span className="text-[11px] text-muted-foreground">Guide coming soon</span>
       </div>
+
+      <WorkflowNotifyDialog
+        open={open}
+        onOpenChange={setOpen}
+        workflowName={item.name}
+      />
     </div>
   );
 }
