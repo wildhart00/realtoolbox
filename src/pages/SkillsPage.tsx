@@ -173,15 +173,14 @@ export default function SkillsPage() {
           <div className="absolute inset-x-0 -top-px h-px bg-gradient-to-r from-transparent via-[hsl(229_94%_82%)]/40 to-transparent" />
           <div className="max-w-2xl mx-auto text-center">
             <span className="inline-flex items-center gap-1.5 rounded-full border border-foreground/10 bg-foreground/[0.04] px-2.5 py-0.5 text-[10px] font-semibold tracking-[0.18em] uppercase text-muted-foreground">
-              Early Access
+              Stay Updated
             </span>
             <h2 className="mt-4 font-display text-2xl lg:text-[34px] font-bold tracking-[-0.02em] leading-[1.1] text-foreground">
-              First skills launching soon — get early access
+              New skills drop regularly
             </h2>
             <p className="mt-3 text-[14.5px] text-muted-foreground leading-[1.65]">
-              We're building real estate Claude skills from the ground up — starting with the
-              Listing Description Writer, Deal Analyzer, and Weekly Market Report. Drop your email
-              to be first in line when they launch and get founder pricing.
+              We build real estate skills from real-world expertise and add new ones all the time.
+              Drop your email to get notified when fresh skills land.
             </p>
 
             {success ? (
