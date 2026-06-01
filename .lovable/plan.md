@@ -1,24 +1,19 @@
-## Admin Skills management
+Update `src/pages/SkillsPage.tsx` to remove all assistant-specific language and make the page AI-agnostic.
 
-Mirror the Integrations admin pattern (table + dialog form). No public UI, no schema changes.
+## Hero section
+- Headline: change "Real estate skills for **Claude**" to "Real estate skills for **any AI**" — keep the purple gradient text styling, just move it onto "any AI."
+- Subhead: replace with: "A skill is a ready-made instruction file that turns any AI assistant into a real estate specialist for one specific task. Load it once and your AI follows it every time — no re-prompting, no copy-paste. Just consistent, professional output built from real-world real estate expertise. Works in Claude, ChatGPT, Gemini, and any assistant that lets you add instructions."
 
-### Files to create
-1. **`src/pages/admin/SkillsAdmin.tsx`** — table view: order, name (+tagline), audience, tier, access (with price for paid), downloads, published toggle, edit/delete actions, "New Skill" button.
-2. **`src/pages/admin/SkillFormDialog.tsx`** — dialog form with all skill columns:
-   - name, slug (auto-slug from name when blank)
-   - tagline (input), description (textarea)
-   - audience select (Agent / Investor / Both)
-   - tier select (Quick Tool / Workflow / Business System)
-   - access_level select (Free / Paid)
-   - price number input — disabled when access_level !== 'paid'; auto-reset to 0 when switching back to Free
-   - `.md` file upload → `skill-files` bucket, path `{slug}-{timestamp}.md`, stores public URL in `file_url`; shows current file link + Clear
-   - is_published switch, sort_order number
+## How it works (3 step cards)
+1. Title: "Download the file" (icon stays Download)
+2. Title: "Add it to your AI assistant" — add subtext: "Claude Project, Custom GPT, Gemini Gem, or just paste it in."
+3. Title: "Reference it in any prompt" (no change)
 
-### Files to edit
-3. **`src/App.tsx`** — add lazy route `/admin/skills` → `SkillsAdmin` under existing `AdminLayout` route, gated like other admin routes.
-4. **`src/components/admin/AdminLayout.tsx`** — add `{ title: "Skills", url: "/admin/skills", icon: Sparkles }` to the `items` array (right after Integrations).
+## Early-access CTA box
+- Badge text: "STAY UPDATED"
+- Heading: "New skills drop regularly"
+- Body: "We build real estate skills from real-world expertise and add new ones all the time. Drop your email to get notified when fresh skills land."
+- Button text: "Notify Me" (was "Get Early Access")
+- Remove all occurrences of "Claude" and all "launching soon" language from this section.
 
-### Notes
-- Auth/admin gating is already inherited from `AdminLayout` — no extra check needed.
-- Use `supabase.from("skills" as any)` cast (types regen on next save, same pattern used for `integrations`).
-- No edits to public site, nav, or other tables.
+No other files or UI sections are affected.

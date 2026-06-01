@@ -15,9 +15,14 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { SkillPreviewCard } from "@/components/skills/SkillPreviewCard";
 
-const steps = [
-  { n: "1", title: "Download the .md file", icon: Download },
-  { n: "2", title: "Upload to your Claude Project", icon: Upload },
+const steps: { n: string; title: string; subtext?: string; icon: typeof Download }[] = [
+  { n: "1", title: "Download the file", icon: Download },
+  {
+    n: "2",
+    title: "Add it to your AI assistant",
+    subtext: "Claude Project, Custom GPT, Gemini Gem, or just paste it in.",
+    icon: Upload,
+  },
   { n: "3", title: "Reference it in any prompt", icon: Sparkles },
 ];
 
@@ -76,7 +81,7 @@ export default function SkillsPage() {
       })();
     meta.setAttribute(
       "content",
-      "Real-estate Claude Skills — done-for-you markdown files that turn Claude into a listing writer, deal analyzer and market report generator. Join the waitlist.",
+      "Real-estate AI skills — done-for-you instruction files that turn any AI assistant (Claude, ChatGPT, Gemini) into a listing writer, deal analyzer and market report generator.",
     );
   }, []);
 
@@ -119,14 +124,15 @@ export default function SkillsPage() {
           <h1 className="mt-5 font-display text-5xl lg:text-[64px] font-bold leading-[1.02] tracking-[-0.03em] text-foreground">
             Real estate skills for{" "}
             <span className="bg-gradient-to-r from-[hsl(229_94%_82%)] to-[hsl(265_84%_75%)] bg-clip-text text-transparent">
-              Claude
+              any AI
             </span>
           </h1>
           <p className="mt-6 text-[17px] lg:text-lg text-muted-foreground leading-[1.65] max-w-3xl">
-            A Claude Skill is a markdown file that gives Claude expert instructions for a specific
-            task. Think of it as a recipe — load it once and Claude follows it every time. No
-            re-prompting. No copy-paste. Just consistent, professional output built from real-world
-            real estate expertise.
+            A skill is a ready-made instruction file that turns any AI assistant into a real estate
+            specialist for one specific task. Load it once and your AI follows it every time — no
+            re-prompting, no copy-paste. Just consistent, professional output built from real-world
+            real estate expertise. Works in Claude, ChatGPT, Gemini, and any assistant that lets
+            you add instructions.
           </p>
         </div>
       </section>
@@ -147,6 +153,11 @@ export default function SkillsPage() {
                 <div className="text-[15px] font-semibold text-foreground leading-tight">
                   {s.title}
                 </div>
+                {s.subtext && (
+                  <p className="mt-2 text-[13px] text-muted-foreground leading-[1.55]">
+                    {s.subtext}
+                  </p>
+                )}
                 {i < steps.length - 1 && (
                   <ArrowRight className="hidden md:block absolute -right-3.5 top-1/2 -translate-y-1/2 h-5 w-5 text-foreground/20" />
                 )}
@@ -162,15 +173,14 @@ export default function SkillsPage() {
           <div className="absolute inset-x-0 -top-px h-px bg-gradient-to-r from-transparent via-[hsl(229_94%_82%)]/40 to-transparent" />
           <div className="max-w-2xl mx-auto text-center">
             <span className="inline-flex items-center gap-1.5 rounded-full border border-foreground/10 bg-foreground/[0.04] px-2.5 py-0.5 text-[10px] font-semibold tracking-[0.18em] uppercase text-muted-foreground">
-              Early Access
+              Stay Updated
             </span>
             <h2 className="mt-4 font-display text-2xl lg:text-[34px] font-bold tracking-[-0.02em] leading-[1.1] text-foreground">
-              First skills launching soon — get early access
+              New skills drop regularly
             </h2>
             <p className="mt-3 text-[14.5px] text-muted-foreground leading-[1.65]">
-              We're building real estate Claude skills from the ground up — starting with the
-              Listing Description Writer, Deal Analyzer, and Weekly Market Report. Drop your email
-              to be first in line when they launch and get founder pricing.
+              We build real estate skills from real-world expertise and add new ones all the time.
+              Drop your email to get notified when fresh skills land.
             </p>
 
             {success ? (
@@ -199,7 +209,7 @@ export default function SkillsPage() {
                   disabled={submitting}
                   className="shrink-0"
                 >
-                  {submitting ? "Adding…" : "Get Early Access"}
+                  {submitting ? "Adding…" : "Notify Me"}
                 </Button>
               </form>
             )}
