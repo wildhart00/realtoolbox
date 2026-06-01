@@ -153,6 +153,11 @@ export default function SkillsPage() {
                 <div className="text-[15px] font-semibold text-foreground leading-tight">
                   {s.title}
                 </div>
+                {s.subtext && (
+                  <p className="mt-2 text-[13px] text-muted-foreground leading-[1.55]">
+                    {s.subtext}
+                  </p>
+                )}
                 {i < steps.length - 1 && (
                   <ArrowRight className="hidden md:block absolute -right-3.5 top-1/2 -translate-y-1/2 h-5 w-5 text-foreground/20" />
                 )}
