@@ -111,25 +111,74 @@ export default function SkillsPage() {
   return (
     <AppLayout>
       {/* Hero */}
-      <section className="mx-auto max-w-[1200px] px-6 lg:px-10 pt-16 lg:pt-24 pb-16">
-        <div className="max-w-3xl">
-          <div className="inline-flex items-center gap-2 rounded-full border border-foreground/10 bg-foreground/[0.03] px-3 py-1 text-[11px] font-semibold tracking-[0.16em] text-muted-foreground uppercase">
-            <span className="h-1.5 w-1.5 rounded-full bg-[hsl(229_94%_82%)]" />
-            Skills
+      <section className="mx-auto max-w-[1200px] px-6 lg:px-10 pt-16 lg:pt-24 pb-16 lg:min-h-[640px]">
+        <div className="grid gap-12 lg:grid-cols-[55fr_45fr] lg:items-center">
+          <div className="max-w-2xl lg:max-w-none">
+            <div className="inline-flex items-center gap-2 rounded-full border border-foreground/10 bg-foreground/[0.03] px-3 py-1 text-[11px] font-semibold tracking-[0.16em] text-muted-foreground uppercase">
+              <span className="h-1.5 w-1.5 rounded-full bg-[hsl(229_94%_82%)]" />
+              Skills
+            </div>
+            <h1 className="mt-5 font-display text-5xl lg:text-[64px] font-bold leading-[1.02] tracking-[-0.03em] text-foreground">
+              Real estate skills for{" "}
+              <span className="bg-gradient-to-r from-[hsl(229_94%_82%)] to-[hsl(265_84%_75%)] bg-clip-text text-transparent">
+                any AI
+              </span>
+            </h1>
+            <p className="mt-6 text-[17px] lg:text-lg text-muted-foreground leading-[1.65]">
+              A skill is a ready-made instruction file that turns any AI assistant into a real estate
+              specialist for one specific task. Load it once and your AI follows it every time — no
+              re-prompting, no copy-paste. Just consistent, professional output built from real-world
+              real estate expertise. Works in Claude, ChatGPT, Gemini, and any assistant that lets
+              you add instructions.
+            </p>
           </div>
-          <h1 className="mt-5 font-display text-5xl lg:text-[64px] font-bold leading-[1.02] tracking-[-0.03em] text-foreground">
-            Real estate skills for{" "}
-            <span className="bg-gradient-to-r from-[hsl(229_94%_82%)] to-[hsl(265_84%_75%)] bg-clip-text text-transparent">
-              any AI
-            </span>
-          </h1>
-          <p className="mt-6 text-[17px] lg:text-lg text-muted-foreground leading-[1.65] max-w-3xl">
-            A skill is a ready-made instruction file that turns any AI assistant into a real estate
-            specialist for one specific task. Load it once and your AI follows it every time — no
-            re-prompting, no copy-paste. Just consistent, professional output built from real-world
-            real estate expertise. Works in Claude, ChatGPT, Gemini, and any assistant that lets
-            you add instructions.
-          </p>
+
+          {/* Floating card cluster — desktop only */}
+          <div className="hidden lg:block">
+            <div className="relative h-[460px] w-full pointer-events-none">
+              {/* Glow */}
+              <div
+                aria-hidden
+                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-[420px] w-[420px] rounded-full blur-3xl opacity-60 bg-gradient-to-br from-[hsl(229_94%_82%)]/35 via-[hsl(265_84%_75%)]/25 to-transparent"
+              />
+
+              <div className="relative h-full w-full motion-safe:animate-float-slow">
+                {/* Card A — back */}
+                <div className="absolute top-4 left-0 w-[320px] rounded-2xl p-[22px] surface-card -rotate-[4deg] z-10 shadow-2xl shadow-black/40">
+                  <span className="text-[10px] px-2 py-[3px] rounded-md border bg-accent/10 text-[hsl(229_94%_82%)] border-accent/25 font-semibold uppercase tracking-[0.06em]">
+                    For Agents
+                  </span>
+                  <h3 className="mt-4 font-display text-xl font-semibold tracking-[-0.01em] text-foreground leading-tight">
+                    Listing Description Writer
+                  </h3>
+                  <p className="mt-2 text-[14px] text-muted-foreground leading-[1.6]">
+                    MLS-ready listing copy in your voice.
+                  </p>
+                  <div className="mt-5 inline-flex items-center gap-1.5 rounded-[10px] bg-foreground/90 px-3.5 py-2 text-[13px] font-semibold text-background">
+                    <Download className="h-4 w-4" />
+                    Download
+                  </div>
+                </div>
+
+                {/* Card B — front */}
+                <div className="absolute top-[150px] left-[110px] w-[320px] rounded-2xl p-[22px] surface-card rotate-[3deg] z-20 shadow-2xl shadow-black/50 ring-1 ring-foreground/10">
+                  <span className="text-[10px] px-2 py-[3px] rounded-md border bg-accent/10 text-[hsl(229_94%_82%)] border-accent/25 font-semibold uppercase tracking-[0.06em]">
+                    For Agents
+                  </span>
+                  <h3 className="mt-4 font-display text-xl font-semibold tracking-[-0.01em] text-foreground leading-tight">
+                    Offer & Negotiation Strategist
+                  </h3>
+                  <p className="mt-2 text-[14px] text-muted-foreground leading-[1.6]">
+                    Build, present, and negotiate from strength.
+                  </p>
+                  <div className="mt-5 inline-flex items-center gap-1.5 rounded-[10px] bg-foreground/90 px-3.5 py-2 text-[13px] font-semibold text-background">
+                    <Download className="h-4 w-4" />
+                    Download
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
