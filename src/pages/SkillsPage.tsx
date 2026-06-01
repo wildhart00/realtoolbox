@@ -124,14 +124,15 @@ export default function SkillsPage() {
           <h1 className="mt-5 font-display text-5xl lg:text-[64px] font-bold leading-[1.02] tracking-[-0.03em] text-foreground">
             Real estate skills for{" "}
             <span className="bg-gradient-to-r from-[hsl(229_94%_82%)] to-[hsl(265_84%_75%)] bg-clip-text text-transparent">
-              Claude
+              any AI
             </span>
           </h1>
           <p className="mt-6 text-[17px] lg:text-lg text-muted-foreground leading-[1.65] max-w-3xl">
-            A Claude Skill is a markdown file that gives Claude expert instructions for a specific
-            task. Think of it as a recipe — load it once and Claude follows it every time. No
-            re-prompting. No copy-paste. Just consistent, professional output built from real-world
-            real estate expertise.
+            A skill is a ready-made instruction file that turns any AI assistant into a real estate
+            specialist for one specific task. Load it once and your AI follows it every time — no
+            re-prompting, no copy-paste. Just consistent, professional output built from real-world
+            real estate expertise. Works in Claude, ChatGPT, Gemini, and any assistant that lets
+            you add instructions.
           </p>
         </div>
       </section>
