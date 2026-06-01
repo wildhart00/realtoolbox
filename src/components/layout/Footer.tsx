@@ -45,7 +45,7 @@ export function Footer() {
               </span>
             </Link>
             <p className="mt-4 text-[13px] text-foreground/50 leading-[1.65] max-w-[280px]">
-              The AI toolkit built for real estate professionals. Curated weekly. No sponsored listings.
+              The AI toolkit built for real estate professionals. Hand-curated weekly — picks are earned, not bought.
             </p>
           </div>
 

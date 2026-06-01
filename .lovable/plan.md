@@ -1,14 +1,37 @@
-Update the SkillsAnnouncementStrip component on the homepage to reflect the live Skills page.
+## Homepage Copy Edits
 
-## Changes to `src/components/home/SkillsAnnouncementStrip.tsx`
+Three small text changes — no layout or styling adjustments.
 
-**Content updates (keep purple gradient + layout exactly as-is):**
+### 1. Hero credibility line
+**File:** `src/components/home/Hero.tsx`
 
-1. **Heading** — Change from `Claude Skills for Real Estate — coming soon` to `Real estate skills for any AI — now live`
-2. **Body text** — Change from the existing waitlist copy to: `Done-for-you instruction files that turn any AI assistant (Claude, ChatGPT, Gemini) into a listing description writer, follow-up sequence writer, pricing strategist, and more. Free to download.`
-3. **Button** — Change label from `Join the Waitlist` to `Browse the skills`, and update the `Link` destination from `/skills` (waitlist) to `/skills` (same path, new label).
-4. **Remove** the `New` badge from inside the button label area — the section label context already implies this is a featured announcement.
+Insert a single understated line directly below the hero subhead (`<p>`) and above the search `<form>`. Small, muted, lower-contrast gray, centered.
 
-No visual, layout, or styling changes. The purple gradient, rounded corners, decorative blur highlights, spacing, and typography tokens all stay exactly as they are.
+**Text:**
+> Built by a real estate investor who's been flipping houses since 2014 — every tool here is hand-picked on merit.
 
-No other files are affected.
+Styling: `text-[13px] text-muted-foreground/70 text-center mx-auto` with max-width matching the subhead, using `mt-3` spacing.
+
+### 2. Footer about blurb
+**File:** `src/components/layout/Footer.tsx`
+
+Replace the existing brand description paragraph:
+
+**From:**
+> The AI toolkit built for real estate professionals. Curated weekly. No sponsored listings.
+
+**To:**
+> The AI toolkit built for real estate professionals. Hand-curated weekly — picks are earned, not bought.
+
+### 3. Newsletter box description
+**File:** `src/components/home/NewsletterCard.tsx`
+
+Replace the description paragraph inside the newsletter card:
+
+**From:**
+> The latest AI tools for real estate and beyond. No sponsored content — just what's actually useful.
+
+**To:**
+> The latest AI tools for real estate and beyond — hand-picked on merit, just what's worth your time.
+
+No other content, layout, or styling changes.
