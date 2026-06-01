@@ -1,37 +1,24 @@
 ## Homepage Copy Edits
 
-Three small text changes — no layout or styling adjustments.
+Three text-only changes — no layout or styling adjustments.
 
 ### 1. Hero credibility line
 **File:** `src/components/home/Hero.tsx`
 
-Insert a single understated line directly below the hero subhead (`<p>`) and above the search `<form>`. Small, muted, lower-contrast gray, centered.
+Update the existing `<p>` element on line 37–39. Keep all existing styling (`mt-3 text-[13px] text-muted-foreground/70 leading-[1.6] text-center mx-auto`, maxWidth 520) exactly as-is.
 
-**Text:**
-> Built by a real estate investor who's been flipping houses since 2014 — every tool here is hand-picked on merit.
+**From:**
+> Built by a real estate investor who&apos;s been flipping houses since 2014 — every tool here is hand-picked on merit.
 
-Styling: `text-[13px] text-muted-foreground/70 text-center mx-auto` with max-width matching the subhead, using `mt-3` spacing.
+**To:**
+> Built by a real estate operator who&apos;s been in the business since 2014 and grew a house-flipping company to 100+ flips a year.
 
 ### 2. Footer about blurb
 **File:** `src/components/layout/Footer.tsx`
 
-Replace the existing brand description paragraph:
-
-**From:**
-> The AI toolkit built for real estate professionals. Curated weekly. No sponsored listings.
-
-**To:**
-> The AI toolkit built for real estate professionals. Hand-curated weekly — picks are earned, not bought.
+Already correct in the codebase. No change needed.
 
 ### 3. Newsletter box description
 **File:** `src/components/home/NewsletterCard.tsx`
 
-Replace the description paragraph inside the newsletter card:
-
-**From:**
-> The latest AI tools for real estate and beyond. No sponsored content — just what's actually useful.
-
-**To:**
-> The latest AI tools for real estate and beyond — hand-picked on merit, just what's worth your time.
-
-No other content, layout, or styling changes.
+Already correct in the codebase. No change needed.
