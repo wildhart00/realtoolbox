@@ -30,7 +30,7 @@ export function WorkflowCard({ item }: { item: WorkflowItem }) {
         {item.description}
       </p>
 
-      <div className="mt-5 pt-0 mt-auto">
+      <div className="mt-auto pt-5">
         <Link
           to={item.guideHref ?? "/blog"}
           className="inline-flex items-center gap-1.5 rounded-[10px] border border-foreground/15 px-4 py-2 text-[12.5px] font-semibold text-foreground hover:bg-foreground/[0.04] transition-base"

@@ -96,7 +96,7 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
   );
 }
 
-const heroPills = ["No code required", "Works with Claude", "Real workflows"];
+const heroPills = ["No code required", "Works with any AI", "Real workflows"];
 
 export default function AgentsPage() {
   useEffect(() => {
@@ -154,9 +154,14 @@ export default function AgentsPage() {
       {/* Section 1 — platforms */}
       <section className="mx-auto max-w-[1200px] px-6 lg:px-10 pb-16">
         <SectionLabel>Agent platforms</SectionLabel>
-        <div className="grid gap-4 md:gap-5 md:grid-cols-2 lg:grid-cols-3">
+        <div className="flex flex-wrap justify-center gap-4 md:gap-5">
           {agentPlatforms.map((a) => (
-            <AgentPlatformCard key={a.name} item={a} />
+            <div
+              key={a.name}
+              className="flex w-full md:w-[calc((100%-1.25rem)/2)] lg:w-[calc((100%-1.25rem*2)/3)]"
+            >
+              <AgentPlatformCard item={a} />
+            </div>
           ))}
         </div>
       </section>
@@ -164,9 +169,11 @@ export default function AgentsPage() {
       {/* Section 2 — workflows */}
       <section className="mx-auto max-w-[1200px] px-6 lg:px-10 pb-20">
         <SectionLabel>Real estate agent workflows</SectionLabel>
-        <div className="grid gap-4 md:gap-5 md:grid-cols-2">
+        <div className="flex flex-wrap justify-center gap-4 md:gap-5">
           {workflows.map((w) => (
-            <WorkflowCard key={w.name} item={w} />
+            <div key={w.name} className="flex w-full md:w-[calc((100%-1.25rem)/2)]">
+              <WorkflowCard item={w} />
+            </div>
           ))}
         </div>
       </section>
