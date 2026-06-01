@@ -10,7 +10,7 @@ export interface WorkflowItem {
 
 export function WorkflowCard({ item }: { item: WorkflowItem }) {
   return (
-    <div className="flex flex-col rounded-2xl p-7 surface-card hover:surface-card-hover transition-base">
+    <div className="flex flex-col h-full rounded-2xl p-7 surface-card hover:surface-card-hover transition-base">
       <h3 className="font-display text-xl font-semibold tracking-[-0.01em] text-foreground">
         {item.name}
       </h3>
@@ -30,7 +30,7 @@ export function WorkflowCard({ item }: { item: WorkflowItem }) {
         {item.description}
       </p>
 
-      <div className="mt-5">
+      <div className="mt-5 pt-0 mt-auto">
         <Link
           to={item.guideHref ?? "/blog"}
           className="inline-flex items-center gap-1.5 rounded-[10px] border border-foreground/15 px-4 py-2 text-[12.5px] font-semibold text-foreground hover:bg-foreground/[0.04] transition-base"
