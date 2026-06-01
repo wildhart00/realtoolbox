@@ -81,7 +81,7 @@ export default function SkillsPage() {
       })();
     meta.setAttribute(
       "content",
-      "Real-estate Claude Skills — done-for-you markdown files that turn Claude into a listing writer, deal analyzer and market report generator. Join the waitlist.",
+      "Real-estate AI skills — done-for-you instruction files that turn any AI assistant (Claude, ChatGPT, Gemini) into a listing writer, deal analyzer and market report generator.",
     );
   }, []);
 
