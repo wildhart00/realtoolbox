@@ -111,7 +111,7 @@ export default function SkillsPage() {
   return (
     <AppLayout>
       {/* Hero */}
-      <section className="mx-auto max-w-[1200px] px-6 lg:px-10 pt-16 lg:pt-24 pb-12">
+      <section className="mx-auto max-w-[1200px] px-6 lg:px-10 pt-16 lg:pt-24 pb-16">
         <div className="max-w-3xl">
           <div className="inline-flex items-center gap-2 rounded-full border border-foreground/10 bg-foreground/[0.03] px-3 py-1 text-[11px] font-semibold tracking-[0.16em] text-muted-foreground uppercase">
             <span className="h-1.5 w-1.5 rounded-full bg-[hsl(229_94%_82%)]" />
@@ -134,7 +134,7 @@ export default function SkillsPage() {
       </section>
 
       {/* How it works */}
-      <section className="mx-auto max-w-[1200px] px-6 lg:px-10 pb-20">
+      <section className="mx-auto max-w-[1200px] px-6 lg:px-10 pb-16">
         <div className="grid gap-4 md:gap-5 md:grid-cols-3">
           {steps.map((s, i) => {
             const Icon = s.icon;
@@ -163,8 +163,31 @@ export default function SkillsPage() {
         </div>
       </section>
 
+      {/* Available skills */}
+      <section className="mx-auto max-w-[1200px] px-6 lg:px-10 pb-16">
+        <SectionLabel>Available skills</SectionLabel>
+        {loadingSkills ? (
+          <div className="text-sm text-muted-foreground">Loading skills…</div>
+        ) : skills.length === 0 ? (
+          <div className="text-sm text-muted-foreground">
+            No skills published yet — check back soon.
+          </div>
+        ) : (
+          <div className="flex flex-wrap justify-center gap-4 md:gap-5">
+            {skills.map((s) => (
+              <div
+                key={s.id}
+                className="w-full md:w-[calc((100%-1.25rem*2)/3)]"
+              >
+                <SkillPreviewCard {...s} />
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
+
       {/* Email capture */}
-      <section className="mx-auto max-w-[1200px] px-6 lg:px-10 pb-20">
+      <section className="mx-auto max-w-[1200px] px-6 lg:px-10 pb-16">
         <div className="relative overflow-hidden rounded-2xl border border-foreground/10 bg-gradient-to-br from-foreground/[0.06] to-foreground/[0.01] px-8 py-10 lg:px-14 lg:py-14">
           <div className="absolute inset-x-0 -top-px h-px bg-gradient-to-r from-transparent via-[hsl(229_94%_82%)]/40 to-transparent" />
           <div className="max-w-2xl mx-auto text-center">
@@ -213,26 +236,8 @@ export default function SkillsPage() {
         </div>
       </section>
 
-      {/* Available skills */}
-      <section className="mx-auto max-w-[1200px] px-6 lg:px-10 pb-20">
-        <SectionLabel>Available skills</SectionLabel>
-        {loadingSkills ? (
-          <div className="text-sm text-muted-foreground">Loading skills…</div>
-        ) : skills.length === 0 ? (
-          <div className="text-sm text-muted-foreground">
-            No skills published yet — check back soon.
-          </div>
-        ) : (
-          <div className="grid gap-4 md:gap-5 md:grid-cols-3">
-            {skills.map((s) => (
-              <SkillPreviewCard key={s.id} {...s} />
-            ))}
-          </div>
-        )}
-      </section>
-
       {/* Submit callout */}
-      <section className="mx-auto max-w-[1200px] px-6 lg:px-10 pb-24">
+      <section className="mx-auto max-w-[1200px] px-6 lg:px-10 pb-20">
         <div className="relative overflow-hidden rounded-2xl border border-foreground/10 bg-gradient-to-br from-foreground/[0.04] to-foreground/[0.01] px-8 py-10 lg:px-12 lg:py-12 text-center">
           <div className="absolute inset-x-0 -top-px h-px bg-gradient-to-r from-transparent via-[hsl(229_94%_82%)]/40 to-transparent" />
           <h2 className="font-display text-2xl lg:text-3xl font-bold tracking-[-0.02em] text-foreground">
