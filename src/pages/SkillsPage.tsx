@@ -134,45 +134,45 @@ export default function SkillsPage() {
           </div>
 
           {/* Floating card cluster — desktop only */}
-          <div className="hidden lg:block">
-            <div className="relative h-[460px] w-full pointer-events-none">
+          <div className="hidden lg:block overflow-visible">
+            <div className="relative h-[500px] w-full pr-2 pointer-events-none overflow-visible">
               {/* Glow */}
               <div
                 aria-hidden
-                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-[420px] w-[420px] rounded-full blur-3xl opacity-60 bg-gradient-to-br from-[hsl(229_94%_82%)]/35 via-[hsl(265_84%_75%)]/25 to-transparent"
+                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-[520px] w-[520px] rounded-full blur-3xl bg-[radial-gradient(closest-side,hsl(265_84%_70%/0.55),hsl(229_94%_75%/0.30)_45%,transparent_75%)]"
               />
 
               <div className="relative h-full w-full motion-safe:animate-float-slow">
                 {/* Card A — back */}
-                <div className="absolute top-4 left-0 w-[320px] rounded-2xl p-[22px] surface-card -rotate-[4deg] z-10 shadow-2xl shadow-black/40">
+                <div className="absolute top-0 left-0 w-[272px] rounded-2xl p-[18px] surface-card -rotate-[5deg] z-10 shadow-2xl shadow-black/40">
                   <span className="text-[10px] px-2 py-[3px] rounded-md border bg-accent/10 text-[hsl(229_94%_82%)] border-accent/25 font-semibold uppercase tracking-[0.06em]">
                     For Agents
                   </span>
-                  <h3 className="mt-4 font-display text-xl font-semibold tracking-[-0.01em] text-foreground leading-tight">
+                  <h3 className="mt-4 font-display text-[17px] font-semibold tracking-[-0.01em] text-foreground leading-tight">
                     Listing Description Writer
                   </h3>
-                  <p className="mt-2 text-[14px] text-muted-foreground leading-[1.6]">
+                  <p className="mt-2 text-[13px] text-muted-foreground leading-[1.6]">
                     MLS-ready listing copy in your voice.
                   </p>
-                  <div className="mt-5 inline-flex items-center gap-1.5 rounded-[10px] bg-foreground/90 px-3.5 py-2 text-[13px] font-semibold text-background">
-                    <Download className="h-4 w-4" />
+                  <div className="mt-4 inline-flex items-center gap-1.5 rounded-[10px] bg-foreground/90 px-3 py-1.5 text-[12px] font-semibold text-background">
+                    <Download className="h-3.5 w-3.5" />
                     Download
                   </div>
                 </div>
 
                 {/* Card B — front */}
-                <div className="absolute top-[150px] left-[110px] w-[320px] rounded-2xl p-[22px] surface-card rotate-[3deg] z-20 shadow-2xl shadow-black/50 ring-1 ring-foreground/10">
+                <div className="absolute top-[200px] left-[180px] w-[272px] rounded-2xl p-[18px] surface-card rotate-[4deg] z-20 shadow-2xl shadow-black/50 ring-1 ring-foreground/10">
                   <span className="text-[10px] px-2 py-[3px] rounded-md border bg-accent/10 text-[hsl(229_94%_82%)] border-accent/25 font-semibold uppercase tracking-[0.06em]">
                     For Agents
                   </span>
-                  <h3 className="mt-4 font-display text-xl font-semibold tracking-[-0.01em] text-foreground leading-tight">
+                  <h3 className="mt-4 font-display text-[17px] font-semibold tracking-[-0.01em] text-foreground leading-tight">
                     Offer & Negotiation Strategist
                   </h3>
-                  <p className="mt-2 text-[14px] text-muted-foreground leading-[1.6]">
+                  <p className="mt-2 text-[13px] text-muted-foreground leading-[1.6]">
                     Build, present, and negotiate from strength.
                   </p>
-                  <div className="mt-5 inline-flex items-center gap-1.5 rounded-[10px] bg-foreground/90 px-3.5 py-2 text-[13px] font-semibold text-background">
-                    <Download className="h-4 w-4" />
+                  <div className="mt-4 inline-flex items-center gap-1.5 rounded-[10px] bg-foreground/90 px-3 py-1.5 text-[12px] font-semibold text-background">
+                    <Download className="h-3.5 w-3.5" />
                     Download
                   </div>
                 </div>
