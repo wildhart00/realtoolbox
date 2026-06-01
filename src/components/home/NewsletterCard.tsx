@@ -33,7 +33,7 @@ export function NewsletterCard({ source = "homepage" }: { source?: string } = {}
           New tools, every month
         </h2>
         <p className="mt-2.5 text-[14px] text-muted-foreground leading-[1.65]">
-          The latest AI tools for real estate and beyond. No sponsored content — just what&apos;s actually useful.
+          The latest AI tools for real estate and beyond — hand-picked on merit, just what&apos;s worth your time.
         </p>
 
         {done ? (

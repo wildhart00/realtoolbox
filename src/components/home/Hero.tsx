@@ -34,6 +34,10 @@ export function Hero({ toolCount }: { toolCount: number }) {
         Curated tools for agents, investors, property managers, and deal makers — plus the best general AI tools any pro should know about.
       </p>
 
+      <p className="mt-3 text-[13px] text-muted-foreground/70 leading-[1.6] text-center mx-auto" style={{ maxWidth: 520 }}>
+        Built by a real estate investor who&apos;s been flipping houses since 2014 — every tool here is hand-picked on merit.
+      </p>
+
       <form onSubmit={submit} className="relative mt-9 mx-auto" style={{ maxWidth: 520 }}>
         <button
           type="submit"
