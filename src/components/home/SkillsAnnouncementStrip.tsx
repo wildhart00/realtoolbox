@@ -19,14 +19,15 @@ export function SkillsAnnouncementStrip() {
         <div className="relative flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
           <div className="max-w-2xl">
             <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 backdrop-blur-sm border border-white/25 px-2.5 py-0.5 text-[10px] font-semibold tracking-[0.18em] uppercase text-white">
-              New
+              Now Live
             </span>
             <h2 className="mt-4 font-display text-3xl lg:text-[40px] font-bold tracking-[-0.02em] leading-[1.05] text-white">
-              Claude Skills for Real Estate — coming soon
+              Real estate skills for any AI — now live
             </h2>
             <p className="mt-3 text-[15px] lg:text-base text-white/85 leading-[1.6]">
-              Done-for-you skill files that turn Claude into a listing description writer, deal
-              analyzer, market report generator and more. Get early access and founder pricing.
+              Done-for-you instruction files that turn any AI assistant (Claude, ChatGPT, Gemini)
+              into a listing description writer, follow-up sequence writer, pricing strategist, and
+              more. Free to download.
             </p>
           </div>
 
@@ -37,10 +38,11 @@ export function SkillsAnnouncementStrip() {
               className="bg-white text-[hsl(239_84%_55%)] hover:bg-white/90 shadow-elevated"
             >
               <Link to="/skills">
-                Join the Waitlist <ArrowRight className="h-4 w-4" />
+                Browse the skills <ArrowRight className="h-4 w-4" />
               </Link>
             </Button>
           </div>
+
         </div>
       </div>
     </section>
