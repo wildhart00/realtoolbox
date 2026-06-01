@@ -1,32 +1,36 @@
-## Goal
-Replace the hardcoded "What's Coming" placeholder section on /skills with a live grid that pulls real, published skills from the Supabase `skills` table.
+# Email-gated skill downloads
 
-## Changes
+## 1. Database — new `skill_subscribers` table
 
-### 1. Update `SkillPreviewCard` (`src/components/skills/SkillPreviewCard.tsx`)
-- Replace the current static props (`title`, `description`, `audience`) with the actual `skills` table fields: `name`, `tagline`, `audience`, `file_url`, `access_level`, `price`, `slug`.
-- Remove the "Coming Soon" badge and the "Drop your email above to be notified when this drops" text.
-- Render the audience badge (e.g. "For Agents") as before.
-- Add a "Download" button:
-  - On click, call the existing `increment_skill_download(skill_slug)` database function to bump the count.
-  - Then trigger a direct file download from `file_url`.
-  - For now every skill is free, so the button label is always "Download". The component will read `access_level` and `price` so a paid label (e.g. "$9.00") can be wired in later without further structural changes.
-- Keep the existing `surface-card` dark card styling.
+Migration creates:
+- `id uuid pk default gen_random_uuid()`
+- `email text not null` (with format check)
+- `skill_slug text not null`
+- `source text not null default 'skill_download'`
+- `created_at timestamptz not null default now()`
+- Unique constraint on `(email, skill_slug)` so re-downloads upsert cleanly
 
-### 2. Wire up live data in `SkillsPage` (`src/pages/SkillsPage.tsx`)
-- Add a `useState` + `useEffect` fetch from `supabase.from('skills')`:
-  - Filter: `is_published === true`
-  - Order: `sort_order` ascending
-- Remove the local `const skills = [...]` hardcoded array.
-- In the "What's coming" section:
-  - Change `<SectionLabel>` text from "What's coming" to "Available skills"
-  - Map the fetched rows to `<SkillPreviewCard>` instead of the static array.
-  - Show a loading state while fetching.
-- Leave every other section untouched: hero, how-it-works, email capture, submit callout, footer newsletter.
+GRANTs: `INSERT` to anon + authenticated, `ALL` to service_role, `SELECT` to authenticated (gated by admin RLS policy).
 
-### 3. No database or storage changes
-- The `skills` table, RLS policies, and `increment_skill_download` function already exist from earlier work. No new migrations or buckets are needed.
+RLS:
+- Anyone may insert when email matches a basic regex and `skill_slug` is non-empty.
+- Only admins may read.
 
-## Files to modify
-- `src/components/skills/SkillPreviewCard.tsx`
-- `src/pages/SkillsPage.tsx`
+## 2. New `SkillDownloadDialog` component
+
+`src/components/skills/SkillDownloadDialog.tsx` — shadcn `Dialog` styled with the dark premium theme.
+- Heading: "Get the skill", subtext referencing the skill name.
+- Single email input with zod validation (trim, email, max 255).
+- Submit button "Download".
+- On submit: `upsert` into `skill_subscribers` on conflict do nothing (swallow unique violations), call `increment_skill_download` RPC, open `file_url` in a new tab, close dialog, show success toast.
+
+## 3. Update `SkillPreviewCard`
+
+Replace the direct-download `handleDownload` with `setOpen(true)`. Render `<SkillDownloadDialog>` controlled locally and pass `slug`, `name`, `file_url`. Keep Download icon and paid-label scaffolding untouched.
+
+## Files
+- New migration (table + grants + RLS)
+- New `src/components/skills/SkillDownloadDialog.tsx`
+- Edit `src/components/skills/SkillPreviewCard.tsx`
+
+No changes to `SkillsPage` sections, hero, or footer newsletter.

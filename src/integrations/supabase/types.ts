@@ -481,6 +481,30 @@ export type Database = {
           },
         ]
       }
+      skill_subscribers: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          skill_slug: string
+          source: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          skill_slug: string
+          source?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          skill_slug?: string
+          source?: string
+        }
+        Relationships: []
+      }
       skills: {
         Row: {
           access_level: string
