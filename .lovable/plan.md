@@ -1,22 +1,36 @@
-Styling + copy cleanup on the Agents page. No structural changes.
+## Fix Agent Platforms grid centering
 
-## 1. `src/pages/AgentsPage.tsx`
+The "Agent Platforms" grid already uses `flex flex-wrap justify-center`, but its trailing row isn't centering reliably. The Skills page uses a slightly different (and proven) wrapper shape, and the Workflows grid below works because its 2-col math is simpler. Align Platforms to the Skills pattern.
 
-- Change hero pill `"Works with Claude"` → `"Works with any AI"` in the `heroPills` array.
-- Replace both card grids with the Skills-page flex-wrap pattern so the last row centers and cards equalize via `w-full md:w-[calc(...)]` wrappers:
-  - Agent platforms (3-col target): `<div className="flex flex-wrap justify-center gap-4 md:gap-5">` with each card wrapped in `<div className="flex w-full md:w-[calc((100%-1.25rem*2)/3)] lg:w-[calc((100%-1.25rem*2)/3)]">` (the inner card already stretches via `flex flex-col` + `h-full`).
-  - Workflows (2-col target): same pattern with `md:w-[calc((100%-1.25rem)/2)]`.
-- The wrapper uses `flex` so child cards fill height; add `h-full` to the card roots.
+### `src/pages/AgentsPage.tsx`
 
-## 2. `src/components/agents/AgentPlatformCard.tsx`
+In the Agent Platforms section, change each card wrapper from:
 
-- Add `h-full` to the root `<div>` so it fills the flex wrapper.
-- Card is already `flex flex-col` with `mt-auto` on the footer row — the `Visit` link already sits at the bottom. No further change needed for pinning.
-- `Visit` anchor already has `target="_blank" rel="noopener noreferrer"` — already satisfies item 3, no change required.
+```tsx
+<div
+  key={a.name}
+  className="flex w-full md:w-[calc((100%-1.25rem)/2)] lg:w-[calc((100%-1.25rem*2)/3)]"
+>
+  <AgentPlatformCard item={a} />
+</div>
+```
 
-## 3. `src/components/agents/WorkflowCard.tsx`
+to match the Skills page exactly:
 
-- Add `h-full` to the root `<div>` (already `flex flex-col`).
-- Wrap the `View Guide` link container with `mt-auto` (currently `mt-5`) so it pins to the bottom across rows.
+```tsx
+<div key={a.name} className="w-full md:w-[calc((100%-1.25rem*2)/3)]">
+  <AgentPlatformCard item={a} />
+</div>
+```
 
-No copy, section order, or link destinations change beyond the one pill rename.
+Changes:
+- Drop the intermediate `md:w-[calc((100%-1.25rem)/2)]` 2-col step (Skills goes straight from 1-col → 3-col at md, which is what the working centered grid does).
+- Remove `flex` from the wrapper. Card height equalization is already handled by `h-full` on `AgentPlatformCard` plus `items-stretch` (the default) on the parent flex row, so cards still match height without the extra flex wrapper that was interfering with line centering.
+
+The container row stays exactly as-is: `flex flex-wrap justify-center gap-4 md:gap-5`.
+
+### Not changing
+
+- Workflows grid (already centers correctly).
+- `AgentPlatformCard` and `WorkflowCard` internals.
+- All copy, section order, card styling, and link behavior.
