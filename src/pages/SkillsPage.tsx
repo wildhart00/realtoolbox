@@ -209,7 +209,7 @@ export default function SkillsPage() {
                   disabled={submitting}
                   className="shrink-0"
                 >
-                  {submitting ? "Adding…" : "Get Early Access"}
+                  {submitting ? "Adding…" : "Notify Me"}
                 </Button>
               </form>
             )}
