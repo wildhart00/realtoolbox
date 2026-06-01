@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { supabase } from "@/integrations/supabase/client";
-import { toast } from "sonner";
+import { SkillDownloadDialog } from "./SkillDownloadDialog";
 
 const AUDIENCE_LABEL: Record<string, string> = {
   agent: "For Agents",
@@ -29,53 +28,48 @@ export function SkillPreviewCard({
   access_level,
   price,
 }: SkillCardData) {
-  const [busy, setBusy] = useState(false);
+  const [open, setOpen] = useState(false);
   const isPaid = access_level === "paid" && Number(price) > 0;
   const label = isPaid ? `Get — $${Number(price).toFixed(2)}` : "Download";
 
-  const handleDownload = async () => {
-    if (!file_url) {
-      toast.error("File not available yet.");
-      return;
-    }
-    setBusy(true);
-    try {
-      await supabase.rpc("increment_skill_download" as any, { skill_slug: slug });
-    } catch {
-      // non-fatal
-    }
-    setBusy(false);
-    window.open(file_url, "_blank", "noopener,noreferrer");
-  };
-
   return (
-    <div className="flex flex-col rounded-2xl p-[22px] surface-card">
-      <div className="flex items-start justify-between gap-3">
-        <span className="text-[10px] px-2 py-[3px] rounded-md border bg-accent/10 text-[hsl(229_94%_82%)] border-accent/25 font-semibold uppercase tracking-[0.06em]">
-          {AUDIENCE_LABEL[audience] ?? audience}
-        </span>
+    <>
+      <div className="flex flex-col rounded-2xl p-[22px] surface-card">
+        <div className="flex items-start justify-between gap-3">
+          <span className="text-[10px] px-2 py-[3px] rounded-md border bg-accent/10 text-[hsl(229_94%_82%)] border-accent/25 font-semibold uppercase tracking-[0.06em]">
+            {AUDIENCE_LABEL[audience] ?? audience}
+          </span>
+        </div>
+
+        <h3 className="mt-4 font-display text-xl font-semibold tracking-[-0.01em] text-foreground leading-tight">
+          {name}
+        </h3>
+
+        {tagline && (
+          <p className="mt-2 text-[14px] text-muted-foreground leading-[1.6] flex-1">
+            {tagline}
+          </p>
+        )}
+
+        <Button
+          onClick={() => setOpen(true)}
+          disabled={!file_url}
+          variant="hero"
+          size="sm"
+          className="mt-5 self-start gap-1.5"
+        >
+          <Download className="h-4 w-4" />
+          {label}
+        </Button>
       </div>
 
-      <h3 className="mt-4 font-display text-xl font-semibold tracking-[-0.01em] text-foreground leading-tight">
-        {name}
-      </h3>
-
-      {tagline && (
-        <p className="mt-2 text-[14px] text-muted-foreground leading-[1.6] flex-1">
-          {tagline}
-        </p>
-      )}
-
-      <Button
-        onClick={handleDownload}
-        disabled={busy || !file_url}
-        variant="hero"
-        size="sm"
-        className="mt-5 self-start gap-1.5"
-      >
-        <Download className="h-4 w-4" />
-        {busy ? "Starting…" : label}
-      </Button>
-    </div>
+      <SkillDownloadDialog
+        open={open}
+        onOpenChange={setOpen}
+        skillName={name}
+        skillSlug={slug}
+        fileUrl={file_url}
+      />
+    </>
   );
 }
