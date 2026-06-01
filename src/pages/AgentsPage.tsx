@@ -156,10 +156,7 @@ export default function AgentsPage() {
         <SectionLabel>Agent platforms</SectionLabel>
         <div className="flex flex-wrap justify-center gap-4 md:gap-5">
           {agentPlatforms.map((a) => (
-            <div
-              key={a.name}
-              className="flex w-full md:w-[calc((100%-1.25rem)/2)] lg:w-[calc((100%-1.25rem*2)/3)]"
-            >
+            <div key={a.name} className="w-full md:w-[calc((100%-1.25rem*2)/3)]">
               <AgentPlatformCard item={a} />
             </div>
           ))}
