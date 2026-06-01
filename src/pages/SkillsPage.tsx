@@ -15,9 +15,14 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { SkillPreviewCard } from "@/components/skills/SkillPreviewCard";
 
-const steps = [
-  { n: "1", title: "Download the .md file", icon: Download },
-  { n: "2", title: "Upload to your Claude Project", icon: Upload },
+const steps: { n: string; title: string; subtext?: string; icon: typeof Download }[] = [
+  { n: "1", title: "Download the file", icon: Download },
+  {
+    n: "2",
+    title: "Add it to your AI assistant",
+    subtext: "Claude Project, Custom GPT, Gemini Gem, or just paste it in.",
+    icon: Upload,
+  },
   { n: "3", title: "Reference it in any prompt", icon: Sparkles },
 ];
 
