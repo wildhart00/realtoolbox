@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import { SkillPreviewCard } from "@/components/skills/SkillPreviewCard";
+import { SkillPreviewCard, type SkillCardData } from "@/components/skills/SkillPreviewCard";
 
 const steps: { n: string; title: string; subtext?: string; icon: typeof Download }[] = [
   { n: "1", title: "Download the file", icon: Download },
@@ -26,25 +26,7 @@ const steps: { n: string; title: string; subtext?: string; icon: typeof Download
   { n: "3", title: "Reference it in any prompt", icon: Sparkles },
 ];
 
-const skills = [
-  {
-    title: "Listing Description Writer",
-    description: "Input property details, get MLS-ready copy in your voice.",
-    audience: "For Agents",
-  },
-  {
-    title: "Deal Analyzer",
-    description:
-      "Input purchase price, rents and expenses, get a full investment scorecard.",
-    audience: "For Investors",
-  },
-  {
-    title: "Weekly Market Report",
-    description:
-      "Input your MLS data, get a client-ready market update narrative.",
-    audience: "For Agents + Investors",
-  },
-];
+type SkillRow = SkillCardData & { id: string };
 
 const emailSchema = z
   .string()
@@ -68,6 +50,20 @@ export default function SkillsPage() {
   const [email, setEmail] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [skills, setSkills] = useState<SkillRow[]>([]);
+  const [loadingSkills, setLoadingSkills] = useState(true);
+
+  useEffect(() => {
+    (async () => {
+      const { data } = await supabase
+        .from("skills" as any)
+        .select("id, name, slug, tagline, audience, file_url, access_level, price")
+        .eq("is_published", true)
+        .order("sort_order", { ascending: true });
+      setSkills((data as unknown as SkillRow[]) ?? []);
+      setLoadingSkills(false);
+    })();
+  }, []);
 
   useEffect(() => {
     document.title = "Claude Skills for Real Estate — RealToolbox.ai";
@@ -217,14 +213,22 @@ export default function SkillsPage() {
         </div>
       </section>
 
-      {/* What's coming */}
+      {/* Available skills */}
       <section className="mx-auto max-w-[1200px] px-6 lg:px-10 pb-20">
-        <SectionLabel>What's coming</SectionLabel>
-        <div className="grid gap-4 md:gap-5 md:grid-cols-3">
-          {skills.map((s) => (
-            <SkillPreviewCard key={s.title} {...s} />
-          ))}
-        </div>
+        <SectionLabel>Available skills</SectionLabel>
+        {loadingSkills ? (
+          <div className="text-sm text-muted-foreground">Loading skills…</div>
+        ) : skills.length === 0 ? (
+          <div className="text-sm text-muted-foreground">
+            No skills published yet — check back soon.
+          </div>
+        ) : (
+          <div className="grid gap-4 md:gap-5 md:grid-cols-3">
+            {skills.map((s) => (
+              <SkillPreviewCard key={s.id} {...s} />
+            ))}
+          </div>
+        )}
       </section>
 
       {/* Submit callout */}
