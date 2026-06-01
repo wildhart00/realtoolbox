@@ -1,62 +1,56 @@
+## Refine Skills hero floating card cluster
 
-## Skills hero — add right-side floating card visual
+Edit only `src/pages/SkillsPage.tsx` — the hero's right-column visual. No other files change. Card markup, copy, two-column layout, and `motion-safe:animate-float-slow` stay.
 
-Pure presentation change in `src/pages/SkillsPage.tsx` plus one tiny keyframe addition in `tailwind.config.ts`. No copy, data, or business-logic changes.
+### 1. Restagger on a clean diagonal (no badge/title/button overlap)
 
-### 1. Hero becomes a two-column row on `lg+`
+Currently Card B sits at `top-[150px] left-[110px]` which overlaps Card A's badge and Download button. Each card is ~`w-[320px]` and ~210px tall.
 
-In `SkillsPage.tsx`, wrap the existing hero contents in a grid:
+New positions (back card upper-left, front card lower-right, overlap only at one corner):
+- **Card A (back — Listing Description Writer):** `top-0 left-0`
+- **Card B (front — Offer & Negotiation Strategist):** `top-[170px] left-[180px]`
 
-- Outer hero `<section>` keeps `mx-auto max-w-[1200px] px-6 lg:px-10 pt-16 lg:pt-24 pb-16`, and gains `lg:min-h-[640px]` so the floating cluster never gets clipped.
-- New inner wrapper: `grid gap-12 lg:grid-cols-[55fr_45fr] lg:items-center`.
-- Left column: the existing `max-w-3xl` text block (badge + h1 + subhead) — unchanged copy. Drop `max-w-3xl` on `lg+` so it can breathe inside its 55% column; keep `max-w-2xl` on mobile.
-- Right column: the new visual. Hidden below `lg` via `hidden lg:block` so mobile stays exactly as today (text full-width, no extra vertical bulk).
+This leaves Card A's badge/title/button fully visible above Card B, and Card B sits lower-right with only its top-left corner kissing Card A's bottom-right corner.
 
-### 2. The floating card cluster (right column)
+### 2. Scale to ~85% of grid-card size
 
-A relatively-positioned container roughly `h-[460px]` that holds:
+Real grid cards are full width of a 3-col cell (~380px at 1200px container). 85% ≈ 272px.
 
-**Background glow** — absolutely-positioned blurred radial blob centered behind the stack:
-- ~`h-[420px] w-[420px]`, `rounded-full`, `blur-3xl`, `opacity-60`
-- `bg-gradient-to-br from-[hsl(229_94%_82%)]/35 via-[hsl(265_84%_75%)]/25 to-transparent` — same indigo→violet pair already used by "any AI" and `bg-gradient-accent`.
+- Both cards: change `w-[320px] p-[22px]` → `w-[272px] p-[18px]`
+- Titles: `text-xl` → `text-[17px]`
+- Tagline: `text-[14px]` → `text-[13px]`
+- Download pill: `text-[13px] py-2 px-3.5` → `text-[12px] py-1.5 px-3`, icon `h-4 w-4` → `h-3.5 w-3.5`
 
-**2 decorative skill cards** — built inline (display-only, not from DB) to exactly mirror `SkillPreviewCard`:
-- Classes: `rounded-2xl p-[22px] surface-card w-[320px]`.
-- Header: same audience pill — `text-[10px] px-2 py-[3px] rounded-md border bg-accent/10 text-[hsl(229_94%_82%)] border-accent/25 font-semibold uppercase tracking-[0.06em]` reading `FOR AGENTS`.
-- Title (`font-display text-xl font-semibold tracking-[-0.01em] text-foreground leading-tight mt-4`) + tagline (`mt-2 text-[14px] text-muted-foreground leading-[1.6]`).
-- A muted faux-button row at the bottom (matching the real "Download" button silhouette) so the card visually balances — no real onClick, `pointer-events-none` on the whole cluster so it's purely decorative.
+### 3. Opposing tilts
 
-Content:
-1. "Listing Description Writer" — "MLS-ready listing copy in your voice."
-2. "Offer & Negotiation Strategist" — "Build, present, and negotiate from strength."
+- Card A: `-rotate-[4deg]` → `-rotate-[5deg]`
+- Card B: `rotate-[3deg]` → `rotate-[4deg]`
 
-**Stack / depth**:
-- Both absolutely positioned inside the container.
-- Card A (back): `top-4 left-0 -rotate-[4deg] z-10 shadow-2xl shadow-black/40`.
-- Card B (front): `top-24 left-24 rotate-[3deg] z-20 shadow-2xl shadow-black/50 ring-1 ring-foreground/10`.
-- Add `animate-float-slow` on the wrapper for the drift (see §3).
+### 4. Visible violet/indigo brand glow
 
-### 3. Subtle floating motion
+Replace the single glow div with a stronger, larger, more visibly purple radial:
 
-Add one keyframe + animation in `tailwind.config.ts`:
-
-```ts
-keyframes: {
-  "float-slow": {
-    "0%, 100%": { transform: "translateY(0px)" },
-    "50%":      { transform: "translateY(-6px)" },
-  },
-},
-animation: {
-  "float-slow": "float-slow 5s ease-in-out infinite",
-},
+```tsx
+<div
+  aria-hidden
+  className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2
+             h-[520px] w-[520px] rounded-full blur-3xl
+             bg-[radial-gradient(closest-side,hsl(265_84%_70%/0.55),hsl(229_94%_75%/0.30)_45%,transparent_75%)]"
+/>
 ```
 
-Apply `motion-safe:animate-float-slow` to the cards-cluster wrapper so `prefers-reduced-motion: reduce` users get a static stack automatically (Tailwind's built-in `motion-safe:` variant — no extra CSS).
+Bump container `h-[460px]` → `h-[500px]` so the glow has room and isn't clipped on top/bottom.
 
-### Files touched
+### 5. Prevent right-edge clipping
 
-- `src/pages/SkillsPage.tsx` — hero grid + right-column visual JSX.
-- `tailwind.config.ts` — add `float-slow` keyframe + animation.
+- Right column container: add `overflow-visible` and remove any `w-full` clipping. Verify Card B's right edge (`left-[180px] + 272px = 452px`) fits within the 45% column (~495px at 1200px container, minus gap). It does.
+- Add `pr-2` safety padding on the cluster wrapper so the +4deg rotation doesn't push the corner past the column.
+- Keep `pointer-events-none` on the cluster.
 
-No new components, no new dependencies, no DB, no changes to steps/grid/email-capture/submit sections or to `SkillPreviewCard`.
+### Acceptance check (visual)
+
+- Card A's badge, title, tagline, and Download button are all fully visible.
+- Card B sits down-and-right of Card A, overlapping only at the corner.
+- Purple glow is clearly visible behind both cards, soft-edged, not a hard shape.
+- Nothing clips the right edge at `lg` (1024px) or `xl` (1280px).
+- Float animation still applies to the cluster wrapper.
