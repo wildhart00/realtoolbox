@@ -1,36 +1,41 @@
-## Fix Agent Platforms grid centering
+## Goal
+Replace the "View Guide" blog link on every Real Estate Agent Workflow card with an honest "Notify me" CTA that opens an email-capture modal, mirroring the Skill download pattern.
 
-The "Agent Platforms" grid already uses `flex flex-wrap justify-center`, but its trailing row isn't centering reliably. The Skills page uses a slightly different (and proven) wrapper shape, and the Workflows grid below works because its 2-col math is simpler. Align Platforms to the Skills pattern.
+## Changes
 
-### `src/pages/AgentsPage.tsx`
+### 1. Database (migration)
+Add a nullable `workflow_name` column to `newsletter_subscribers` so workflow waitlist signups can be attributed without a separate table.
 
-In the Agent Platforms section, change each card wrapper from:
-
-```tsx
-<div
-  key={a.name}
-  className="flex w-full md:w-[calc((100%-1.25rem)/2)] lg:w-[calc((100%-1.25rem*2)/3)]"
->
-  <AgentPlatformCard item={a} />
-</div>
+```sql
+ALTER TABLE public.newsletter_subscribers
+  ADD COLUMN workflow_name text;
 ```
 
-to match the Skills page exactly:
+Existing RLS policies (anyone can insert, admins can read) already cover this — no policy changes needed.
 
-```tsx
-<div key={a.name} className="w-full md:w-[calc((100%-1.25rem*2)/3)]">
-  <AgentPlatformCard item={a} />
-</div>
-```
+### 2. New component: `src/components/agents/WorkflowNotifyDialog.tsx`
+Mirror `SkillDownloadDialog`:
+- Props: `open`, `onOpenChange`, `workflowName`.
+- Heading: **"Get this workflow guide"**.
+- Subtext: *"We'll email you when the {workflowName} build guide drops."*
+- zod email validation (same schema as the skill dialog).
+- On submit: `insert` into `newsletter_subscribers` with `{ email, source: 'workflow_waitlist', workflow_name }`.
+- Treat Postgres duplicate (code `23505`) as success — no error toast.
+- Success toast: *"You're on the list. We'll email you when it's ready."*
+- Close dialog + reset email on success.
 
-Changes:
-- Drop the intermediate `md:w-[calc((100%-1.25rem)/2)]` 2-col step (Skills goes straight from 1-col → 3-col at md, which is what the working centered grid does).
-- Remove `flex` from the wrapper. Card height equalization is already handled by `h-full` on `AgentPlatformCard` plus `items-stretch` (the default) on the parent flex row, so cards still match height without the extra flex wrapper that was interfering with line centering.
+### 3. `src/components/agents/WorkflowCard.tsx`
+- Remove the `Link` to `item.guideHref ?? "/blog"`.
+- Replace footer block with:
+  - Small muted label: **"Guide coming soon"** (`text-[11px] text-muted-foreground`).
+  - Button **"Notify me"** styled identically to the previous View Guide button (same border, padding, font, bell or arrow icon — keep ArrowRight for visual parity) that sets local `open` state.
+- Render `<WorkflowNotifyDialog>` controlled by that state, passing `item.name`.
+- Keep `mt-auto pt-5` bottom-pinning, card styling, and overall layout untouched.
+- `guideHref` field on `WorkflowItem` becomes unused — leave the type field optional (already is) so no other call sites break, but stop reading it.
 
-The container row stays exactly as-is: `flex flex-wrap justify-center gap-4 md:gap-5`.
+### 4. `src/pages/AgentsPage.tsx`
+No changes needed — the workflow items already lack `guideHref`, and the card handles its own modal state.
 
-### Not changing
-
-- Workflows grid (already centers correctly).
-- `AgentPlatformCard` and `WorkflowCard` internals.
-- All copy, section order, card styling, and link behavior.
+## Out of scope
+- No changes to `AgentPlatformCard`, hero copy, section order, grid layout, or the Skill download flow.
+- No new admin UI for viewing waitlist entries (admins can already read `newsletter_subscribers`; the new `workflow_name` column will surface there once the existing admin view is updated separately).
