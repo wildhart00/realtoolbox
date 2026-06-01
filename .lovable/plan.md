@@ -1,24 +1,22 @@
-## Homepage Copy Edits
+Styling + copy cleanup on the Agents page. No structural changes.
 
-Three text-only changes — no layout or styling adjustments.
+## 1. `src/pages/AgentsPage.tsx`
 
-### 1. Hero credibility line
-**File:** `src/components/home/Hero.tsx`
+- Change hero pill `"Works with Claude"` → `"Works with any AI"` in the `heroPills` array.
+- Replace both card grids with the Skills-page flex-wrap pattern so the last row centers and cards equalize via `w-full md:w-[calc(...)]` wrappers:
+  - Agent platforms (3-col target): `<div className="flex flex-wrap justify-center gap-4 md:gap-5">` with each card wrapped in `<div className="flex w-full md:w-[calc((100%-1.25rem*2)/3)] lg:w-[calc((100%-1.25rem*2)/3)]">` (the inner card already stretches via `flex flex-col` + `h-full`).
+  - Workflows (2-col target): same pattern with `md:w-[calc((100%-1.25rem)/2)]`.
+- The wrapper uses `flex` so child cards fill height; add `h-full` to the card roots.
 
-Update the existing `<p>` element on line 37–39. Keep all existing styling (`mt-3 text-[13px] text-muted-foreground/70 leading-[1.6] text-center mx-auto`, maxWidth 520) exactly as-is.
+## 2. `src/components/agents/AgentPlatformCard.tsx`
 
-**From:**
-> Built by a real estate investor who&apos;s been flipping houses since 2014 — every tool here is hand-picked on merit.
+- Add `h-full` to the root `<div>` so it fills the flex wrapper.
+- Card is already `flex flex-col` with `mt-auto` on the footer row — the `Visit` link already sits at the bottom. No further change needed for pinning.
+- `Visit` anchor already has `target="_blank" rel="noopener noreferrer"` — already satisfies item 3, no change required.
 
-**To:**
-> Built by a real estate operator who&apos;s been in the business since 2014 and grew a house-flipping company to 100+ flips a year.
+## 3. `src/components/agents/WorkflowCard.tsx`
 
-### 2. Footer about blurb
-**File:** `src/components/layout/Footer.tsx`
+- Add `h-full` to the root `<div>` (already `flex flex-col`).
+- Wrap the `View Guide` link container with `mt-auto` (currently `mt-5`) so it pins to the bottom across rows.
 
-Already correct in the codebase. No change needed.
-
-### 3. Newsletter box description
-**File:** `src/components/home/NewsletterCard.tsx`
-
-Already correct in the codebase. No change needed.
+No copy, section order, or link destinations change beyond the one pill rename.
