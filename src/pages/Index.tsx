@@ -1,27 +1,22 @@
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Hero } from "@/components/home/Hero";
-import { FeaturedTabsSection } from "@/components/home/FeaturedTabsSection";
+import { FeaturedSection } from "@/components/home/FeaturedSection";
 import { BrowseByTagSection } from "@/components/home/BrowseByTagSection";
 import { BuiltForSpecialtySection } from "@/components/home/BuiltForSpecialtySection";
-import { SkillsAnnouncementStrip } from "@/components/home/SkillsAnnouncementStrip";
-import {
-  useTools,
-  useFeaturedTools,
-  useJustLaunchedTools,
-} from "@/hooks/useDirectory";
+import { SkillsHomeSection } from "@/components/home/SkillsHomeSection";
+import { useTools, useFeaturedTools } from "@/hooks/useDirectory";
 
 const Index = () => {
   const { data: tools = [] } = useTools();
   const { data: featured = [] } = useFeaturedTools();
-  const { data: justLaunched = [] } = useJustLaunchedTools();
 
   return (
     <AppLayout>
       <Hero toolCount={tools.length} />
-      <FeaturedTabsSection featured={featured} justLaunched={justLaunched} />
-      <BrowseByTagSection />
+      <SkillsHomeSection />
       <BuiltForSpecialtySection />
-      <SkillsAnnouncementStrip />
+      <BrowseByTagSection />
+      <FeaturedSection featured={featured} />
     </AppLayout>
   );
 };
