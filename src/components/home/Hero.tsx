@@ -35,7 +35,7 @@ export function Hero({ toolCount }: { toolCount: number }) {
       </p>
 
       <p className="mt-3 text-[13px] text-muted-foreground/70 leading-[1.6] text-center mx-auto" style={{ maxWidth: 520 }}>
-        Built by a real estate operator with 12 years and hundreds of deals behind him — not a tech company, not a content creator.
+        Built by a real estate operator — 12 years, hundreds of deals — not a tech company, not a content creator.
       </p>
 
       <form onSubmit={submit} className="relative mt-9 mx-auto" style={{ maxWidth: 520 }}>
