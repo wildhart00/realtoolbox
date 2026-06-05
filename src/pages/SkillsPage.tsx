@@ -16,15 +16,21 @@ import { supabase } from "@/integrations/supabase/client";
 import { SkillPreviewCard, type SkillCardData } from "@/components/skills/SkillPreviewCard";
 
 const steps: { n: string; title: string; subtext?: string; icon: typeof Download }[] = [
-  { n: "1", title: "Download the file", icon: Download },
+  { n: "1", title: "Pick a workflow", subtext: "Choose the one for the job in front of you.", icon: Download },
   {
     n: "2",
-    title: "Add it to your AI assistant",
-    subtext: "Claude Project, Custom GPT, Gemini Gem, or just paste it in.",
+    title: "Load it into your AI",
+    subtext: "ChatGPT, Claude, Gemini, or any assistant. Copy it in, or save it once.",
     icon: Upload,
   },
-  { n: "3", title: "Reference it in any prompt", icon: Sparkles },
+  { n: "3", title: "Get operator-grade output", subtext: "The numbers and judgment of someone who's run the deals.", icon: Sparkles },
 ];
+
+const STAGE_OPTIONS = [
+  { value: "first_deal", label: "Working on my first deal" },
+  { value: "actively_investing", label: "Actively flipping or investing" },
+  { value: "scaling", label: "Scaling a team & operations" },
+] as const;
 
 type SkillRow = SkillCardData & { id: string };
 
