@@ -73,7 +73,7 @@ export default function SkillsPage() {
   }, []);
 
   useEffect(() => {
-    document.title = "Claude Skills for Real Estate — RealToolbox.ai";
+    document.title = "AI Workflows for Real Estate Investors — RealToolbox.ai";
     const meta =
       document.querySelector('meta[name="description"]') ??
       (() => {
