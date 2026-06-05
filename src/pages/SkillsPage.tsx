@@ -123,20 +123,16 @@ export default function SkillsPage() {
           <div className="max-w-2xl lg:max-w-none">
             <div className="inline-flex items-center gap-2 rounded-full border border-foreground/10 bg-foreground/[0.03] px-3 py-1 text-[11px] font-semibold tracking-[0.16em] text-muted-foreground uppercase">
               <span className="h-1.5 w-1.5 rounded-full bg-[hsl(229_94%_82%)]" />
-              Skills
+              Operator-grade workflows
             </div>
             <h1 className="mt-5 font-display text-5xl lg:text-[64px] font-bold leading-[1.02] tracking-[-0.03em] text-foreground">
-              Real estate skills for{" "}
+              AI workflows for{" "}
               <span className="bg-gradient-to-r from-[hsl(229_94%_82%)] to-[hsl(265_84%_75%)] bg-clip-text text-transparent">
-                any AI
+                real estate investors.
               </span>
             </h1>
             <p className="mt-6 text-[17px] lg:text-lg text-muted-foreground leading-[1.65]">
-              A skill is a ready-made instruction file that turns any AI assistant into a real estate
-              specialist for one specific task. Load it once and your AI follows it every time — no
-              re-prompting, no copy-paste. Just consistent, professional output built from real-world
-              real estate expertise. Works in Claude, ChatGPT, Gemini, and any assistant that lets
-              you add instructions.
+              Each one turns your AI into a specialist for one money task — deal analysis, lead conversion, pricing, follow-up, KPIs — built from real flipping and rental experience. Copy it into your AI and go.
             </p>
           </div>
 
