@@ -16,15 +16,21 @@ import { supabase } from "@/integrations/supabase/client";
 import { SkillPreviewCard, type SkillCardData } from "@/components/skills/SkillPreviewCard";
 
 const steps: { n: string; title: string; subtext?: string; icon: typeof Download }[] = [
-  { n: "1", title: "Download the file", icon: Download },
+  { n: "1", title: "Pick a workflow", subtext: "Choose the one for the job in front of you.", icon: Download },
   {
     n: "2",
-    title: "Add it to your AI assistant",
-    subtext: "Claude Project, Custom GPT, Gemini Gem, or just paste it in.",
+    title: "Load it into your AI",
+    subtext: "ChatGPT, Claude, Gemini, or any assistant. Copy it in, or save it once.",
     icon: Upload,
   },
-  { n: "3", title: "Reference it in any prompt", icon: Sparkles },
+  { n: "3", title: "Get operator-grade output", subtext: "The numbers and judgment of someone who's run the deals.", icon: Sparkles },
 ];
+
+const STAGE_OPTIONS = [
+  { value: "first_deal", label: "Working on my first deal" },
+  { value: "actively_investing", label: "Actively flipping or investing" },
+  { value: "scaling", label: "Scaling a team & operations" },
+] as const;
 
 type SkillRow = SkillCardData & { id: string };
 
@@ -48,6 +54,7 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 
 export default function SkillsPage() {
   const [email, setEmail] = useState("");
+  const [stage, setStage] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
   const [skills, setSkills] = useState<SkillRow[]>([]);
@@ -66,7 +73,7 @@ export default function SkillsPage() {
   }, []);
 
   useEffect(() => {
-    document.title = "Claude Skills for Real Estate — RealToolbox.ai";
+    document.title = "AI Workflows for Real Estate Investors — RealToolbox.ai";
     const meta =
       document.querySelector('meta[name="description"]') ??
       (() => {
@@ -77,7 +84,7 @@ export default function SkillsPage() {
       })();
     meta.setAttribute(
       "content",
-      "Real-estate AI skills — done-for-you instruction files that turn any AI assistant (Claude, ChatGPT, Gemini) into a listing writer, deal analyzer and market report generator.",
+      "Operator-grade AI workflows for real estate investors — deal analysis, lead conversion, pricing, follow-up, and KPIs. Drop into Claude, ChatGPT or Gemini.",
     );
   }, []);
 
@@ -91,7 +98,7 @@ export default function SkillsPage() {
     setSubmitting(true);
     const { error } = await supabase
       .from("newsletter_subscribers")
-      .insert({ email: parsed.data, source: "skills_waitlist" });
+      .insert({ email: parsed.data, source: "skills_waitlist", investor_stage: stage } as any);
     setSubmitting(false);
 
     if (error) {
@@ -116,20 +123,16 @@ export default function SkillsPage() {
           <div className="max-w-2xl lg:max-w-none">
             <div className="inline-flex items-center gap-2 rounded-full border border-foreground/10 bg-foreground/[0.03] px-3 py-1 text-[11px] font-semibold tracking-[0.16em] text-muted-foreground uppercase">
               <span className="h-1.5 w-1.5 rounded-full bg-[hsl(229_94%_82%)]" />
-              Skills
+              Operator-grade workflows
             </div>
             <h1 className="mt-5 font-display text-5xl lg:text-[64px] font-bold leading-[1.02] tracking-[-0.03em] text-foreground">
-              Real estate skills for{" "}
+              AI workflows for{" "}
               <span className="bg-gradient-to-r from-[hsl(229_94%_82%)] to-[hsl(265_84%_75%)] bg-clip-text text-transparent">
-                any AI
+                real estate investors.
               </span>
             </h1>
             <p className="mt-6 text-[17px] lg:text-lg text-muted-foreground leading-[1.65]">
-              A skill is a ready-made instruction file that turns any AI assistant into a real estate
-              specialist for one specific task. Load it once and your AI follows it every time — no
-              re-prompting, no copy-paste. Just consistent, professional output built from real-world
-              real estate expertise. Works in Claude, ChatGPT, Gemini, and any assistant that lets
-              you add instructions.
+              Each one turns your AI into a specialist for one money task — deal analysis, lead conversion, pricing, follow-up, KPIs — built from real flipping and rental experience. Copy it into your AI and go.
             </p>
           </div>
 
@@ -235,8 +238,7 @@ export default function SkillsPage() {
         )}
       </section>
 
-      {/* Email capture */}
-      <section className="mx-auto max-w-[1200px] px-6 lg:px-10 pb-16">
+      <section id="stage-signup" className="mx-auto max-w-[1200px] px-6 lg:px-10 pb-16 scroll-mt-24">
         <div className="relative overflow-hidden rounded-2xl border border-foreground/10 bg-gradient-to-br from-foreground/[0.06] to-foreground/[0.01] px-8 py-10 lg:px-14 lg:py-14">
           <div className="absolute inset-x-0 -top-px h-px bg-gradient-to-r from-transparent via-[hsl(229_94%_82%)]/40 to-transparent" />
           <div className="max-w-2xl mx-auto text-center">
@@ -257,28 +259,52 @@ export default function SkillsPage() {
                 You're on the list — we'll be in touch when skills drop.
               </div>
             ) : (
-              <form
-                onSubmit={handleSubmit}
-                className="mt-7 flex flex-col sm:flex-row gap-2 sm:gap-2 max-w-md mx-auto"
-              >
-                <Input
-                  type="email"
-                  required
-                  placeholder="you@brokerage.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="h-11 bg-background/60 border-foreground/15"
-                  disabled={submitting}
-                />
-                <Button
-                  type="submit"
-                  variant="hero"
-                  size="lg"
-                  disabled={submitting}
-                  className="shrink-0"
-                >
-                  {submitting ? "Adding…" : "Notify Me"}
-                </Button>
+              <form onSubmit={handleSubmit} className="mt-7 max-w-md mx-auto">
+                <div className="text-left">
+                  <p className="text-[12px] font-semibold uppercase tracking-[0.12em] text-muted-foreground mb-2.5">
+                    Where are you right now? <span className="text-foreground/40 normal-case tracking-normal font-normal">(optional)</span>
+                  </p>
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {STAGE_OPTIONS.map((opt) => {
+                      const active = stage === opt.value;
+                      return (
+                        <button
+                          key={opt.value}
+                          type="button"
+                          onClick={() => setStage(active ? null : opt.value)}
+                          className={
+                            "rounded-full px-3.5 py-1.5 text-[12.5px] font-medium border transition-base " +
+                            (active
+                              ? "bg-gradient-to-r from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] text-white border-transparent"
+                              : "border-foreground/15 bg-foreground/[0.04] text-foreground/80 hover:border-accent/40")
+                          }
+                        >
+                          {opt.label}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+                <div className="flex flex-col sm:flex-row gap-2">
+                  <Input
+                    type="email"
+                    required
+                    placeholder="you@brokerage.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="h-11 bg-background/60 border-foreground/15"
+                    disabled={submitting}
+                  />
+                  <Button
+                    type="submit"
+                    variant="hero"
+                    size="lg"
+                    disabled={submitting}
+                    className="shrink-0"
+                  >
+                    {submitting ? "Adding…" : "Notify Me"}
+                  </Button>
+                </div>
               </form>
             )}
           </div>

@@ -4,6 +4,7 @@ import { FeaturedSection } from "@/components/home/FeaturedSection";
 import { BrowseByTagSection } from "@/components/home/BrowseByTagSection";
 import { BuiltForSpecialtySection } from "@/components/home/BuiltForSpecialtySection";
 import { SkillsHomeSection } from "@/components/home/SkillsHomeSection";
+import { ChooseYourStageSection } from "@/components/home/ChooseYourStageSection";
 import { useTools, useFeaturedTools } from "@/hooks/useDirectory";
 
 const Index = () => {
@@ -13,6 +14,7 @@ const Index = () => {
   return (
     <AppLayout>
       <Hero toolCount={tools.length} />
+      <ChooseYourStageSection />
       <SkillsHomeSection />
       <BuiltForSpecialtySection />
       <BrowseByTagSection />

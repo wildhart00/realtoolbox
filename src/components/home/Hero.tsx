@@ -1,60 +1,45 @@
-import { useState } from "react";
-import { Search } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
-export function Hero({ toolCount }: { toolCount: number }) {
-  const navigate = useNavigate();
-  const [value, setValue] = useState("");
-
-  const submit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const q = value.trim();
-    navigate(q ? `/browse?q=${encodeURIComponent(q)}` : "/browse");
-  };
-
+export function Hero({ toolCount: _toolCount }: { toolCount: number }) {
   return (
-    <section className="px-6 lg:px-10 pt-[88px] pb-14 text-center mx-auto" style={{ maxWidth: 780 }}>
+    <section className="px-6 lg:px-10 pt-[88px] pb-14 text-center mx-auto" style={{ maxWidth: 820 }}>
       <div className="inline-flex items-center gap-2 bg-accent/[0.08] border border-accent/20 rounded-full px-3.5 py-[5px] mb-[26px]">
         <span className="h-[5px] w-[5px] rounded-full bg-[hsl(229_94%_82%)]" />
-        <span className="text-[12px] text-[hsl(229_94%_82%)] font-medium">
-          {toolCount} curated tools — updated weekly
+        <span className="text-[11px] tracking-[0.16em] text-[hsl(229_94%_82%)] font-semibold uppercase">
+          For real estate investors &amp; operators
         </span>
       </div>
 
       <h1
-        className="font-display font-bold text-foreground mb-[18px]"
+        className="font-display font-bold text-foreground mb-[20px]"
         style={{ fontSize: "clamp(38px, 6vw, 62px)", lineHeight: 1.08, letterSpacing: "-0.03em" }}
       >
-        The AI toolkit built
-        <br />
-        <span className="italic text-[hsl(229_94%_82%)]">for real estate pros</span>
+        Build and scale a real estate business with{" "}
+        <span className="italic text-[hsl(229_94%_82%)]">AI that knows the numbers.</span>
       </h1>
 
-      <p className="text-[16px] text-muted-foreground leading-[1.65] mx-auto" style={{ maxWidth: 520 }}>
-        Curated tools for agents, investors, property managers, and deal makers — plus the best general AI tools any pro should know about.
+      <p className="text-[16px] text-muted-foreground leading-[1.65] mx-auto" style={{ maxWidth: 640 }}>
+        Ready-to-run AI workflows for real estate investors, flippers, and the agents who want to think like them — deal analysis, lead conversion, KPIs, and scaling, built from real operator experience, not generic prompts. Drop one into ChatGPT, Claude, or Gemini and get operator-grade output in minutes.
       </p>
 
-      <p className="mt-3 text-[13px] text-muted-foreground/70 leading-[1.6] text-center mx-auto" style={{ maxWidth: 520 }}>
-        Built by a real estate operator — 12 years, hundreds of deals — not a tech company, not a content creator.
-      </p>
-
-      <form onSubmit={submit} className="relative mt-9 mx-auto" style={{ maxWidth: 520 }}>
-        <button
-          type="submit"
-          aria-label="Search"
-          className="absolute left-4 top-1/2 -translate-y-1/2 text-foreground/50 hover:text-foreground transition-base"
+      <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+        <Link
+          to="/skills"
+          className="inline-flex items-center justify-center rounded-[10px] bg-gradient-to-r from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] px-6 py-3 text-[14px] font-semibold text-white shadow-lg shadow-[hsl(252_84%_50%)]/25 hover:shadow-[hsl(252_84%_50%)]/40 transition-base"
         >
-          <Search className="h-[17px] w-[17px]" />
-        </button>
-        <input
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-          placeholder="Search tools, categories, use cases…"
-          className={`w-full bg-foreground/[0.05] border border-foreground/20 rounded-xl py-[14px] text-[15px] text-foreground placeholder:text-foreground/50 outline-none focus:border-accent/40 transition-base ${
-            value ? "pl-[46px] pr-5 text-left" : "px-[46px] text-center"
-          }`}
-        />
-      </form>
+          Start free — Deal Screen
+        </Link>
+        <Link
+          to="/skills"
+          className="text-[14px] font-semibold text-foreground/80 hover:text-foreground transition-base"
+        >
+          See the workflows →
+        </Link>
+      </div>
+
+      <p className="mt-6 text-[13px] text-muted-foreground/75 leading-[1.65] text-center mx-auto" style={{ maxWidth: 600 }}>
+        ChatGPT doesn&apos;t know how a flip gets underwritten or why your follow-up isn&apos;t converting. These do — because an operator built them.
+      </p>
     </section>
   );
 }
