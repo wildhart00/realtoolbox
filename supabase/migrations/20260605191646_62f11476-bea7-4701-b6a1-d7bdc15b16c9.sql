@@ -1,0 +1,1 @@
+ALTER TABLE public.newsletter_subscribers ADD COLUMN IF NOT EXISTS investor_stage text;

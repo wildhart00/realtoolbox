@@ -296,6 +296,7 @@ export type Database = {
           created_at: string
           email: string
           id: string
+          investor_stage: string | null
           source: string | null
           workflow_name: string | null
         }
@@ -303,6 +304,7 @@ export type Database = {
           created_at?: string
           email: string
           id?: string
+          investor_stage?: string | null
           source?: string | null
           workflow_name?: string | null
         }
@@ -310,6 +312,7 @@ export type Database = {
           created_at?: string
           email?: string
           id?: string
+          investor_stage?: string | null
           source?: string | null
           workflow_name?: string | null
         }
