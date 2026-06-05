@@ -311,10 +311,6 @@ export default function SkillsPage() {
         </div>
       </section>
 
-          </div>
-        </div>
-      </section>
-
       {/* Submit callout */}
       <section className="mx-auto max-w-[1200px] px-6 lg:px-10 pb-20">
         <div className="relative overflow-hidden rounded-2xl border border-foreground/10 bg-gradient-to-br from-foreground/[0.04] to-foreground/[0.01] px-8 py-10 lg:px-12 lg:py-12 text-center">
