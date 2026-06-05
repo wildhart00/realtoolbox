@@ -52,9 +52,7 @@ export function SkillsHomeSection() {
                 Real estate skills for any AI — now live
               </h2>
               <p className="mt-3 text-[15px] lg:text-base text-white/85 leading-[1.6]">
-                Done-for-you instruction files that turn any AI assistant (Claude, ChatGPT, Gemini)
-                into a listing description writer, follow-up sequence writer, pricing strategist, and
-                more. Free to download.
+                Done-for-you instruction files that turn any AI assistant — ChatGPT, Claude, or Gemini — into a deal analyzer, seller-lead responder, or KPI strategist, built from real flipping and rental experience. Start free with the Deal Screen.
               </p>
             </div>
 

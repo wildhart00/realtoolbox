@@ -149,13 +149,13 @@ export default function SkillsPage() {
                 {/* Card A — back */}
                 <div className="absolute top-0 left-0 w-[272px] rounded-2xl p-[18px] surface-card -rotate-[5deg] z-10 shadow-2xl shadow-black/40">
                   <span className="text-[10px] px-2 py-[3px] rounded-md border bg-accent/10 text-[hsl(229_94%_82%)] border-accent/25 font-semibold uppercase tracking-[0.06em]">
-                    For Agents
+                    Free
                   </span>
                   <h3 className="mt-4 font-display text-[17px] font-semibold tracking-[-0.01em] text-foreground leading-tight">
-                    Listing Description Writer
+                    Deal Screen
                   </h3>
                   <p className="mt-2 text-[13px] text-muted-foreground leading-[1.6]">
-                    MLS-ready listing copy in your voice.
+                    Instant go/no-go on any deal.
                   </p>
                   <div className="mt-4 inline-flex items-center gap-1.5 rounded-[10px] bg-foreground/90 px-3 py-1.5 text-[12px] font-semibold text-background">
                     <Download className="h-3.5 w-3.5" />
@@ -166,13 +166,13 @@ export default function SkillsPage() {
                 {/* Card B — front */}
                 <div className="absolute top-[200px] left-[180px] w-[272px] rounded-2xl p-[18px] surface-card rotate-[4deg] z-20 shadow-2xl shadow-black/50 ring-1 ring-foreground/10">
                   <span className="text-[10px] px-2 py-[3px] rounded-md border bg-accent/10 text-[hsl(229_94%_82%)] border-accent/25 font-semibold uppercase tracking-[0.06em]">
-                    For Agents
+                    For Investors
                   </span>
                   <h3 className="mt-4 font-display text-[17px] font-semibold tracking-[-0.01em] text-foreground leading-tight">
-                    Offer & Negotiation Strategist
+                    Deal Analyzer & Underwriter
                   </h3>
                   <p className="mt-2 text-[13px] text-muted-foreground leading-[1.6]">
-                    Build, present, and negotiate from strength.
+                    Full underwriting in minutes.
                   </p>
                   <div className="mt-4 inline-flex items-center gap-1.5 rounded-[10px] bg-foreground/90 px-3 py-1.5 text-[12px] font-semibold text-background">
                     <Download className="h-3.5 w-3.5" />
