@@ -238,8 +238,7 @@ export default function SkillsPage() {
         )}
       </section>
 
-      {/* Email capture */}
-      <section className="mx-auto max-w-[1200px] px-6 lg:px-10 pb-16">
+      <section id="stage-signup" className="mx-auto max-w-[1200px] px-6 lg:px-10 pb-16 scroll-mt-24">
         <div className="relative overflow-hidden rounded-2xl border border-foreground/10 bg-gradient-to-br from-foreground/[0.06] to-foreground/[0.01] px-8 py-10 lg:px-14 lg:py-14">
           <div className="absolute inset-x-0 -top-px h-px bg-gradient-to-r from-transparent via-[hsl(229_94%_82%)]/40 to-transparent" />
           <div className="max-w-2xl mx-auto text-center">
@@ -260,30 +259,58 @@ export default function SkillsPage() {
                 You're on the list — we'll be in touch when skills drop.
               </div>
             ) : (
-              <form
-                onSubmit={handleSubmit}
-                className="mt-7 flex flex-col sm:flex-row gap-2 sm:gap-2 max-w-md mx-auto"
-              >
-                <Input
-                  type="email"
-                  required
-                  placeholder="you@brokerage.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="h-11 bg-background/60 border-foreground/15"
-                  disabled={submitting}
-                />
-                <Button
-                  type="submit"
-                  variant="hero"
-                  size="lg"
-                  disabled={submitting}
-                  className="shrink-0"
-                >
-                  {submitting ? "Adding…" : "Notify Me"}
-                </Button>
+              <form onSubmit={handleSubmit} className="mt-7 max-w-md mx-auto">
+                <div className="text-left">
+                  <p className="text-[12px] font-semibold uppercase tracking-[0.12em] text-muted-foreground mb-2.5">
+                    Where are you right now? <span className="text-foreground/40 normal-case tracking-normal font-normal">(optional)</span>
+                  </p>
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {STAGE_OPTIONS.map((opt) => {
+                      const active = stage === opt.value;
+                      return (
+                        <button
+                          key={opt.value}
+                          type="button"
+                          onClick={() => setStage(active ? null : opt.value)}
+                          className={
+                            "rounded-full px-3.5 py-1.5 text-[12.5px] font-medium border transition-base " +
+                            (active
+                              ? "bg-gradient-to-r from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] text-white border-transparent"
+                              : "border-foreground/15 bg-foreground/[0.04] text-foreground/80 hover:border-accent/40")
+                          }
+                        >
+                          {opt.label}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+                <div className="flex flex-col sm:flex-row gap-2">
+                  <Input
+                    type="email"
+                    required
+                    placeholder="you@brokerage.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="h-11 bg-background/60 border-foreground/15"
+                    disabled={submitting}
+                  />
+                  <Button
+                    type="submit"
+                    variant="hero"
+                    size="lg"
+                    disabled={submitting}
+                    className="shrink-0"
+                  >
+                    {submitting ? "Adding…" : "Notify Me"}
+                  </Button>
+                </div>
               </form>
             )}
+          </div>
+        </div>
+      </section>
+
           </div>
         </div>
       </section>
