@@ -54,6 +54,7 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 
 export default function SkillsPage() {
   const [email, setEmail] = useState("");
+  const [stage, setStage] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
   const [skills, setSkills] = useState<SkillRow[]>([]);
@@ -83,7 +84,7 @@ export default function SkillsPage() {
       })();
     meta.setAttribute(
       "content",
-      "Real-estate AI skills — done-for-you instruction files that turn any AI assistant (Claude, ChatGPT, Gemini) into a listing writer, deal analyzer and market report generator.",
+      "Operator-grade AI workflows for real estate investors — deal analysis, lead conversion, pricing, follow-up, and KPIs. Drop into Claude, ChatGPT or Gemini.",
     );
   }, []);
 
@@ -97,7 +98,7 @@ export default function SkillsPage() {
     setSubmitting(true);
     const { error } = await supabase
       .from("newsletter_subscribers")
-      .insert({ email: parsed.data, source: "skills_waitlist" });
+      .insert({ email: parsed.data, source: "skills_waitlist", investor_stage: stage } as any);
     setSubmitting(false);
 
     if (error) {
