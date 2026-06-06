@@ -66,6 +66,7 @@ const App = () => (
               <Route path="/integrations" element={<IntegrationsPage />} />
               <Route path="/mcps" element={<Navigate to="/integrations" replace />} />
               <Route path="/skills" element={<SkillsPage />} />
+              <Route path="/skills/:slug" element={<SkillDetailPage />} />
               <Route path="/agents" element={<AgentsPage />} />
               <Route path="/resources" element={<ResourcesPage />} />
               <Route path="/submit" element={<SubmitPage />} />
