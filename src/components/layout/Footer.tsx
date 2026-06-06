@@ -2,21 +2,15 @@ import { Link } from "react-router-dom";
 import { NewsletterCard } from "@/components/home/NewsletterCard";
 
 const quickLinks = [
-  { name: "Integrations", href: "/integrations" },
   { name: "Skills", href: "/skills" },
-  { name: "Agents", href: "/agents" },
   { name: "Resources", href: "/resources" },
   { name: "Blog", href: "/blog" },
-  { name: "Submit a Tool", href: "/submit" },
 ];
 
-const popularCategories = [
-  { name: "Image Generation", href: "/category/image-generation" },
-  { name: "Video Creation", href: "/category/video-creation" },
-  { name: "Automation", href: "/category/automation" },
-  { name: "AI Writers", href: "/category/ai-writers" },
-  { name: "Virtual Staging", href: "/category/virtual-staging" },
-  { name: "Commercial Real Estate", href: "/category/commercial-real-estate" },
+const byStage = [
+  { name: "First Deal", href: "/skills" },
+  { name: "Actively Investing", href: "/skills" },
+  { name: "Scaling", href: "/skills" },
 ];
 
 const linkClass =
@@ -45,7 +39,7 @@ export function Footer() {
               </span>
             </Link>
             <p className="mt-4 text-[13px] text-foreground/50 leading-[1.65] max-w-[280px]">
-              The AI toolkit built for real estate professionals. Hand-curated weekly — picks are earned, not bought.
+              The AI toolkit built for real estate investors and operators — workflows drawn from real flipping and rental experience.
             </p>
           </div>
 
@@ -61,12 +55,12 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Popular Categories */}
+          {/* By Stage */}
           <div>
-            <h3 className={headerClass}>Popular Categories</h3>
+            <h3 className={headerClass}>By Stage</h3>
             <ul className="space-y-2.5">
-              {popularCategories.map((l) => (
-                <li key={l.href}>
+              {byStage.map((l) => (
+                <li key={l.name}>
                   <Link to={l.href} className={linkClass}>{l.name}</Link>
                 </li>
               ))}
