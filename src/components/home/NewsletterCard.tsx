@@ -30,10 +30,10 @@ export function NewsletterCard({ source = "homepage" }: { source?: string } = {}
           <Mail className="h-5 w-5 text-[hsl(229_94%_82%)]" />
         </div>
         <h2 className="font-display text-[28px] font-bold text-foreground tracking-tight">
-          New tools, every month
+          New investor skills, every month
         </h2>
         <p className="mt-2.5 text-[14px] text-muted-foreground leading-[1.65]">
-          The latest AI tools for real estate and beyond — hand-picked on merit, just what&apos;s worth your time.
+          New AI workflows for real estate investors — built from real operator experience. Drop your email to hear when they land.
         </p>
 
         {done ? (

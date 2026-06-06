@@ -1,46 +1,46 @@
-## Plan: Email-capture modal for Deal Screen + early access
+Cleanup: Remove AI-tool-directory clutter from public-facing pages to focus the site on investor skills.
 
-Build one reusable capture modal with two modes, wired to existing hero + stage cards + Deal Screen card CTA. Save to existing `newsletter_subscribers` table (already has `investor_stage`). No auth, no schema changes, no admin/payments/nav changes.
+All underlying routes, components, Supabase data, and /admin remain untouched. Only hide/remove elements from nav, homepage, and footer.
 
-### 1. New component: `src/components/capture/CaptureDialog.tsx`
-Reusable dialog built on existing `@/components/ui/dialog`, `Input`, `Label`, `Button` (variant `hero`) — matches existing dark/purple/serif theme.
+---
 
-Props:
-- `open`, `onOpenChange`
-- `mode`: `"free-skill" | "early-access"`
-- `initialStage?`: `"first" | "active" | "scaling"` (pre-selects pill)
-- `source`: short string for the `source` column (e.g. `"hero_deal_screen"`, `"stage_first"`, `"stage_active"`, `"stage_scaling"`, `"deal_screen_card"`)
+## 1. Topbar (`src/components/layout/Topbar.tsx`)
 
-UI:
-- Heading: `"Get the free Deal Screen"` (mode A) or `"Join the early-access list"` (mode B)
-- Email input (required, zod-validated like `SkillDownloadDialog`)
-- "Where are you right now?" — 3 selectable pills (single-select, optional):
-  - "Working on my first deal" → `first_deal`
-  - "Actively flipping or investing" → `actively_investing`
-  - "Scaling a team & operations" → `scaling`
-- Submit button (`variant="hero"`)
+- Keep nav links: Skills, Resources, Blog.
+- Remove from nav links array: Browse, Integrations, Agents.
+- Remove "Updated weekly" indicator (green dot + text).
+- Remove "Submit a Tool" button.
+- Add a "Start free" primary button (same gradient-hero style as hero CTA) that opens `CaptureDialog` in `free-skill` mode with source `nav_deal_screen`.
+- Keep Sign in / user dropdown logic exactly as-is.
+- Apply the same changes to the mobile menu.
 
-Submit logic:
-1. Validate email with zod.
-2. `supabase.from("newsletter_subscribers").insert({ email, source, investor_stage })`. Treat unique-violation `23505` as success (already subscribed).
-3. Mode A: fetch Deal Screen file URL — `supabase.from("skills").select("file_url").eq("slug","deal-screen").maybeSingle()` — then `window.open(file_url, "_blank", "noopener,noreferrer")`. Success state replaces form with: "Downloaded — load it into ChatGPT, Claude, or Gemini and start screening deals."
-4. Mode B: Success state: "You're on the list — we'll email you when these tools go live."
+## 2. Homepage (`src/pages/Index.tsx`)
 
-Toast errors via `sonner` on failure (consistent with `SkillDownloadDialog`).
+- Remove imports and usage of: `FeaturedSection`, `BrowseByTagSection`, `BuiltForSpecialtySection`.
+- Keep: `Hero`, `ChooseYourStageSection`, `SkillsHomeSection`.
+- No changes to `AppLayout` or any page-level logic.
 
-### 2. Wire triggers
+## 3. Footer (`src/components/layout/Footer.tsx`)
 
-**`src/components/home/Hero.tsx`** — convert "Start free — Deal Screen" `<Link>` into a button that opens `CaptureDialog` in mode `free-skill`, source `hero_deal_screen`. Leave "See the workflows →" link unchanged.
+- **Tagline**: replace current paragraph with:
+  "The AI toolkit built for real estate investors and operators — workflows drawn from real flipping and rental experience."
+- **Quick Links**: keep only Skills, Resources, Blog. Remove Integrations, Agents, Submit a Tool.
+- **By Stage column**: replace "Popular Categories" with a "By Stage" header and list:
+  - First Deal → /skills
+  - Actively Investing → /skills
+  - Scaling → /skills
+- **Newsletter band** (inside `NewsletterCard` via `source` prop, or edit `NewsletterCard` if props aren't sufficient):
+  - Change heading from "New tools, every month" to "New investor skills, every month"
+  - Change body from current text to: "New AI workflows for real estate investors — built from real operator experience. Drop your email to hear when they land."
+  - Keep email input and button styling unchanged.
 
-**`src/components/home/ChooseYourStageSection.tsx`** — replace each card's `<Link>`/`<a>` with a button that opens the dialog:
-- First Deal → mode `free-skill`, initialStage `first`, source `stage_first`
-- Actively Investing → mode `early-access`, initialStage `active`, source `stage_active`
-- Scaling → mode `early-access`, initialStage `scaling`, source `stage_scaling`
+## Technical notes
+- Reuse existing `CaptureDialog` component. Add `nav_deal_screen` source.
+- No database changes. No theme/font/component changes.
+- All existing routes (`/browse`, `/integrations`, `/agents`, `/submit`, etc.) remain in `App.tsx` and are accessible by direct URL — only removed from public navigation surfaces.
 
-**Deal Screen card CTA** — in `src/components/skills/SkillPreviewCard.tsx`, detect `slug === "deal-screen"` and open `CaptureDialog` (mode `free-skill`, source `deal_screen_card`) instead of the existing `SkillDownloadDialog`. All other skill cards keep current behavior unchanged.
-
-### Technical notes
-- No DB migration: `investor_stage` column already exists on `newsletter_subscribers`. Existing RLS policy "Anyone can subscribe" allows anon insert with email validation — compatible.
-- Reads `skills.file_url` for `deal-screen` via the existing public `skills` SELECT policy.
-- No changes to `SkillDownloadDialog`, admin, routes, nav, theme, fonts, or other skill cards.
-- Files touched: new `CaptureDialog.tsx`; edits to `Hero.tsx`, `ChooseYourStageSection.tsx`, `SkillPreviewCard.tsx`.
+## Files touched
+- `src/components/layout/Topbar.tsx`
+- `src/pages/Index.tsx`
+- `src/components/layout/Footer.tsx`
+- `src/components/home/NewsletterCard.tsx` (if copy lives there; otherwise may only need prop changes in Footer)

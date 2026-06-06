@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { CaptureDialog } from "@/components/capture/CaptureDialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,10 +16,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 const navLinks = [
-  { name: "Browse", href: "/browse" },
-  { name: "Integrations", href: "/integrations" },
   { name: "Skills", href: "/skills" },
-  { name: "Agents", href: "/agents" },
   { name: "Resources", href: "/resources" },
   { name: "Blog", href: "/blog" },
 ];
@@ -27,6 +25,7 @@ export function Topbar() {
   const location = useLocation();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
+  const [captureOpen, setCaptureOpen] = useState(false);
   const { user, signOut } = useAuth();
   const [isAdmin, setIsAdmin] = useState(false);
 
@@ -57,6 +56,11 @@ export function Topbar() {
 
   const initial = (user?.email ?? "U")[0].toUpperCase();
 
+  const openCapture = () => {
+    setOpen(false);
+    setCaptureOpen(true);
+  };
+
   return (
     <header
       className="sticky top-0 z-50 border-b border-foreground/[0.06] backdrop-blur-xl"
@@ -79,20 +83,11 @@ export function Topbar() {
         {/* Center nav */}
         <nav className="hidden lg:flex items-center gap-0.5">
           {navLinks.map((l) => {
-            const isBrowse = l.href === "/browse";
-            const active = isBrowse
-              ? location.pathname === "/browse" ||
-                location.pathname.startsWith("/category/") ||
-                location.pathname.startsWith("/specialty/")
-              : l.href === "/"
-                ? location.pathname === "/"
-                : location.pathname.startsWith(l.href);
-            const isHome = l.href === "/";
+            const active = location.pathname.startsWith(l.href);
             return (
               <Link
                 key={l.name}
                 to={l.href}
-                onClick={isHome ? handleHomeClick : undefined}
                 className={cn(
                   "text-[13.5px] font-medium px-2.5 py-1.5 rounded-md transition-base",
                   active ? "text-foreground" : "text-muted-foreground hover:text-foreground hover:bg-foreground/[0.05]",
@@ -106,16 +101,13 @@ export function Topbar() {
 
         {/* Right */}
         <div className="hidden lg:flex items-center gap-2.5 shrink-0">
-          <div className="flex items-center gap-1.5">
-            <span className="h-1.5 w-1.5 rounded-full bg-success pulse-dot" />
-            <span className="text-[11px] text-foreground/30">Updated weekly</span>
-          </div>
-          <Link
-            to="/submit"
-            className="bg-foreground text-background rounded-[9px] px-4 py-2 text-[13px] font-semibold hover:bg-foreground/90 transition-base"
+          <button
+            type="button"
+            onClick={openCapture}
+            className="inline-flex items-center justify-center rounded-[10px] bg-gradient-to-r from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] px-4 py-2 text-[13px] font-semibold text-white shadow-lg shadow-[hsl(252_84%_50%)]/25 hover:shadow-[hsl(252_84%_50%)]/40 transition-base"
           >
-            Submit a Tool
-          </Link>
+            Start free
+          </button>
 
           {user ? (
             <DropdownMenu>
@@ -211,16 +203,23 @@ export function Topbar() {
               </Link>
             )}
 
-            <Link
-              to="/submit"
-              onClick={() => setOpen(false)}
-              className="block mt-3 text-center bg-foreground text-background rounded-[9px] px-4 py-2 text-sm font-semibold"
+            <button
+              type="button"
+              onClick={openCapture}
+              className="block w-full mt-3 text-center rounded-[10px] bg-gradient-to-r from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] px-4 py-2 text-sm font-semibold text-white"
             >
-              Submit a Tool
-            </Link>
+              Start free
+            </button>
           </div>
         </div>
       )}
+
+      <CaptureDialog
+        open={captureOpen}
+        onOpenChange={setCaptureOpen}
+        mode="free-skill"
+        source="nav_deal_screen"
+      />
     </header>
   );
 }
