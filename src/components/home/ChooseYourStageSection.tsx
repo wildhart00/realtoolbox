@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { CaptureDialog, type CaptureMode, type StageKey } from "@/components/capture/CaptureDialog";
 
 type StageCard = {
@@ -10,6 +10,8 @@ type StageCard = {
   mode: CaptureMode;
   stage: StageKey;
   source: string;
+  learnMoreSlug: string;
+  primaryHref?: string;
 };
 
 const STAGES: StageCard[] = [
@@ -21,6 +23,8 @@ const STAGES: StageCard[] = [
     mode: "free-skill",
     stage: "first",
     source: "stage_first",
+    learnMoreSlug: "deal-screen",
+    primaryHref: "/skills/deal-screen",
   },
   {
     tag: "Actively Investing",
@@ -30,6 +34,7 @@ const STAGES: StageCard[] = [
     mode: "early-access",
     stage: "active",
     source: "stage_active",
+    learnMoreSlug: "deal-analyzer-underwriter",
   },
   {
     tag: "Scaling",
@@ -39,11 +44,13 @@ const STAGES: StageCard[] = [
     mode: "early-access",
     stage: "scaling",
     source: "stage_scaling",
+    learnMoreSlug: "kpi-constraint-finder",
   },
 ];
 
 export function ChooseYourStageSection() {
   const [active, setActive] = useState<StageCard | null>(null);
+  const navigate = useNavigate();
 
   return (
     <section
@@ -81,13 +88,13 @@ export function ChooseYourStageSection() {
             <div className="mt-auto flex items-center gap-4">
               <button
                 type="button"
-                onClick={() => setActive(s)}
+                onClick={() => (s.primaryHref ? navigate(s.primaryHref) : setActive(s))}
                 className="inline-flex items-center justify-center rounded-[10px] bg-gradient-to-r from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] px-4 py-2.5 text-[13px] font-semibold text-white shadow-lg shadow-[hsl(252_84%_50%)]/20 hover:shadow-[hsl(252_84%_50%)]/35 transition-base"
               >
                 {s.buttonLabel} →
               </button>
               <Link
-                to="/skills"
+                to={`/skills/${s.learnMoreSlug}`}
                 className="text-[13px] font-medium text-foreground/70 hover:text-foreground transition-base"
               >
                 Learn more →
