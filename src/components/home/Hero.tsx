@@ -23,7 +23,7 @@ export function Hero({ toolCount: _toolCount }: { toolCount: number }) {
       </h1>
 
       <p className="text-[16px] text-muted-foreground leading-[1.65] mx-auto" style={{ maxWidth: 640 }}>
-        Ready-to-run AI workflows for real estate investors, flippers, and the agents who want to think like them — deal analysis, lead conversion, KPIs, and scaling, built from real operator experience, not generic prompts. Drop one into ChatGPT, Claude, or Gemini and get operator-grade output in minutes.
+        AI workflows built by a real estate operator, not a prompt writer. Load one into ChatGPT, Claude, or Gemini for operator-grade help with deals, leads, KPIs, and scaling — in minutes.
       </p>
 
       <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">

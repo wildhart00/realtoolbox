@@ -16,7 +16,7 @@ function useHomeSkills() {
     queryFn: async (): Promise<SkillRow[]> => {
       const { data, error } = await supabase
         .from("skills" as any)
-        .select("id, name, slug, tagline, audience, file_url, access_level, price")
+        .select("id, name, slug, tagline, description, audience, file_url, access_level, price")
         .eq("is_published", true)
         .order("sort_order", { ascending: true })
         .limit(4);

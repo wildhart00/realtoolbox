@@ -36,6 +36,7 @@ import { Navigate } from "react-router-dom";
 import AgentsPage from "./pages/AgentsPage.tsx";
 import ResourcesPage from "./pages/ResourcesPage.tsx";
 import SkillsPage from "./pages/SkillsPage.tsx";
+import SkillDetailPage from "./pages/SkillDetailPage.tsx";
 import PrivacyPage from "./pages/PrivacyPage.tsx";
 import TermsPage from "./pages/TermsPage.tsx";
 import ContactPage from "./pages/ContactPage.tsx";
@@ -65,6 +66,7 @@ const App = () => (
               <Route path="/integrations" element={<IntegrationsPage />} />
               <Route path="/mcps" element={<Navigate to="/integrations" replace />} />
               <Route path="/skills" element={<SkillsPage />} />
+              <Route path="/skills/:slug" element={<SkillDetailPage />} />
               <Route path="/agents" element={<AgentsPage />} />
               <Route path="/resources" element={<ResourcesPage />} />
               <Route path="/submit" element={<SubmitPage />} />
