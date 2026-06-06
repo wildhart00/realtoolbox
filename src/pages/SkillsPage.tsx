@@ -120,7 +120,7 @@ export default function SkillsPage() {
               </span>
             </h1>
             <p className="mt-6 text-[17px] lg:text-lg text-muted-foreground leading-[1.65]">
-              Each one turns your AI into a specialist for one money task — deal analysis, lead conversion, pricing, follow-up, KPIs — built from real flipping and rental experience. Copy it into your AI and go.
+              Each one turns your AI into a specialist for one specific job — deal analysis, lead conversion, pricing, follow-up, KPIs — built from real flipping and rental experience. Copy it into your AI and go.
             </p>
           </div>
 
