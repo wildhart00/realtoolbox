@@ -94,7 +94,7 @@ export function ChooseYourStageSection() {
                 {s.buttonLabel} →
               </button>
               <Link
-                to={`/skills/${s.learnMoreSlug}`}
+                to="/skills"
                 className="text-[13px] font-medium text-foreground/70 hover:text-foreground transition-base"
               >
                 Learn more →
