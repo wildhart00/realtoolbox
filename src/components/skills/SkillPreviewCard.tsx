@@ -31,6 +31,7 @@ export function SkillPreviewCard({
 }: SkillCardData) {
   const [open, setOpen] = useState(false);
   const isPaid = access_level === "paid" && Number(price) > 0;
+  const isDealScreen = slug === "deal-screen";
   const label = isPaid ? `Get — $${Number(price).toFixed(2)}` : "Download";
 
   return (
@@ -56,7 +57,7 @@ export function SkillPreviewCard({
 
         <Button
           onClick={() => setOpen(true)}
-          disabled={!file_url}
+          disabled={!isDealScreen && !file_url}
           variant="hero"
           size="sm"
           className="mt-5 self-start gap-1.5"
@@ -66,13 +67,22 @@ export function SkillPreviewCard({
         </Button>
       </div>
 
-      <SkillDownloadDialog
-        open={open}
-        onOpenChange={setOpen}
-        skillName={name}
-        skillSlug={slug}
-        fileUrl={file_url}
-      />
+      {isDealScreen ? (
+        <CaptureDialog
+          open={open}
+          onOpenChange={setOpen}
+          mode="free-skill"
+          source="deal_screen_card"
+        />
+      ) : (
+        <SkillDownloadDialog
+          open={open}
+          onOpenChange={setOpen}
+          skillName={name}
+          skillSlug={slug}
+          fileUrl={file_url}
+        />
+      )}
     </>
   );
 }
