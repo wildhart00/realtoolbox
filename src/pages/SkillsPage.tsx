@@ -3,9 +3,6 @@ import { Link } from "react-router-dom";
 import { z } from "zod";
 import {
   ArrowRight,
-  Download,
-  Upload,
-  Sparkles,
   CheckCircle2,
 } from "lucide-react";
 import { AppLayout } from "@/components/layout/AppLayout";
@@ -14,17 +11,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { SkillPreviewCard, type SkillCardData } from "@/components/skills/SkillPreviewCard";
-
-const steps: { n: string; title: string; subtext?: string; icon: typeof Download }[] = [
-  { n: "1", title: "Pick a workflow", subtext: "Choose the one for the job in front of you.", icon: Download },
-  {
-    n: "2",
-    title: "Load it into your AI",
-    subtext: "ChatGPT, Claude, Gemini, or any assistant. Copy it in, or save it once.",
-    icon: Upload,
-  },
-  { n: "3", title: "Get operator-grade output", subtext: "The numbers and judgment of someone who's run the deals.", icon: Sparkles },
-];
+import { HowToUseSteps } from "@/components/skills/HowToUseSteps";
 
 const STAGE_OPTIONS = [
   { value: "first_deal", label: "Working on my first deal" },
