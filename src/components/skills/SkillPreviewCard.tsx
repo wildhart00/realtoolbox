@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SkillDownloadDialog } from "./SkillDownloadDialog";
+import { CaptureDialog } from "@/components/capture/CaptureDialog";
 
 const AUDIENCE_LABEL: Record<string, string> = {
   agent: "For Agents",
