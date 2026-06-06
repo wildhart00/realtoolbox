@@ -27,6 +27,7 @@ export interface SkillRow {
   slug: string;
   tagline: string | null;
   description: string | null;
+  overview: string | null;
   audience: "agent" | "investor" | "both";
   tier: "quick_tool" | "workflow" | "business_system";
   access_level: "free" | "paid";
@@ -42,6 +43,7 @@ const empty: SkillRow = {
   slug: "",
   tagline: "",
   description: "",
+  overview: "",
   audience: "agent",
   tier: "quick_tool",
   access_level: "free",

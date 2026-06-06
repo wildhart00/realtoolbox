@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowLeft, Lock } from "lucide-react";
+import { ArrowLeft, Check, Copy, Lock } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { toast } from "sonner";
 import { AppLayout } from "@/components/layout/AppLayout";
-import { HowToUseSteps } from "@/components/skills/HowToUseSteps";
 import { CaptureDialog, type StageKey } from "@/components/capture/CaptureDialog";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -15,6 +15,7 @@ type SkillRow = {
   slug: string;
   tagline: string | null;
   description: string | null;
+  overview: string | null;
   audience: string;
   file_url: string | null;
   access_level: string;
@@ -28,9 +29,17 @@ function stageFromTagline(tagline: string | null): StageKey {
   return "first";
 }
 
+const LLM_LINKS = [
+  { label: "Open ChatGPT", href: "https://chatgpt.com" },
+  { label: "Open Claude", href: "https://claude.ai/new" },
+  { label: "Open Gemini", href: "https://gemini.google.com" },
+];
+
 export default function SkillDetailPage() {
   const { slug } = useParams<{ slug: string }>();
   const [open, setOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const copyTimer = useRef<number | null>(null);
 
   const { data: skill, isLoading } = useQuery({
     queryKey: ["skill-detail", slug],
@@ -38,7 +47,7 @@ export default function SkillDetailPage() {
     queryFn: async (): Promise<SkillRow | null> => {
       const { data, error } = await supabase
         .from("skills" as any)
-        .select("id, name, slug, tagline, description, audience, file_url, access_level, price")
+        .select("id, name, slug, tagline, description, overview, audience, file_url, access_level, price")
         .eq("slug", slug!)
         .eq("is_published", true)
         .maybeSingle();
@@ -48,16 +57,6 @@ export default function SkillDetailPage() {
   });
 
   const isPaid = !!skill && skill.access_level === "paid" && Number(skill.price) > 0;
-
-  const { data: markdown } = useQuery({
-    queryKey: ["skill-md", skill?.file_url],
-    enabled: !!skill && !isPaid && !!skill.file_url,
-    queryFn: async (): Promise<string> => {
-      const r = await fetch(skill!.file_url!);
-      if (!r.ok) throw new Error("Failed to load");
-      return r.text();
-    },
-  });
 
   useEffect(() => {
     if (!skill) return;
@@ -70,8 +69,37 @@ export default function SkillDetailPage() {
         document.head.appendChild(m);
         return m;
       })();
-    meta.setAttribute("content", (skill.description ?? skill.tagline ?? "Operator-grade AI workflow for real estate investors.").slice(0, 160));
+    meta.setAttribute(
+      "content",
+      (skill.description ?? skill.tagline ?? "Operator-grade AI workflow for real estate investors.").slice(0, 160),
+    );
   }, [skill]);
+
+  useEffect(() => {
+    return () => {
+      if (copyTimer.current) window.clearTimeout(copyTimer.current);
+    };
+  }, []);
+
+  async function handleCopySuccess() {
+    if (!skill?.file_url) {
+      toast.error("Skill file not available yet.");
+      return;
+    }
+    try {
+      const r = await fetch(skill.file_url);
+      if (!r.ok) throw new Error("Fetch failed");
+      const text = await r.text();
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      toast.success("Skill copied to your clipboard.");
+      if (copyTimer.current) window.clearTimeout(copyTimer.current);
+      copyTimer.current = window.setTimeout(() => setCopied(false), 3500);
+    } catch (err) {
+      console.warn("copy skill failed", err);
+      toast.error("Couldn't copy the skill. Please try again.");
+    }
+  }
 
   return (
     <AppLayout>
@@ -108,59 +136,91 @@ export default function SkillDetailPage() {
                 {skill.description}
               </p>
             )}
-
-            <div className="mt-8">
-              <button
-                type="button"
-                onClick={() => setOpen(true)}
-                className="inline-flex items-center justify-center rounded-[10px] bg-gradient-to-r from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] px-6 py-3 text-[14px] font-semibold text-white shadow-lg shadow-[hsl(252_84%_50%)]/25 hover:shadow-[hsl(252_84%_50%)]/40 transition-base"
-              >
-                {isPaid ? "Coming soon — Join for early access" : "Start free"}
-              </button>
-            </div>
           </>
         )}
       </section>
 
       {skill && (
         <>
-          <section className="mx-auto max-w-[1100px] px-6 lg:px-10 pb-12">
-            <p className="text-[11px] uppercase tracking-[0.16em] text-foreground/50 font-semibold mb-5">
-              How to use it
-            </p>
-            <HowToUseSteps />
-          </section>
-
-          <section className="mx-auto max-w-[900px] px-6 lg:px-10 pb-20">
-            {isPaid ? (
-              <div className="rounded-2xl p-7 surface-card">
-                <h2 className="font-display text-2xl font-semibold tracking-[-0.01em] text-foreground">
-                  What's inside
-                </h2>
-                <p className="mt-3 text-[15px] text-muted-foreground leading-[1.7]">
+          {/* Overview */}
+          <section className="mx-auto max-w-[900px] px-6 lg:px-10 pb-10">
+            <div className="rounded-2xl p-7 lg:p-9 surface-card">
+              <p className="text-[11px] uppercase tracking-[0.16em] text-foreground/50 font-semibold mb-4">
+                Overview
+              </p>
+              {skill.overview ? (
+                <div className="prose prose-invert max-w-none prose-headings:font-display prose-headings:tracking-[-0.01em] prose-h1:text-3xl prose-h2:text-2xl prose-h3:text-xl prose-p:text-muted-foreground prose-p:leading-[1.7] prose-li:text-muted-foreground prose-strong:text-foreground prose-a:text-[hsl(229_94%_82%)]">
+                  <ReactMarkdown remarkPlugins={[remarkGfm]}>{skill.overview}</ReactMarkdown>
+                </div>
+              ) : (
+                <p className="text-[15px] text-muted-foreground leading-[1.7]">
                   {skill.description ?? "A complete operator workflow you can drop into ChatGPT, Claude, or Gemini."}
                 </p>
-                <div className="mt-6">
-                  <button
-                    type="button"
-                    onClick={() => setOpen(true)}
-                    className="inline-flex items-center justify-center rounded-[10px] bg-gradient-to-r from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] px-5 py-2.5 text-[13.5px] font-semibold text-white shadow-md transition-base hover:shadow-[hsl(252_84%_50%)]/40"
-                  >
-                    Coming soon — Join for early access
-                  </button>
-                </div>
+              )}
+            </div>
+          </section>
+
+          {/* How to set it up for continuous use */}
+          <section className="mx-auto max-w-[900px] px-6 lg:px-10 pb-10">
+            <div className="rounded-2xl p-7 lg:p-9 surface-card">
+              <p className="text-[11px] uppercase tracking-[0.16em] text-foreground/50 font-semibold mb-5">
+                How to set it up for continuous use
+              </p>
+              <ol className="space-y-4 text-[15px] text-muted-foreground leading-[1.7] list-decimal pl-5 marker:text-foreground/60 marker:font-semibold">
+                <li>Copy the skill (button below).</li>
+                <li>Open your AI assistant.</li>
+                <li>
+                  Save it once so it&apos;s always on:
+                  <ul className="mt-2 space-y-2 list-disc pl-5 marker:text-foreground/40">
+                    <li>
+                      <span className="text-foreground/85 font-semibold">ChatGPT</span> — create a new Custom GPT and paste the skill into its instructions (or paste into any chat for one-time use).
+                    </li>
+                    <li>
+                      <span className="text-foreground/85 font-semibold">Claude</span> — create a new Project and paste the skill into the project&apos;s custom instructions.
+                    </li>
+                    <li>
+                      <span className="text-foreground/85 font-semibold">Gemini</span> — create a new Gem and paste the skill into its instructions.
+                    </li>
+                  </ul>
+                </li>
+                <li>From then on, just talk to it — your AI follows the skill every time, no re-pasting.</li>
+              </ol>
+            </div>
+          </section>
+
+          {/* Action area */}
+          <section className="mx-auto max-w-[900px] px-6 lg:px-10 pb-20">
+            {isPaid ? (
+              <div className="flex flex-wrap items-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => setOpen(true)}
+                  className="inline-flex items-center justify-center rounded-[10px] bg-gradient-to-r from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] px-6 py-3 text-[14px] font-semibold text-white shadow-lg shadow-[hsl(252_84%_50%)]/25 hover:shadow-[hsl(252_84%_50%)]/40 transition-base"
+                >
+                  Coming soon — Join for early access
+                </button>
               </div>
             ) : (
-              <div className="rounded-2xl p-7 lg:p-9 surface-card">
-                {markdown ? (
-                  <div className="prose prose-invert max-w-none prose-headings:font-display prose-headings:tracking-[-0.01em] prose-h1:text-3xl prose-h2:text-2xl prose-h3:text-xl prose-p:text-muted-foreground prose-p:leading-[1.7] prose-li:text-muted-foreground prose-strong:text-foreground prose-a:text-[hsl(229_94%_82%)]">
-                    <ReactMarkdown remarkPlugins={[remarkGfm]}>{markdown}</ReactMarkdown>
-                  </div>
-                ) : skill.file_url ? (
-                  <div className="text-sm text-muted-foreground">Loading skill…</div>
-                ) : (
-                  <div className="text-sm text-muted-foreground">Full skill coming soon.</div>
-                )}
+              <div className="flex flex-wrap items-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => setOpen(true)}
+                  className="inline-flex items-center justify-center gap-2 rounded-[10px] bg-gradient-to-r from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] px-6 py-3 text-[14px] font-semibold text-white shadow-lg shadow-[hsl(252_84%_50%)]/25 hover:shadow-[hsl(252_84%_50%)]/40 transition-base"
+                >
+                  {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                  {copied ? "Copied!" : "Copy skill"}
+                </button>
+                {LLM_LINKS.map((l) => (
+                  <a
+                    key={l.href}
+                    href={l.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center rounded-[10px] border border-foreground/15 bg-background/40 px-4 py-3 text-[13.5px] font-semibold text-foreground/85 hover:border-[hsl(239_84%_67%)]/45 hover:text-foreground transition-base"
+                  >
+                    {l.label} →
+                  </a>
+                ))}
               </div>
             )}
           </section>
@@ -171,6 +231,8 @@ export default function SkillDetailPage() {
             mode={isPaid ? "early-access" : "free-skill"}
             source={isPaid ? `skill_detail_paid_${skill.slug}` : `skill_detail_${skill.slug}`}
             initialStage={isPaid ? stageFromTagline(skill.tagline) : undefined}
+            suppressDefaultDownload={!isPaid}
+            onSuccess={isPaid ? undefined : handleCopySuccess}
           />
         </>
       )}

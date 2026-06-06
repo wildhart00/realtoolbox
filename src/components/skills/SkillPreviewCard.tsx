@@ -1,5 +1,5 @@
 import { useState, type MouseEvent } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Lock } from "lucide-react";
 import { CaptureDialog, type StageKey } from "@/components/capture/CaptureDialog";
 import { cn } from "@/lib/utils";
@@ -104,13 +104,13 @@ export function SkillPreviewCard({
               </span>
             </>
           ) : (
-            <button
-              type="button"
-              onClick={handleAction}
+            <Link
+              to={`/skills/${slug}`}
+              onClick={(e) => e.stopPropagation()}
               className="inline-flex items-center justify-center rounded-[10px] bg-gradient-to-r from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] px-4 py-2 text-[13px] font-semibold text-white shadow-md shadow-[hsl(252_84%_50%)]/20 hover:shadow-[hsl(252_84%_50%)]/35 transition-base"
             >
               Start free
-            </button>
+            </Link>
           )}
         </div>
       </div>
