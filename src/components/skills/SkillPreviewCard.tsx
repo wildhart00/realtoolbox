@@ -1,5 +1,5 @@
 import { useState, type MouseEvent } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Lock } from "lucide-react";
 import { CaptureDialog, type StageKey } from "@/components/capture/CaptureDialog";
 import { cn } from "@/lib/utils";
