@@ -78,7 +78,7 @@ export function ChooseYourStageSection() {
             <p className="text-[13px] text-muted-foreground leading-[1.65] flex-1">
               {s.body}
             </p>
-            <div className="mt-auto">
+            <div className="mt-auto flex items-center gap-4">
               <button
                 type="button"
                 onClick={() => setActive(s)}
@@ -86,6 +86,12 @@ export function ChooseYourStageSection() {
               >
                 {s.buttonLabel} →
               </button>
+              <Link
+                to="/skills"
+                className="text-[13px] font-medium text-foreground/70 hover:text-foreground transition-base"
+              >
+                Learn more →
+              </Link>
             </div>
           </div>
         ))}
