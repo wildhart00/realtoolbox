@@ -522,6 +522,7 @@ export type Database = {
           id: string
           is_published: boolean
           name: string
+          overview: string | null
           price: number
           slug: string
           sort_order: number
@@ -539,6 +540,7 @@ export type Database = {
           id?: string
           is_published?: boolean
           name: string
+          overview?: string | null
           price?: number
           slug: string
           sort_order?: number
@@ -556,6 +558,7 @@ export type Database = {
           id?: string
           is_published?: boolean
           name?: string
+          overview?: string | null
           price?: number
           slug?: string
           sort_order?: number

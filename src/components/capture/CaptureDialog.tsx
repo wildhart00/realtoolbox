@@ -37,6 +37,8 @@ interface Props {
   mode: CaptureMode;
   source: string;
   initialStage?: StageKey;
+  onSuccess?: () => void;
+  suppressDefaultDownload?: boolean;
 }
 
 export function CaptureDialog({
@@ -45,6 +47,8 @@ export function CaptureDialog({
   mode,
   source,
   initialStage,
+  onSuccess,
+  suppressDefaultDownload,
 }: Props) {
   const [email, setEmail] = useState("");
   const [stage, setStage] = useState<StageKey | null>(initialStage ?? null);
@@ -83,7 +87,7 @@ export function CaptureDialog({
       return;
     }
 
-    if (mode === "free-skill") {
+    if (mode === "free-skill" && !suppressDefaultDownload) {
       const { data: skill } = await supabase
         .from("skills" as any)
         .select("file_url")
@@ -99,6 +103,7 @@ export function CaptureDialog({
 
     setDone(true);
     setBusy(false);
+    onSuccess?.();
   }
 
   const heading =
