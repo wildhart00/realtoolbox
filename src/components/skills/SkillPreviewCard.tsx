@@ -125,6 +125,3 @@ export function SkillPreviewCard({
     </>
   );
 }
-
-// Re-export Link to satisfy potential tree-shaking checks (unused)
-export const _SkillCardLink = Link;
