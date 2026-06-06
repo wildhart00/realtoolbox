@@ -163,6 +163,21 @@ export function SkillFormDialog({
             />
           </div>
 
+          <div>
+            <Label>Overview (markdown)</Label>
+            <Textarea
+              value={row.overview ?? ""}
+              onChange={(e) => update("overview", e.target.value)}
+              rows={8}
+              placeholder="Benefit-focused detail content shown on the skill's detail page. Markdown supported."
+            />
+            <div className="text-xs text-muted-foreground mt-1">
+              Shown in the Overview section of the public skill page. Falls back to Description if empty.
+            </div>
+          </div>
+
+
+
           <div className="grid grid-cols-3 gap-3">
             <div>
               <Label>Audience</Label>
