@@ -36,6 +36,7 @@ import { Navigate } from "react-router-dom";
 import AgentsPage from "./pages/AgentsPage.tsx";
 import ResourcesPage from "./pages/ResourcesPage.tsx";
 import SkillsPage from "./pages/SkillsPage.tsx";
+import SkillDetailPage from "./pages/SkillDetailPage.tsx";
 import PrivacyPage from "./pages/PrivacyPage.tsx";
 import TermsPage from "./pages/TermsPage.tsx";
 import ContactPage from "./pages/ContactPage.tsx";
