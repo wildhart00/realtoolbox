@@ -22,8 +22,13 @@ const headerClass =
 export function Footer() {
   return (
     <footer className="border-t border-foreground/[0.06] mt-auto">
-      {/* Section 1: 3-column links */}
-      <div className="mx-auto max-w-[1200px] px-6 lg:px-10 py-14">
+      {/* Section 1: Newsletter band */}
+      <div>
+        <NewsletterCard source="newsletter" />
+      </div>
+
+      {/* Section 2: 3-column links */}
+      <div className="border-t border-foreground/[0.06] mx-auto max-w-[1200px] px-6 lg:px-10 py-14">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-12">
           {/* Brand */}
           <div>
@@ -69,10 +74,6 @@ export function Footer() {
         </div>
       </div>
 
-      {/* Section 2: Newsletter band */}
-      <div className="border-t border-foreground/[0.06]">
-        <NewsletterCard source="newsletter" />
-      </div>
 
       {/* Section 3: Legal bar */}
       <div className="border-t border-foreground/[0.06]">
