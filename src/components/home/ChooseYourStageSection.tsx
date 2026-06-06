@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { CaptureDialog, type CaptureMode, type StageKey } from "@/components/capture/CaptureDialog";
 
 type StageCard = {
