@@ -1,19 +1,26 @@
-## Goal
-Update the homepage hero subheadline, secondary button, and muted tagline. Keep all visual styling, fonts, layout, and the primary CTA exactly as-is.
+## Plan: Add "The Investor Arc" section to homepage
 
-## Changes
+### What we're building
+A new homepage section placed directly below the Hero and above "Choose your stage". It shows a 7-step horizontal timeline of skills that form a continuous investor decision path, with the free Deal Screen step highlighted.
 
-### `src/components/home/Hero.tsx`
+### Changes
 
-1. **Subheadline paragraph** — Replace the current `<p>` (the one with `maxWidth: 640`) with:
-   > "Ready-to-run AI workflows for real estate investors — built from real operator experience, not generic prompts. Load one into ChatGPT, Claude, or Gemini and get operator-grade answers on whether a deal works, what to offer, and when to walk away — in minutes."
+1. **New component** `src/components/home/InvestorArcSection.tsx`
+   - Small uppercase label: "THE INVESTOR ARC"
+   - Large serif heading: "Seven skills. One decision path."
+   - One muted intro line explaining the system.
+   - Horizontal step-flow of 7 nodes (numbered cards), connected with arrows/lines, wrapping on smaller screens.
+   - Each node: number, short title, one-line description.
+   - Step 2 (Deal Screen) gets a "FREE" badge and subtle accent ring to stand out.
+   - Centered "Browse all seven skills →" link in accent color below the flow.
+   - Uses existing design tokens: `font-display`, `text-muted-foreground`, `surface-card`, accent gradients, same max-width and padding as other homepage sections.
 
-2. **Secondary link** — Change the text from `"See the workflows →"` to `"See what's inside →"`. Replace the `<Link>` with an `<a>` or `<button>` that prevents default and calls `scrollIntoView({ behavior: "smooth" })` on `document.getElementById("journey-section")`. This matches the pattern already used in `BrowseByTagSection`.
+2. **Update** `src/pages/Index.tsx`
+   - Import and render `<InvestorArcSection />` between `<Hero />` and `<ChooseYourStageSection />`.
 
-3. **Muted tagline** — Replace the bottom `<p>` (the one with `text-muted-foreground/75`) with:
-   > "ChatGPT doesn't know how a flip gets underwritten, what to safely offer, or when to walk away. These do — because an operator built them."
-
-4. **Primary CTA** — Leave `"Start free — Deal Screen"` unchanged (text, style, gradient, and `/skills/deal-screen` link).
-
-## Anchor target
-The smooth-scroll link targets an element with `id="journey-section"`. This section does not yet exist on the page; you will add it next. If you prefer a different `id`, let me know before I implement.
+### Design details
+- Background: transparent (inherits dark page background, same as other sections).
+- Container: `max-w-[1100px]` with `px-6 lg:px-10 py-14 lg:py-16 mx-auto` (matching existing homepage section spacing).
+- Step cards: `surface-card` style with `rounded-2xl`, compact padding.
+- Connectors: simple SVG or CSS-based arrows/lines between cards on desktop; gracefully stack/wrap on mobile.
+- Generous gap between cards and rows; no crowding.
