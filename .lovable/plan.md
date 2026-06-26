@@ -1,26 +1,11 @@
-## Plan: Add "The Investor Arc" section to homepage
+## Two homepage copy changes (no layout/styling changes)
 
-### What we're building
-A new homepage section placed directly below the Hero and above "Choose your stage". It shows a 7-step horizontal timeline of skills that form a continuous investor decision path, with the free Deal Screen step highlighted.
+### CHANGE 1 — Stage cards in ChooseYourStageSection
+- Card 1 ("Doing your first deal") description: "Build your buy box, screen deals, and learn to walk away from the bad ones — with workflows that think like a seasoned investor. All seven launch skills live here."
+- Card 2 ("Flipping or renting now") description: "Deeper sourcing, lead conversion, and portfolio workflows for investors already in the game. Rolling out now."
+- Card 3 ("Building a business") — no change.
+- Titles, buttons, and links stay exactly as they are.
 
-### Changes
-
-1. **New component** `src/components/home/InvestorArcSection.tsx`
-   - Small uppercase label: "THE INVESTOR ARC"
-   - Large serif heading: "Seven skills. One decision path."
-   - One muted intro line explaining the system.
-   - Horizontal step-flow of 7 nodes (numbered cards), connected with arrows/lines, wrapping on smaller screens.
-   - Each node: number, short title, one-line description.
-   - Step 2 (Deal Screen) gets a "FREE" badge and subtle accent ring to stand out.
-   - Centered "Browse all seven skills →" link in accent color below the flow.
-   - Uses existing design tokens: `font-display`, `text-muted-foreground`, `surface-card`, accent gradients, same max-width and padding as other homepage sections.
-
-2. **Update** `src/pages/Index.tsx`
-   - Import and render `<InvestorArcSection />` between `<Hero />` and `<ChooseYourStageSection />`.
-
-### Design details
-- Background: transparent (inherits dark page background, same as other sections).
-- Container: `max-w-[1100px]` with `px-6 lg:px-10 py-14 lg:py-16 mx-auto` (matching existing homepage section spacing).
-- Step cards: `surface-card` style with `rounded-2xl`, compact padding.
-- Connectors: simple SVG or CSS-based arrows/lines between cards on desktop; gracefully stack/wrap on mobile.
-- Generous gap between cards and rows; no crowding.
+### CHANGE 2 — Purple "Now Live" banner body in SkillsHomeSection
+- Replace paragraph text with: "Done-for-you instruction files that turn any AI assistant — ChatGPT, Claude, or Gemini — into an operator-grade deal partner: build your buy box, screen and triage leads, pick the right exit, and underwrite a safe offer. Built from real flipping and rental experience. Start free with the Deal Screen."
+- Badge, heading, and "Browse the skills →" button stay exactly as they are.

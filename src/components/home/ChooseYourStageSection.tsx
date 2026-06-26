@@ -18,7 +18,7 @@ const STAGES: StageCard[] = [
   {
     tag: "First Deal",
     title: "Doing your first deal",
-    body: "Screen deals, learn the numbers, and dodge rookie mistakes with workflows that think like a seasoned investor.",
+    body: "Build your buy box, screen deals, and learn to walk away from the bad ones — with workflows that think like a seasoned investor. All seven launch skills live here.",
     buttonLabel: "Start free",
     mode: "free-skill",
     stage: "first",
@@ -29,7 +29,7 @@ const STAGES: StageCard[] = [
   {
     tag: "Actively Investing",
     title: "Flipping or renting now",
-    body: "Tighten deal analysis, lead conversion, and follow-up so more deals close.",
+    body: "Deeper sourcing, lead conversion, and portfolio workflows for investors already in the game. Rolling out now.",
     buttonLabel: "Join for early access",
     mode: "early-access",
     stage: "active",
