@@ -3,6 +3,7 @@ import { Hero } from "@/components/home/Hero";
 import { InvestorArcSection } from "@/components/home/InvestorArcSection";
 import { SkillsHomeSection } from "@/components/home/SkillsHomeSection";
 import { ChooseYourStageSection } from "@/components/home/ChooseYourStageSection";
+import { PricingSection } from "@/components/home/PricingSection";
 import { useTools } from "@/hooks/useDirectory";
 
 const Index = () => {
@@ -14,6 +15,7 @@ const Index = () => {
       <InvestorArcSection />
       <ChooseYourStageSection />
       <SkillsHomeSection />
+      <PricingSection />
     </AppLayout>
   );
 };
