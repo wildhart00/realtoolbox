@@ -1,19 +1,19 @@
-## Three small fixes
+## Goal
+Update the homepage hero subheadline, secondary button, and muted tagline. Keep all visual styling, fonts, layout, and the primary CTA exactly as-is.
 
-### 1. Footer order swap
-In `src/components/layout/Footer.tsx`, move the NewsletterCard band above the 3-column link block so the page footer reads:
-1. Newsletter band
-2. 3-column links (Brand, Quick Links, By Stage)
-3. Legal bar (copyright / Privacy / Terms)
+## Changes
 
-No other footer changes.
+### `src/components/home/Hero.tsx`
 
-### 2. Skills page hero subhead
-In `src/pages/SkillsPage.tsx`, change:
-> "Each one turns your AI into a specialist for one money task — deal analysis, lead conversion, pricing, follow-up, KPIs — built from real flipping and rental experience. Copy it into your AI and go."
+1. **Subheadline paragraph** — Replace the current `<p>` (the one with `maxWidth: 640`) with:
+   > "Ready-to-run AI workflows for real estate investors — built from real operator experience, not generic prompts. Load one into ChatGPT, Claude, or Gemini and get operator-grade answers on whether a deal works, what to offer, and when to walk away — in minutes."
 
-to:
-> "Each one turns your AI into a specialist for one specific job — deal analysis, lead conversion, pricing, follow-up, KPIs — built from real flipping and rental experience. Copy it into your AI and go."
+2. **Secondary link** — Change the text from `"See the workflows →"` to `"See what's inside →"`. Replace the `<Link>` with an `<a>` or `<button>` that prevents default and calls `scrollIntoView({ behavior: "smooth" })` on `document.getElementById("journey-section")`. This matches the pattern already used in `BrowseByTagSection`.
 
-### 3. Stage card "Learn more" links
-In `src/components/home/ChooseYourStageSection.tsx`, point all three "Learn more" links to `/skills` instead of `/skills/{slug}`. Keep each primary button unchanged (First Deal → /skills/deal-screen, Actively Investing / Scaling → capture modal).
+3. **Muted tagline** — Replace the bottom `<p>` (the one with `text-muted-foreground/75`) with:
+   > "ChatGPT doesn't know how a flip gets underwritten, what to safely offer, or when to walk away. These do — because an operator built them."
+
+4. **Primary CTA** — Leave `"Start free — Deal Screen"` unchanged (text, style, gradient, and `/skills/deal-screen` link).
+
+## Anchor target
+The smooth-scroll link targets an element with `id="journey-section"`. This section does not yet exist on the page; you will add it next. If you prefer a different `id`, let me know before I implement.

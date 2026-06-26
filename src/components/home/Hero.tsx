@@ -19,7 +19,7 @@ export function Hero({ toolCount: _toolCount }: { toolCount: number }) {
       </h1>
 
       <p className="text-[16px] text-muted-foreground leading-[1.65] mx-auto" style={{ maxWidth: 640 }}>
-        Ready-to-run AI workflows for real estate investors, flippers, and ambitious agents — built from real operator experience, not generic prompts. Load one into ChatGPT, Claude, or Gemini and get operator-grade output on deals, leads, KPIs, and scaling in minutes.
+        Ready-to-run AI workflows for real estate investors — built from real operator experience, not generic prompts. Load one into ChatGPT, Claude, or Gemini and get operator-grade answers on whether a deal works, what to offer, and when to walk away — in minutes.
       </p>
 
       <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -29,16 +29,21 @@ export function Hero({ toolCount: _toolCount }: { toolCount: number }) {
         >
           Start free — Deal Screen
         </Link>
-        <Link
-          to="/skills"
+        <a
+          href="#journey-section"
+          onClick={(e) => {
+            e.preventDefault();
+            const el = document.getElementById("journey-section");
+            if (el) el.scrollIntoView({ behavior: "smooth" });
+          }}
           className="text-[14px] font-semibold text-foreground/80 hover:text-foreground transition-base"
         >
-          See the workflows →
-        </Link>
+          See what&apos;s inside →
+        </a>
       </div>
 
       <p className="mt-6 text-[13px] text-muted-foreground/75 leading-[1.65] text-center mx-auto" style={{ maxWidth: 600 }}>
-        ChatGPT doesn&apos;t know how a flip gets underwritten or why your follow-up isn&apos;t converting. These do — because an operator built them.
+        ChatGPT doesn&apos;t know how a flip gets underwritten, what to safely offer, or when to walk away. These do — because an operator built them.
       </p>
     </section>
   );
