@@ -32,15 +32,16 @@ export function PricingSection() {
               <span className="text-[14px] text-muted-foreground">forever</span>
             </div>
             <p className="mt-3 text-[13px] text-muted-foreground leading-[1.65]">
-              Run any deal through the operator math in seconds.
+              Paste in any deal and get a fast, conservative read on whether the numbers actually work — using the same adjusted-ARV math seasoned operators use to avoid overpaying.
             </p>
           </div>
 
           <ul className="flex flex-col gap-2.5">
             {[
-              "Free Deal Screen — unlimited",
-              "Pat's Adjusted ARV Method",
-              "Works in ChatGPT, Claude, or Gemini",
+              "Unlimited deal screens — free forever",
+              "Conservative, operator-grade ARV and offer math",
+              "Instantly flags deals that don't clear",
+              "Runs in ChatGPT, Claude, or Gemini",
             ].map((item) => (
               <li key={item} className="flex items-start gap-2.5 text-[13px] text-foreground/80">
                 <Check className="h-4 w-4 text-muted-foreground/60 shrink-0 mt-[1px]" />
@@ -60,8 +61,9 @@ export function PricingSection() {
         </div>
 
         {/* Card 2 — All-Access */}
-        <div className="rounded-2xl p-[1px] bg-gradient-to-br from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] flex">
-          <div className="rounded-[15px] bg-[hsl(230_18%_8%)] p-6 lg:p-7 flex flex-col gap-5 flex-1">
+        <div className="relative rounded-2xl flex">
+          <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)]" />
+          <div className="relative m-[1px] rounded-[15px] bg-[hsl(230_18%_8%)] p-6 lg:p-7 flex flex-col gap-5 flex-1">
             <div>
               <span className="inline-flex items-center rounded-full bg-gradient-to-r from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] px-2.5 py-[3px] text-[10px] font-bold uppercase tracking-[0.12em] text-white shadow-sm">
                 Founding Member
