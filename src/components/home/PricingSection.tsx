@@ -32,15 +32,16 @@ export function PricingSection() {
               <span className="text-[14px] text-muted-foreground">forever</span>
             </div>
             <p className="mt-3 text-[13px] text-muted-foreground leading-[1.65]">
-              Run any deal through the operator math in seconds.
+              Paste in any deal and get a fast, conservative read on whether the numbers actually work — using the same adjusted-ARV math seasoned operators use to avoid overpaying.
             </p>
           </div>
 
           <ul className="flex flex-col gap-2.5">
             {[
-              "Free Deal Screen — unlimited",
-              "Pat's Adjusted ARV Method",
-              "Works in ChatGPT, Claude, or Gemini",
+              "Unlimited deal screens — free forever",
+              "Conservative, operator-grade ARV and offer math",
+              "Instantly flags deals that don't clear",
+              "Runs in ChatGPT, Claude, or Gemini",
             ].map((item) => (
               <li key={item} className="flex items-start gap-2.5 text-[13px] text-foreground/80">
                 <Check className="h-4 w-4 text-muted-foreground/60 shrink-0 mt-[1px]" />
