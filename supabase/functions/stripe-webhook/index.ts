@@ -74,7 +74,7 @@ async function upsertFromSubscription(sub: Stripe.Subscription, userId: string) 
   const customerId = typeof sub.customer === "string" ? sub.customer : sub.customer.id;
   const periodEnd = (sub as unknown as { current_period_end?: number }).current_period_end;
 
-  const { error } = await admin
+  const { error } = await getAdmin()
     .from("subscriptions")
     .upsert(
       {
