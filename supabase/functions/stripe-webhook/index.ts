@@ -1,16 +1,24 @@
 import Stripe from "npm:stripe@17";
 import { createClient } from "npm:@supabase/supabase-js@2";
 
-const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") ?? "", {
-  httpClient: Stripe.createFetchHttpClient(),
-});
+let _stripe: Stripe | null = null;
+function getStripe(): Stripe {
+  if (_stripe) return _stripe;
+  const key = Deno.env.get("STRIPE_SECRET_KEY");
+  if (!key) throw new Error("STRIPE_SECRET_KEY is not set");
+  _stripe = new Stripe(key, { httpClient: Stripe.createFetchHttpClient() });
+  return _stripe;
+}
 
-const admin = createClient(
-  Deno.env.get("SUPABASE_URL")!,
-  Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
-);
-
-const webhookSecret = Deno.env.get("STRIPE_WEBHOOK_SECRET") ?? "";
+let _admin: ReturnType<typeof createClient> | null = null;
+function getAdmin() {
+  if (_admin) return _admin;
+  _admin = createClient(
+    Deno.env.get("SUPABASE_URL")!,
+    Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
+  );
+  return _admin;
+}
 
 function mapStatus(s: string): string {
   switch (s) {
@@ -51,7 +59,7 @@ async function resolveUserId(opts: {
       ? opts.subscription.customer
       : opts.subscription?.customer?.id);
   if (customerId) {
-    const customer = await stripe.customers.retrieve(customerId);
+    const customer = await getStripe().customers.retrieve(customerId);
     if (!("deleted" in customer) || !customer.deleted) {
       const uid = (customer as Stripe.Customer).metadata?.supabase_user_id;
       if (uid) return uid;
@@ -66,7 +74,7 @@ async function upsertFromSubscription(sub: Stripe.Subscription, userId: string) 
   const customerId = typeof sub.customer === "string" ? sub.customer : sub.customer.id;
   const periodEnd = (sub as unknown as { current_period_end?: number }).current_period_end;
 
-  const { error } = await admin
+  const { error } = await getAdmin()
     .from("subscriptions")
     .upsert(
       {
@@ -87,13 +95,14 @@ Deno.serve(async (req) => {
 
   const sig = req.headers.get("stripe-signature");
   if (!sig) return new Response("missing signature", { status: 400 });
+  const webhookSecret = Deno.env.get("STRIPE_WEBHOOK_SECRET") ?? "";
   if (!webhookSecret) return new Response("webhook secret not configured", { status: 500 });
 
   const body = await req.text();
 
   let event: Stripe.Event;
   try {
-    event = await stripe.webhooks.constructEventAsync(body, sig, webhookSecret);
+    event = await getStripe().webhooks.constructEventAsync(body, sig, webhookSecret);
   } catch (err) {
     console.error("signature verification failed:", (err as Error).message);
     return new Response(`bad signature: ${(err as Error).message}`, { status: 400 });
@@ -111,7 +120,7 @@ Deno.serve(async (req) => {
         if (session.subscription) {
           const subId =
             typeof session.subscription === "string" ? session.subscription : session.subscription.id;
-          const sub = await stripe.subscriptions.retrieve(subId);
+          const sub = await getStripe().subscriptions.retrieve(subId);
           await upsertFromSubscription(sub, userId);
         }
         break;

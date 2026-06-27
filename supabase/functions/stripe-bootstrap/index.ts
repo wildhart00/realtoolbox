@@ -1,9 +1,14 @@
 import Stripe from "npm:stripe@17";
 import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
 
-const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") ?? "", {
-  httpClient: Stripe.createFetchHttpClient(),
-});
+let _stripe: Stripe | null = null;
+function getStripe(): Stripe {
+  if (_stripe) return _stripe;
+  const key = Deno.env.get("STRIPE_SECRET_KEY");
+  if (!key) throw new Error("STRIPE_SECRET_KEY is not set");
+  _stripe = new Stripe(key, { httpClient: Stripe.createFetchHttpClient() });
+  return _stripe;
+}
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
@@ -17,13 +22,13 @@ Deno.serve(async (req) => {
     }
 
     // Find or create the All-Access product (idempotent by metadata key)
-    const products = await stripe.products.search({
+    const products = await getStripe().products.search({
       query: "metadata['app_key']:'all_access'",
       limit: 1,
     });
     let product = products.data[0];
     if (!product) {
-      product = await stripe.products.create({
+      product = await getStripe().products.create({
         name: "All-Access",
         description: "Full operator toolkit — every real estate skill, plus new ones every month.",
         metadata: { app_key: "all_access" },
@@ -35,9 +40,9 @@ Deno.serve(async (req) => {
       unit_amount: number,
       interval: "month" | "year",
     ) => {
-      const existing = await stripe.prices.list({ lookup_keys: [lookup_key], limit: 1, active: true });
+      const existing = await getStripe().prices.list({ lookup_keys: [lookup_key], limit: 1, active: true });
       if (existing.data[0]) return existing.data[0];
-      return await stripe.prices.create({
+      return await getStripe().prices.create({
         product: product!.id,
         unit_amount,
         currency: "usd",
