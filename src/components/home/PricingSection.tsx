@@ -1,15 +1,17 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { Check, Loader2 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 export function PricingSection() {
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
+  const [params, setParams] = useSearchParams();
   const [plan, setPlan] = useState<"monthly" | "annual">("monthly");
   const [loading, setLoading] = useState(false);
+  const autoTriggered = useRef(false);
 
   const handleCheckout = async () => {
     if (!user) {
