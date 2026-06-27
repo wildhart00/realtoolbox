@@ -95,13 +95,14 @@ Deno.serve(async (req) => {
 
   const sig = req.headers.get("stripe-signature");
   if (!sig) return new Response("missing signature", { status: 400 });
+  const webhookSecret = Deno.env.get("STRIPE_WEBHOOK_SECRET") ?? "";
   if (!webhookSecret) return new Response("webhook secret not configured", { status: 500 });
 
   const body = await req.text();
 
   let event: Stripe.Event;
   try {
-    event = await stripe.webhooks.constructEventAsync(body, sig, webhookSecret);
+    event = await getStripe().webhooks.constructEventAsync(body, sig, webhookSecret);
   } catch (err) {
     console.error("signature verification failed:", (err as Error).message);
     return new Response(`bad signature: ${(err as Error).message}`, { status: 400 });
@@ -119,7 +120,7 @@ Deno.serve(async (req) => {
         if (session.subscription) {
           const subId =
             typeof session.subscription === "string" ? session.subscription : session.subscription.id;
-          const sub = await stripe.subscriptions.retrieve(subId);
+          const sub = await getStripe().subscriptions.retrieve(subId);
           await upsertFromSubscription(sub, userId);
         }
         break;
