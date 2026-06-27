@@ -1,16 +1,24 @@
 import Stripe from "npm:stripe@17";
 import { createClient } from "npm:@supabase/supabase-js@2";
 
-const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") ?? "", {
-  httpClient: Stripe.createFetchHttpClient(),
-});
+let _stripe: Stripe | null = null;
+function getStripe(): Stripe {
+  if (_stripe) return _stripe;
+  const key = Deno.env.get("STRIPE_SECRET_KEY");
+  if (!key) throw new Error("STRIPE_SECRET_KEY is not set");
+  _stripe = new Stripe(key, { httpClient: Stripe.createFetchHttpClient() });
+  return _stripe;
+}
 
-const admin = createClient(
-  Deno.env.get("SUPABASE_URL")!,
-  Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
-);
-
-const webhookSecret = Deno.env.get("STRIPE_WEBHOOK_SECRET") ?? "";
+let _admin: ReturnType<typeof createClient> | null = null;
+function getAdmin() {
+  if (_admin) return _admin;
+  _admin = createClient(
+    Deno.env.get("SUPABASE_URL")!,
+    Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
+  );
+  return _admin;
+}
 
 function mapStatus(s: string): string {
   switch (s) {
