@@ -88,15 +88,23 @@ export function CaptureDialog({
     }
 
     if (mode === "free-skill" && !suppressDefaultDownload) {
-      const { data: skill } = await supabase
-        .from("skills" as any)
-        .select("file_url")
-        .eq("slug", "deal-screen")
-        .maybeSingle();
-      const fileUrl = (skill as { file_url?: string | null } | null)?.file_url;
-      if (fileUrl) {
-        window.open(fileUrl, "_blank", "noopener,noreferrer");
-      } else {
+      try {
+        const { data, error: fnErr } = await supabase.functions.invoke(
+          "get-skill-content",
+          { body: { slug: "deal-screen" } },
+        );
+        if (fnErr || !data?.content) throw fnErr ?? new Error("No content");
+        const blob = new Blob([data.content], { type: "text/markdown" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "deal-screen.md";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+      } catch (err) {
+        console.warn("free skill download failed", err);
         toast.error("File not available yet.");
       }
     }

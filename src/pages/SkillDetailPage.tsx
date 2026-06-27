@@ -1,13 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowLeft, Check, Copy, Lock } from "lucide-react";
+import { ArrowLeft, Check, Copy, Lock, Sparkles } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { toast } from "sonner";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { CaptureDialog, type StageKey } from "@/components/capture/CaptureDialog";
 import { supabase } from "@/integrations/supabase/client";
+import { useSkillAccess } from "@/hooks/useSkillAccess";
 
 type SkillRow = {
   id: string;
@@ -39,6 +40,7 @@ export default function SkillDetailPage() {
   const { slug } = useParams<{ slug: string }>();
   const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [copying, setCopying] = useState(false);
   const copyTimer = useRef<number | null>(null);
 
   const { data: skill, isLoading } = useQuery({
@@ -56,7 +58,7 @@ export default function SkillDetailPage() {
     },
   });
 
-  const isPaid = !!skill && skill.access_level === "paid" && Number(skill.price) > 0;
+  const { isPaid, locked } = useSkillAccess(skill?.access_level);
 
   useEffect(() => {
     if (!skill) return;
@@ -81,16 +83,15 @@ export default function SkillDetailPage() {
     };
   }, []);
 
-  async function handleCopySuccess() {
-    if (!skill?.file_url) {
-      toast.error("Skill file not available yet.");
-      return;
-    }
+  async function fetchAndCopySkill() {
+    if (!skill) return;
+    setCopying(true);
     try {
-      const r = await fetch(skill.file_url);
-      if (!r.ok) throw new Error("Fetch failed");
-      const text = await r.text();
-      await navigator.clipboard.writeText(text);
+      const { data, error } = await supabase.functions.invoke("get-skill-content", {
+        body: { slug: skill.slug },
+      });
+      if (error || !data?.content) throw error ?? new Error("No content");
+      await navigator.clipboard.writeText(data.content);
       setCopied(true);
       toast.success("Skill copied to your clipboard.");
       if (copyTimer.current) window.clearTimeout(copyTimer.current);
@@ -98,6 +99,8 @@ export default function SkillDetailPage() {
     } catch (err) {
       console.warn("copy skill failed", err);
       toast.error("Couldn't copy the skill. Please try again.");
+    } finally {
+      setCopying(false);
     }
   }
 
@@ -124,7 +127,17 @@ export default function SkillDetailPage() {
               <span className="text-[10px] px-2 py-[3px] rounded-md border bg-accent/10 text-[hsl(229_94%_82%)] border-accent/25 font-semibold uppercase tracking-[0.08em]">
                 {skill.tagline ?? "Skill"}
               </span>
-              {isPaid && <Lock className="h-3.5 w-3.5 text-muted-foreground/70" aria-hidden />}
+              {isPaid && (
+                locked ? (
+                  <span className="inline-flex items-center gap-1 text-[10px] font-semibold uppercase tracking-[0.08em] text-muted-foreground/80">
+                    <Lock className="h-3 w-3" aria-hidden /> All-Access
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center gap-1 text-[10px] font-semibold uppercase tracking-[0.08em] text-[hsl(229_94%_82%)]">
+                    <Sparkles className="h-3 w-3" aria-hidden /> Unlocked
+                  </span>
+                )
+              )}
             </div>
 
             <h1 className="mt-4 font-display text-4xl lg:text-[52px] font-bold leading-[1.05] tracking-[-0.03em] text-foreground">
@@ -190,15 +203,51 @@ export default function SkillDetailPage() {
 
           {/* Action area */}
           <section className="mx-auto max-w-[900px] px-6 lg:px-10 pb-20">
-            {isPaid ? (
+            {isPaid && locked ? (
+              <div className="rounded-2xl p-6 lg:p-7 surface-card border border-foreground/10">
+                <div className="flex items-center gap-2 text-[12px] uppercase tracking-[0.14em] text-muted-foreground font-semibold">
+                  <Lock className="h-3.5 w-3.5" /> Members-only skill
+                </div>
+                <p className="mt-3 text-[15px] text-foreground/85 leading-[1.65]">
+                  This skill unlocks with All-Access. Get every paid skill — plus new ones every month — for one flat price.
+                </p>
+                <div className="mt-5 flex flex-wrap items-center gap-3">
+                  <Link
+                    to="/#pricing"
+                    className="inline-flex items-center justify-center rounded-[10px] bg-gradient-to-r from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] px-6 py-3 text-[14px] font-semibold text-white shadow-lg shadow-[hsl(252_84%_50%)]/25 hover:shadow-[hsl(252_84%_50%)]/40 transition-base"
+                  >
+                    Get All-Access →
+                  </Link>
+                  <Link
+                    to="/skills"
+                    className="inline-flex items-center justify-center rounded-[10px] border border-foreground/15 bg-background/40 px-4 py-3 text-[13.5px] font-semibold text-foreground/85 hover:border-[hsl(239_84%_67%)]/45 hover:text-foreground transition-base"
+                  >
+                    Browse other skills
+                  </Link>
+                </div>
+              </div>
+            ) : isPaid ? (
               <div className="flex flex-wrap items-center gap-3">
                 <button
                   type="button"
-                  onClick={() => setOpen(true)}
-                  className="inline-flex items-center justify-center rounded-[10px] bg-gradient-to-r from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] px-6 py-3 text-[14px] font-semibold text-white shadow-lg shadow-[hsl(252_84%_50%)]/25 hover:shadow-[hsl(252_84%_50%)]/40 transition-base"
+                  onClick={fetchAndCopySkill}
+                  disabled={copying}
+                  className="inline-flex items-center justify-center gap-2 rounded-[10px] bg-gradient-to-r from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] px-6 py-3 text-[14px] font-semibold text-white shadow-lg shadow-[hsl(252_84%_50%)]/25 hover:shadow-[hsl(252_84%_50%)]/40 transition-base disabled:opacity-70"
                 >
-                  Coming soon — Join for early access
+                  {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                  {copying ? "Copying…" : copied ? "Copied!" : "Copy skill"}
                 </button>
+                {LLM_LINKS.map((l) => (
+                  <a
+                    key={l.href}
+                    href={l.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center rounded-[10px] border border-foreground/15 bg-background/40 px-4 py-3 text-[13.5px] font-semibold text-foreground/85 hover:border-[hsl(239_84%_67%)]/45 hover:text-foreground transition-base"
+                  >
+                    {l.label} →
+                  </a>
+                ))}
               </div>
             ) : (
               <div className="flex flex-wrap items-center gap-3">
@@ -225,15 +274,17 @@ export default function SkillDetailPage() {
             )}
           </section>
 
-          <CaptureDialog
-            open={open}
-            onOpenChange={setOpen}
-            mode={isPaid ? "early-access" : "free-skill"}
-            source={isPaid ? `skill_detail_paid_${skill.slug}` : `skill_detail_${skill.slug}`}
-            initialStage={isPaid ? stageFromTagline(skill.tagline) : undefined}
-            suppressDefaultDownload={!isPaid}
-            onSuccess={isPaid ? undefined : handleCopySuccess}
-          />
+          {!isPaid && (
+            <CaptureDialog
+              open={open}
+              onOpenChange={setOpen}
+              mode="free-skill"
+              source={`skill_detail_${skill.slug}`}
+              initialStage={stageFromTagline(skill.tagline)}
+              suppressDefaultDownload
+              onSuccess={fetchAndCopySkill}
+            />
+          )}
         </>
       )}
     </AppLayout>
