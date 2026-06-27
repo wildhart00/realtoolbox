@@ -33,6 +33,34 @@ export function PricingSection() {
     }
   };
 
+  // Auto-resume checkout after returning from /auth?next=/?checkout=monthly|annual
+  useEffect(() => {
+    const target = params.get("checkout");
+    if (!target || authLoading || !user || autoTriggered.current) return;
+    if (target !== "monthly" && target !== "annual") return;
+    autoTriggered.current = true;
+    setPlan(target);
+    params.delete("checkout");
+    setParams(params, { replace: true });
+    (async () => {
+      setLoading(true);
+      try {
+        const { data, error } = await supabase.functions.invoke("create-checkout-session", {
+          body: { plan: target },
+        });
+        if (error) throw error;
+        if (!data?.url) throw new Error("No checkout URL returned");
+        window.location.href = data.url;
+      } catch (err) {
+        console.error(err);
+        toast.error((err as Error).message || "Could not start checkout");
+        setLoading(false);
+      }
+    })();
+  }, [user, authLoading, params, setParams]);
+
+
+
   return (
     <section id="pricing" className="px-6 lg:px-10 py-14 lg:py-16 mx-auto" style={{ maxWidth: 1100 }}>
       <div className="mb-10 max-w-2xl">
