@@ -42,6 +42,7 @@ import TermsPage from "./pages/TermsPage.tsx";
 import ContactPage from "./pages/ContactPage.tsx";
 import ContactMessagesAdmin from "./pages/admin/ContactMessagesAdmin.tsx";
 import { ScrollToTop } from "./components/ScrollToTop.tsx";
+import WelcomePage from "./pages/WelcomePage.tsx";
 
 const queryClient = new QueryClient();
 
@@ -73,6 +74,7 @@ const App = () => (
               <Route path="/privacy" element={<PrivacyPage />} />
               <Route path="/terms" element={<TermsPage />} />
               <Route path="/contact" element={<ContactPage />} />
+              <Route path="/welcome" element={<WelcomePage />} />
               <Route path="/auth" element={<AuthPage />} />
               <Route path="/reset-password" element={<ResetPasswordPage />} />
               <Route path="/admin" element={<AdminLayout />}>
