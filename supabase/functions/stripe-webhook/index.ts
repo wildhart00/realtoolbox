@@ -59,7 +59,7 @@ async function resolveUserId(opts: {
       ? opts.subscription.customer
       : opts.subscription?.customer?.id);
   if (customerId) {
-    const customer = await stripe.customers.retrieve(customerId);
+    const customer = await getStripe().customers.retrieve(customerId);
     if (!("deleted" in customer) || !customer.deleted) {
       const uid = (customer as Stripe.Customer).metadata?.supabase_user_id;
       if (uid) return uid;
