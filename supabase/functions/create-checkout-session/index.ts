@@ -38,7 +38,7 @@ Deno.serve(async (req) => {
     const origin = req.headers.get("origin") ?? "https://realtoolbox.ai";
 
     // Find price by lookup_key
-    const prices = await stripe.prices.list({ lookup_keys: [lookup_key], limit: 1, active: true });
+    const prices = await getStripe().prices.list({ lookup_keys: [lookup_key], limit: 1, active: true });
     const price = prices.data[0];
     if (!price) return json({ error: `Price ${lookup_key} not found. Run stripe-bootstrap first.` }, 500);
 
@@ -55,14 +55,14 @@ Deno.serve(async (req) => {
 
     let customerId = existing?.stripe_customer_id ?? undefined;
     if (!customerId) {
-      const customer = await stripe.customers.create({
+      const customer = await getStripe().customers.create({
         email,
         metadata: { supabase_user_id: userId },
       });
       customerId = customer.id;
     }
 
-    const session = await stripe.checkout.sessions.create({
+    const session = await getStripe().checkout.sessions.create({
       mode: "subscription",
       customer: customerId,
       client_reference_id: userId,
