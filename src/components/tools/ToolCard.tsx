@@ -107,6 +107,11 @@ function ToolScreenshot({ tool }: { tool: Tool }) {
         if (stage === "mshots") {
           const img = e.currentTarget;
           if (img.naturalWidth > 0 && img.naturalWidth < 50) {
+            if (retriesRef.current >= MAX_MSHOTS_RETRIES) {
+              advance();
+              return;
+            }
+            retriesRef.current += 1;
             setTimeout(() => {
               if (img.isConnected) img.src = src + `&cb=${Date.now()}`;
             }, 2500);
