@@ -40,7 +40,7 @@ export function useEntitlements() {
     })();
 
     const channel = supabase
-      .channel(`purchases:${user.id}`)
+      .channel(`purchases:${user.id}:${Math.random().toString(36).slice(2)}`)
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "purchases", filter: `user_id=eq.${user.id}` },
