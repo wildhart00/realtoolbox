@@ -135,7 +135,11 @@ export default function SkillsPage() {
                 className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-[520px] w-[520px] rounded-full blur-3xl bg-[radial-gradient(closest-side,hsl(265_84%_70%/0.55),hsl(229_94%_75%/0.30)_45%,transparent_75%)]"
               />
 
-              <div className="relative h-full w-full motion-safe:animate-float-slow">
+              <div
+                ref={floatCluster.ref}
+                className="relative h-full w-full motion-safe:animate-float-slow"
+                style={{ animationPlayState: floatCluster.active ? "running" : "paused" }}
+              >
                 {/* Card A — back */}
                 <div className="absolute top-0 left-0 w-[272px] rounded-2xl p-[18px] surface-card -rotate-[5deg] z-10 shadow-2xl shadow-black/40">
                   <span className="text-[10px] px-2 py-[3px] rounded-md border bg-accent/10 text-[hsl(229_94%_82%)] border-accent/25 font-semibold uppercase tracking-[0.06em]">
