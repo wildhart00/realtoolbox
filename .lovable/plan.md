@@ -1,31 +1,49 @@
-# Publish the Setup Guide
+# Performance audit — findings
 
-The frontend (`/setup-guide` route, `SetupGuidePage`, `ConnectMcpBlock`, MCP callouts, "First time?" links, guide tile on `/toolbox`) is already built and waiting on the content. This plan ships the markdown you just pasted and confirms end-to-end delivery.
+I searched the codebase for `requestAnimationFrame`, `useFrame`, `setInterval`, `refetchInterval`, and every `animation:` / `@keyframes` / `animate-*` usage. **There are no JS RAF loops in this project.** The main-thread-busy behavior is caused entirely by CSS animations that never stop, plus one image-retry setTimeout that can re-fire indefinitely:
 
-## Steps
+| # | Location | What's running forever |
+|---|---|---|
+| 1 | `src/components/tools/MeshGradientBanner.tsx` | 4 large blurred blobs (each `filter: blur(60px)`, `will-change: transform`) each with their own infinite `@keyframes` (19–26s). Rendered on every `/tools/:slug` page. Heavy compositor + main-thread paint each frame, never pauses even when scrolled off-screen. |
+| 2 | `src/pages/SkillsPage.tsx` line 136 | `motion-safe:animate-float-slow` — infinite 5s transform loop on the hero card cluster. |
+| 3 | `src/components/tools/ToolCard.tsx` lines 102–110 | mShots `onLoad` handler that `setTimeout(2500)` re-assigns `img.src` with a cache-buster whenever `naturalWidth < 50`. If the endpoint keeps returning the placeholder (as it does during warm-up), this retries **forever** per card — 12 cards on the home page can each be re-fetching every 2.5s indefinitely. Same pattern in `MeshGradientBanner.tsx` lines 88–96. |
+| 4 | `src/App.css` `logo-spin` and `src/index.css` `pulse-dot` | Infinite CSS animations left over from the Vite template / earlier design. `logo-spin` targets `a:nth-of-type(2) .logo` (no matching DOM) and `.pulse-dot` isn't referenced anywhere. Dead CSS — safe to remove so it can't be re-introduced accidentally. |
 
-1. **Upload the markdown** to the private `skill-files` bucket at `setup/setup-guide.md` using the pasted content verbatim (headings preserved so the in-page anchor nav auto-generates from H2s).
+React Query has no `refetchInterval`, no polling hooks elsewhere (only `WelcomePage`'s 3s post-checkout poll, which is intentional and short-lived). No framer-motion, no r3f `useFrame`.
 
-2. **Insert the `skills` row** for the guide so `get-skill-content` serves it to any signed-in user:
-   - `slug`: `setup-guide`
-   - `name`: `Setup guide — Load a skill into any AI`
-   - `tagline`: `One guide, every skill, any AI.`
-   - `access_level`: `free`
-   - `toolbox`: `null`
-   - `tier`: `free`
-   - `is_published`: `true`
-   - `file_url`: storage path to `setup/setup-guide.md`
-   - `overview`: short marketing blurb (first paragraph)
-   - `sort_order`: high value so it never appears in library grids (already filtered by slug on `/toolbox`, but a large sort_order is belt-and-suspenders)
+# Fixes
 
-3. **Verify delivery**:
-   - Hit `/setup-guide` while signed in → guide renders, anchor nav lists H2s, "Copy entire guide" works.
-   - Confirm `#connect` scroll target lands on the MCP section (the H2 "Connect your toolbox via MCP" slugifies to `connect-your-toolbox-via-mcp`, not `connect`). Adjust either the anchor href in `ConnectMcpBlock` / `SetupGuidePage`'s "Jump to MCP connection" link, or add an explicit `#connect` anchor at that section, so both jump links land correctly.
-   - Confirm `/toolbox` hides the guide from the library grid and shows it as the dedicated tile.
-   - Confirm `SkillDetailPage`'s "First time? How to load a skill →" link opens `/setup-guide`.
+## 1. `MeshGradientBanner.tsx` — gate the blob animation
+- Wrap the animated blobs in a `useRef` + `IntersectionObserver` + `visibilitychange` hook (`useAnimationActive`, new file `src/hooks/useAnimationActive.ts`) that returns `true` only when the element is ≥10% visible **and** `document.visibilityState === "visible"` **and** `window.matchMedia("(prefers-reduced-motion: reduce)").matches === false`.
+- When inactive, set each blob's inline `animationPlayState: "paused"` (keeps the last transform, no layout thrash) instead of unmounting.
+- Cut blur cost: drop `filter: blur(60px)` to `blur(40px)` and remove `will-change: transform` (it forces a permanent GPU layer even when idle). Visual difference is negligible against the already-dark background.
+
+## 2. `SkillsPage.tsx` float cluster
+- Reuse the same `useAnimationActive` hook to toggle `animationPlayState` on the `animate-float-slow` container. Keeps the visual, drops the cost to zero when off-screen or the tab is hidden. `motion-safe:` already respects reduced-motion.
+
+## 3. Cap image retry loops (`ToolCard.tsx`, `MeshGradientBanner.tsx`)
+- Track retry count in a `useRef` (max **2 retries**, ~2.5s apart). After that, advance to the next fallback stage (`fallback` mesh art) instead of continuing to re-request. Attach an AbortController-style guard so unmounted cards don't re-fire.
+
+## 4. Remove dead infinite CSS
+- Delete `logo-spin` block and the `.card` / `.logo` / `.read-the-docs` rules in `src/App.css` (all Vite-template leftovers, not used).
+- Delete the `pulse-dot` keyframes + class in `src/index.css` (unused).
+
+## 5. Verify
+Playwright script under `/tmp/browser/perf/`:
+1. Load `/`, wait for `load`, then use `performance.getEntriesByType('longtask')` via `PerformanceObserver` for 3 seconds and assert no long tasks > 50ms after t+1500ms.
+2. Repeat on `/tools/<slug>` (the MeshGradientBanner route).
+3. Scroll banner off-screen and re-check — CPU idle should hold.
+4. Screenshot both pages before/after to confirm the design is unchanged.
 
 ## Technical notes
+- Compositor-friendly transforms still cost main-thread time because `filter: blur()` forces the browser to re-rasterize the blurred layer every frame at the animated scale. Pausing via `animationPlayState` is enough; we don't need to convert the animations away from CSS.
+- All animations already respect `prefers-reduced-motion` after this change (MeshGradientBanner already had a `@media (prefers-reduced-motion: reduce)` rule; the new hook also honors it, so JS-driven pause and CSS-driven pause agree).
+- No design tokens, colors, layouts, or copy change.
 
-- The pasted markdown uses H2s (`##`) which the page's anchor nav extracts via regex — no changes needed to the renderer.
-- `get-skill-content` already allows any authenticated user to fetch `access_level: 'free'` content; the guide inherits the same auth-gate as the free Deal Screen, which matches the requirement ("available to anyone with a free account or above").
-- No schema changes. No new edge functions. No component changes beyond the possible anchor-target fix in step 3.
+## Files touched
+- **new** `src/hooks/useAnimationActive.ts`
+- `src/components/tools/MeshGradientBanner.tsx`
+- `src/components/tools/ToolCard.tsx`
+- `src/pages/SkillsPage.tsx`
+- `src/App.css`
+- `src/index.css`

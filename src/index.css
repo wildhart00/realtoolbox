@@ -130,9 +130,4 @@
     border-color: hsl(0 0% 100% / 0.14);
   }
 
-  @keyframes pulse-dot {
-    0%, 100% { box-shadow: 0 0 0 0 hsl(158 64% 52% / 0.7); }
-    50% { box-shadow: 0 0 0 5px hsl(158 64% 52% / 0); }
-  }
-  .pulse-dot { animation: pulse-dot 2s infinite; }
 }

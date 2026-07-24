@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import type { Tool } from "@/lib/types";
 import { ToolLogo, domainFromUrl } from "./ToolLogo";
@@ -6,6 +6,8 @@ import { PricingBadge } from "./PricingBadge";
 import { getBrandPalette } from "@/lib/brandColor";
 
 type Stage = "screenshot" | "hero" | "mshots" | "fallback";
+
+const MAX_MSHOTS_RETRIES = 2;
 
 function ToolScreenshot({ tool }: { tool: Tool }) {
   const domain = domainFromUrl(tool.website_url);
@@ -17,6 +19,8 @@ function ToolScreenshot({ tool }: { tool: Tool }) {
         ? "mshots"
         : "fallback";
   const [stage, setStage] = useState<Stage>(initial);
+  const retriesRef = useRef(0);
+
 
   const advance = () => {
     setStage((s) =>
@@ -103,6 +107,11 @@ function ToolScreenshot({ tool }: { tool: Tool }) {
         if (stage === "mshots") {
           const img = e.currentTarget;
           if (img.naturalWidth > 0 && img.naturalWidth < 50) {
+            if (retriesRef.current >= MAX_MSHOTS_RETRIES) {
+              advance();
+              return;
+            }
+            retriesRef.current += 1;
             setTimeout(() => {
               if (img.isConnected) img.src = src + `&cb=${Date.now()}`;
             }, 2500);

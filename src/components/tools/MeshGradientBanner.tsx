@@ -1,11 +1,14 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { ToolLogo, domainFromUrl } from "@/components/tools/ToolLogo";
 import { getBrandPalette } from "@/lib/brandColor";
+import { useAnimationActive } from "@/hooks/useAnimationActive";
 import type { Tool } from "@/lib/types";
 
 interface Props {
   tool: Tool;
 }
+
+const MAX_MSHOTS_RETRIES = 2;
 
 export function MeshGradientBanner({ tool }: Props) {
   const domain = domainFromUrl(tool.website_url);
@@ -13,6 +16,8 @@ export function MeshGradientBanner({ tool }: Props) {
   const gridId = `grid-${tool.id}`;
   const animId = `mesh-${tool.id.replace(/[^a-z0-9]/gi, "")}`;
   const [shotFailed, setShotFailed] = useState(false);
+  const retriesRef = useRef(0);
+  const { ref, active } = useAnimationActive<HTMLDivElement>();
 
   const shotUrl = domain
     ? `https://s.wordpress.com/mshots/v1/${encodeURIComponent(
@@ -28,9 +33,11 @@ export function MeshGradientBanner({ tool }: Props) {
   ];
 
   const showScreenshot = shotUrl && !shotFailed;
+  const playState = active ? "running" : "paused";
 
   return (
     <div
+      ref={ref}
       className="h-[220px] sm:h-[280px] lg:h-[340px] rounded-2xl border border-foreground/[0.07] relative overflow-hidden flex items-center justify-center"
       style={{ background: "#0a0b0f" }}
     >
@@ -39,9 +46,6 @@ export function MeshGradientBanner({ tool }: Props) {
         @keyframes ${animId}-b { 0%,100%{transform:translate(0,0) scale(1.1)} 50%{transform:translate(-50px,-20px) scale(0.95)} }
         @keyframes ${animId}-c { 0%,100%{transform:translate(0,0) scale(0.95)} 50%{transform:translate(30px,-40px) scale(1.1)} }
         @keyframes ${animId}-d { 0%,100%{transform:translate(0,0) scale(1.05)} 50%{transform:translate(-30px,40px) scale(0.9)} }
-        @media (prefers-reduced-motion: reduce) {
-          .${animId}-blob { animation: none !important; }
-        }
       `}</style>
 
       {blobs.map((b, i) => (
@@ -55,9 +59,9 @@ export function MeshGradientBanner({ tool }: Props) {
             height: b.size,
             background: b.color,
             opacity: showScreenshot ? 0.5 : 0.7,
-            filter: "blur(60px)",
+            filter: "blur(40px)",
             animation: `${b.anim} ${b.dur} ease-in-out infinite`,
-            willChange: "transform",
+            animationPlayState: playState,
           }}
         />
       ))}
@@ -87,10 +91,14 @@ export function MeshGradientBanner({ tool }: Props) {
             className="absolute inset-0 w-full h-full object-cover object-top pt-6 bg-white"
             onLoad={(e) => {
               const img = e.currentTarget;
-              if (img.naturalWidth < 50) {
-                // mShots placeholder — retry once
+              if (img.naturalWidth > 0 && img.naturalWidth < 50) {
+                if (retriesRef.current >= MAX_MSHOTS_RETRIES) {
+                  setShotFailed(true);
+                  return;
+                }
+                retriesRef.current += 1;
                 setTimeout(() => {
-                  img.src = shotUrl + `&cb=${Date.now()}`;
+                  if (img.isConnected) img.src = shotUrl + `&cb=${Date.now()}`;
                 }, 2500);
               }
             }}
