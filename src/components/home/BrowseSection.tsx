@@ -43,11 +43,21 @@ export function BrowseSection({
     return list;
   }, [tools, activeSlug, query, sort, lockCategory]);
 
+  const visibleCategories = useMemo(() => {
+    const counts = new Map<string, number>();
+    for (const t of tools) {
+      for (const c of t.categories ?? []) {
+        counts.set(c.slug, (counts.get(c.slug) ?? 0) + 1);
+      }
+    }
+    return categories.filter((c) => (counts.get(c.slug) ?? 0) > 0);
+  }, [tools, categories]);
+
   return (
     <section id="browse" className="px-6 lg:px-10 py-10 lg:py-12 mx-auto" style={{ maxWidth: 1100 }}>
       <div className="flex flex-col lg:flex-row gap-6 lg:gap-9">
         {!lockCategory && (
-          <CategoryRail categories={categories} active={activeSlug} onChange={setActiveSlug} />
+          <CategoryRail categories={visibleCategories} active={activeSlug} onChange={setActiveSlug} />
         )}
 
         <div className="flex-1 min-w-0">
