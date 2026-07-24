@@ -39,7 +39,7 @@ const STAGES: StageCard[] = [
   {
     tag: "Scaling",
     title: "Building a business",
-    body: "KPI systems, sales process, hiring, and ops workflows to push toward real monthly profit.",
+    body: "KPI systems, sales process, hiring, and ops workflows to push toward real, repeatable profit.",
     buttonLabel: "Join for early access",
     mode: "early-access",
     stage: "scaling",
