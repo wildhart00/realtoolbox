@@ -12,7 +12,7 @@
   "mcp": {
     "server": {
       "name": "realtoolbox-mcp",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "title": "RealToolbox.ai"
     },
     "tools": [
@@ -50,7 +50,7 @@
       {
         "name": "get_skill",
         "title": "Get skill",
-        "description": "Fetch a full skill by slug. Metadata is public. The `overview` (full markdown skill content) is included for free skills, or for paid skills only when the signed-in user has an active All-Access subscription. Otherwise a `locked` flag is returned.",
+        "description": "Fetch a full skill by slug. Metadata is public. The `overview` (full markdown skill content) is included for free skills, or for paid skills only when the signed-in user has purchased the toolbox that unlocks it (or the Complete Toolbox). Otherwise a `locked` flag is returned.",
         "annotations": {
           "readOnlyHint": true,
           "idempotentHint": true,
@@ -94,9 +94,9 @@
         "outputSchema": null
       },
       {
-        "name": "get_my_subscription",
-        "title": "Get my subscription",
-        "description": "Return the signed-in user's RealToolbox.ai subscription status (plan, status, current period end). Requires an authenticated caller.",
+        "name": "get_my_purchases",
+        "title": "Get my purchases",
+        "description": "Return the signed-in user's RealToolbox.ai toolbox purchases (owned toolboxes and purchase history). Requires an authenticated caller.",
         "annotations": {
           "readOnlyHint": true,
           "idempotentHint": true,

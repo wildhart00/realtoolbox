@@ -63,26 +63,40 @@ function userClient(ctx) {
     }
   );
 }
+function requiredToolboxFor(skillToolbox) {
+  if (skillToolbox === "investor") return "investor_toolbox";
+  if (skillToolbox === "agent") return "agent_toolbox";
+  return null;
+}
 var get_skill_default = defineTool2({
   name: "get_skill",
   title: "Get skill",
-  description: "Fetch a full skill by slug. Metadata is public. The `overview` (full markdown skill content) is included for free skills, or for paid skills only when the signed-in user has an active All-Access subscription. Otherwise a `locked` flag is returned.",
+  description: "Fetch a full skill by slug. Metadata is public. The `overview` (full markdown skill content) is included for free skills, or for paid skills only when the signed-in user has purchased the toolbox that unlocks it (or the Complete Toolbox). Otherwise a `locked` flag is returned.",
   inputSchema: {
     slug: z2.string().min(1).describe("The skill slug, e.g. 'deal-screen'.")
   },
   annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
   handler: async ({ slug }, ctx) => {
     const supabase = anonClient();
-    const { data: skill, error } = await supabase.from("skills").select("slug,name,tagline,description,tier,access_level,price,overview,file_url").eq("slug", slug).eq("is_published", true).maybeSingle();
+    const { data: skill, error } = await supabase.from("skills").select("slug,name,tagline,description,tier,access_level,price,overview,file_url,toolbox").eq("slug", slug).eq("is_published", true).maybeSingle();
     if (error) return { content: [{ type: "text", text: error.message }], isError: true };
     if (!skill) return { content: [{ type: "text", text: `No skill with slug '${slug}'.` }], isError: true };
     const isPaid = skill.access_level === "paid";
+    const requiredToolbox = requiredToolboxFor(skill.toolbox);
     let unlocked = !isPaid;
-    if (isPaid && ctx.isAuthenticated()) {
-      const { data: sub } = await userClient(ctx).from("subscriptions").select("status").eq("user_id", ctx.getUserId()).maybeSingle();
-      unlocked = !!sub && (sub.status === "active" || sub.status === "trialing");
+    if (isPaid && requiredToolbox && ctx.isAuthenticated()) {
+      const { data: purchases } = await userClient(ctx).from("purchases").select("toolbox_slug, status").eq("user_id", ctx.getUserId()).eq("status", "paid");
+      const owned = new Set((purchases ?? []).map((p) => p.toolbox_slug));
+      unlocked = owned.has("complete_toolbox") || owned.has(requiredToolbox);
     }
-    const payload = unlocked ? skill : { ...skill, overview: null, file_url: null, locked: true, unlock_hint: "Requires All-Access subscription. Sign in and subscribe at https://realtoolbox.ai to unlock." };
+    const payload = unlocked ? skill : {
+      ...skill,
+      overview: null,
+      file_url: null,
+      locked: true,
+      required_toolbox: requiredToolbox,
+      unlock_hint: "Requires a one-time toolbox purchase. Sign in and buy the matching Toolbox at https://realtoolbox.ai to unlock."
+    };
     return {
       content: [{ type: "text", text: JSON.stringify(payload, null, 2) }],
       structuredContent: payload
@@ -119,13 +133,13 @@ var list_integrations_default = defineTool3({
   }
 });
 
-// src/lib/mcp/tools/get-my-subscription.ts
+// src/lib/mcp/tools/get-my-purchases.ts
 import { createClient as createClient4 } from "npm:@supabase/supabase-js@^2.103.3";
 import { defineTool as defineTool4 } from "npm:@lovable.dev/mcp-js@0.24.0";
-var get_my_subscription_default = defineTool4({
-  name: "get_my_subscription",
-  title: "Get my subscription",
-  description: "Return the signed-in user's RealToolbox.ai subscription status (plan, status, current period end). Requires an authenticated caller.",
+var get_my_purchases_default = defineTool4({
+  name: "get_my_purchases",
+  title: "Get my purchases",
+  description: "Return the signed-in user's RealToolbox.ai toolbox purchases (owned toolboxes and purchase history). Requires an authenticated caller.",
   inputSchema: {},
   annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
   handler: async (_input, ctx) => {
@@ -140,9 +154,11 @@ var get_my_subscription_default = defineTool4({
         auth: { persistSession: false, autoRefreshToken: false }
       }
     );
-    const { data, error } = await supabase.from("subscriptions").select("plan,status,current_period_end").eq("user_id", ctx.getUserId()).maybeSingle();
+    const { data, error } = await supabase.from("purchases").select("toolbox_slug, status, purchased_at").eq("user_id", ctx.getUserId()).eq("status", "paid");
     if (error) return { content: [{ type: "text", text: error.message }], isError: true };
-    const payload = data ?? { plan: null, status: "inactive", current_period_end: null };
+    const purchases = data ?? [];
+    const owned_toolboxes = purchases.map((p) => p.toolbox_slug);
+    const payload = { owned_toolboxes, purchases };
     return {
       content: [{ type: "text", text: JSON.stringify(payload, null, 2) }],
       structuredContent: payload
@@ -155,13 +171,13 @@ var projectRef = "pcnsuyadfqrmythikwpa";
 var mcp_default = defineMcp({
   name: "realtoolbox-mcp",
   title: "RealToolbox.ai",
-  version: "0.1.0",
-  instructions: "Tools for RealToolbox.ai \u2014 a curated library of AI skills and integrations for real estate investors and pros. Use search_skills to browse the skill library, get_skill to retrieve a specific skill's full content (paid skills require an active All-Access subscription on the caller's account), list_integrations to browse MCP/integration directory entries, and get_my_subscription to check the signed-in user's membership.",
+  version: "0.2.0",
+  instructions: "Tools for RealToolbox.ai \u2014 a curated library of AI skills and integrations for real estate investors and pros. Skills are unlocked by one-time Toolbox purchases (Investor Toolbox, Agent Toolbox, or Complete Toolbox \u2014 Complete unlocks both). Use search_skills to browse the skill library, get_skill to retrieve a specific skill's full content (paid skills require the matching toolbox purchase on the caller's account), list_integrations to browse integration directory entries, and get_my_purchases to check the signed-in user's owned toolboxes.",
   auth: auth.oauth.issuer({
     issuer: `https://${projectRef}.supabase.co/auth/v1`,
     acceptedAudiences: "authenticated"
   }),
-  tools: [search_skills_default, get_skill_default, list_integrations_default, get_my_subscription_default]
+  tools: [search_skills_default, get_skill_default, list_integrations_default, get_my_purchases_default]
 });
 
 // lovable-mcp-supabase-entry.ts

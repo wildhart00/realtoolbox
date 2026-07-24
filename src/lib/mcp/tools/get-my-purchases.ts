@@ -2,10 +2,10 @@ import { createClient } from "@supabase/supabase-js";
 import { defineTool, type ToolContext } from "@lovable.dev/mcp-js";
 
 export default defineTool({
-  name: "get_my_subscription",
-  title: "Get my subscription",
+  name: "get_my_purchases",
+  title: "Get my purchases",
   description:
-    "Return the signed-in user's RealToolbox.ai subscription status (plan, status, current period end). Requires an authenticated caller.",
+    "Return the signed-in user's RealToolbox.ai toolbox purchases (owned toolboxes and purchase history). Requires an authenticated caller.",
   inputSchema: {},
   annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
   handler: async (_input, ctx: ToolContext) => {
@@ -21,12 +21,14 @@ export default defineTool({
       },
     );
     const { data, error } = await supabase
-      .from("subscriptions")
-      .select("plan,status,current_period_end")
+      .from("purchases")
+      .select("toolbox_slug, status, purchased_at")
       .eq("user_id", ctx.getUserId())
-      .maybeSingle();
+      .eq("status", "paid");
     if (error) return { content: [{ type: "text", text: error.message }], isError: true };
-    const payload = data ?? { plan: null, status: "inactive", current_period_end: null };
+    const purchases = data ?? [];
+    const owned_toolboxes = purchases.map((p) => p.toolbox_slug as string);
+    const payload = { owned_toolboxes, purchases };
     return {
       content: [{ type: "text", text: JSON.stringify(payload, null, 2) }],
       structuredContent: payload,

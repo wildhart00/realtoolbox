@@ -10,64 +10,95 @@ function getStripe(): Stripe {
   return _stripe;
 }
 
+async function ensureProduct(app_key: string, name: string, description: string) {
+  const found = await getStripe().products.search({
+    query: `metadata['app_key']:'${app_key}'`,
+    limit: 1,
+  });
+  if (found.data[0]) return found.data[0];
+  return await getStripe().products.create({
+    name,
+    description,
+    metadata: { app_key },
+  });
+}
+
+async function ensureOneTimePrice(
+  productId: string,
+  lookup_key: string,
+  unit_amount: number,
+) {
+  const existing = await getStripe().prices.list({
+    lookup_keys: [lookup_key],
+    limit: 1,
+    active: true,
+  });
+  if (existing.data[0]) return existing.data[0];
+  return await getStripe().prices.create({
+    product: productId,
+    unit_amount,
+    currency: "usd",
+    lookup_key,
+    nickname: lookup_key,
+    // No `recurring` -> one-time price
+  });
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
 
   try {
     if (!Deno.env.get("STRIPE_SECRET_KEY")) {
-      return new Response(JSON.stringify({ error: "STRIPE_SECRET_KEY not set" }), {
-        status: 500,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      return json({ error: "STRIPE_SECRET_KEY not set" }, 500);
     }
 
-    // Find or create the All-Access product (idempotent by metadata key)
-    const products = await getStripe().products.search({
-      query: "metadata['app_key']:'all_access'",
-      limit: 1,
-    });
-    let product = products.data[0];
-    if (!product) {
-      product = await getStripe().products.create({
-        name: "All-Access",
-        description: "Full operator toolkit — every real estate skill, plus new ones every month.",
-        metadata: { app_key: "all_access" },
-      });
-    }
-
-    const ensurePrice = async (
-      lookup_key: string,
-      unit_amount: number,
-      interval: "month" | "year",
-    ) => {
-      const existing = await getStripe().prices.list({ lookup_keys: [lookup_key], limit: 1, active: true });
-      if (existing.data[0]) return existing.data[0];
-      return await getStripe().prices.create({
-        product: product!.id,
-        unit_amount,
-        currency: "usd",
-        recurring: { interval },
-        lookup_key,
-        nickname: lookup_key,
-      });
-    };
-
-    const monthly = await ensurePrice("all_access_monthly", 3900, "month");
-    const annual = await ensurePrice("all_access_annual", 39000, "year");
-
-    return new Response(
-      JSON.stringify({
-        product_id: product.id,
-        monthly_price_id: monthly.id,
-        annual_price_id: annual.id,
-      }),
-      { headers: { ...corsHeaders, "Content-Type": "application/json" } },
+    const investor = await ensureProduct(
+      "investor_toolbox",
+      "Investor Toolbox",
+      "The complete real estate investor skill pack — every investor skill, one-time purchase.",
     );
+    const complete = await ensureProduct(
+      "complete_toolbox",
+      "Complete Toolbox",
+      "Every RealToolbox skill — investor and agent — bundled. One-time purchase.",
+    );
+
+    const investorFounding = await ensureOneTimePrice(
+      investor.id,
+      "investor_toolbox_founding",
+      7900,
+    );
+    const investorRegular = await ensureOneTimePrice(
+      investor.id,
+      "investor_toolbox_regular",
+      9900,
+    );
+    const completeFounding = await ensureOneTimePrice(
+      complete.id,
+      "complete_toolbox_founding",
+      14900,
+    );
+
+    return json({
+      investor_toolbox: {
+        product_id: investor.id,
+        founding_price_id: investorFounding.id,
+        regular_price_id: investorRegular.id,
+      },
+      complete_toolbox: {
+        product_id: complete.id,
+        founding_price_id: completeFounding.id,
+      },
+    });
   } catch (err) {
     console.error("stripe-bootstrap error:", err);
-    return new Response(JSON.stringify({ error: (err as Error).message }), {
-      status: 500,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
+    return json({ error: (err as Error).message }, 500);
   }
 });
+
+function json(data: unknown, status = 200) {
+  return new Response(JSON.stringify(data), {
+    status,
+    headers: { ...corsHeaders, "Content-Type": "application/json" },
+  });
+}

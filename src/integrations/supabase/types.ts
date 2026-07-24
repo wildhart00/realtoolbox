@@ -381,6 +381,51 @@ export type Database = {
         }
         Relationships: []
       }
+      purchases: {
+        Row: {
+          amount_cents: number | null
+          created_at: string
+          currency: string
+          id: string
+          purchased_at: string
+          status: string
+          stripe_customer_id: string | null
+          stripe_payment_intent_id: string | null
+          stripe_session_id: string | null
+          toolbox_slug: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount_cents?: number | null
+          created_at?: string
+          currency?: string
+          id?: string
+          purchased_at?: string
+          status?: string
+          stripe_customer_id?: string | null
+          stripe_payment_intent_id?: string | null
+          stripe_session_id?: string | null
+          toolbox_slug: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount_cents?: number | null
+          created_at?: string
+          currency?: string
+          id?: string
+          purchased_at?: string
+          status?: string
+          stripe_customer_id?: string | null
+          stripe_payment_intent_id?: string | null
+          stripe_session_id?: string | null
+          toolbox_slug?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       resources: {
         Row: {
           access_level: string
@@ -528,6 +573,7 @@ export type Database = {
           sort_order: number
           tagline: string | null
           tier: string
+          toolbox: string | null
           updated_at: string
         }
         Insert: {
@@ -546,6 +592,7 @@ export type Database = {
           sort_order?: number
           tagline?: string | null
           tier: string
+          toolbox?: string | null
           updated_at?: string
         }
         Update: {
@@ -564,6 +611,7 @@ export type Database = {
           sort_order?: number
           tagline?: string | null
           tier?: string
+          toolbox?: string | null
           updated_at?: string
         }
         Relationships: []
