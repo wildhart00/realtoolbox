@@ -1,92 +1,57 @@
-## Goal
+## Homepage polish pass
 
-RealToolbox.ai has two wings: (1) a curated **AI tools directory** (affiliate) and (2) **Toolboxes** — one-time purchase AI skill packs. Rebalance the homepage and navigation to present both, restore the directory's visibility, and finish the subscription-language sweep. Design tokens and components stay unchanged.
+Four scoped fixes. No new features, no design changes.
 
----
+### 1. Investor Toolbox skill list copy
+Replace the stale "deal analysis, underwriting, follow-up, KPIs" phrase everywhere it appears in user-facing surfaces with copy that reflects the actual 7 Investor Toolbox skills (buy box, deal screening, triage, input auditing, strategy selection, walk-away calls, full underwriting).
 
-## 1. Hero — dual promise
+Files touched:
+- `src/components/home/PricingSection.tsx` — Investor card description line (line 112). Complete card body already reads "Everything in Investor plus the Agent Toolbox" and doesn't repeat the stale list; leave as-is.
+- `src/pages/SkillsPage.tsx` — meta description (line 75) and hero body copy (line 123): rewrite to the accurate 7-skill list.
 
-Rewrite `src/components/home/Hero.tsx` (copy only, keep gradient/layout):
+`SkillsAnnouncementStrip.tsx` and `ChooseYourStageSection.tsx` mention "follow-up" / "KPI" but in the context of the *future Agent Toolbox* / stage-of-business narrative, not the Investor Toolbox contents. Leave those untouched.
 
-- Eyebrow: `For real estate investors & agents`
-- H1: keep two-line pattern — e.g. *"The complete toolbox for real estate pros —"* + italic accent *"software you should know, AI skills that know the numbers."*
-- Subhead: dual promise — discover the best real estate software/AI tools, and own operator-grade AI skill toolboxes built from 12+ years of real deals.
-- Primary CTA → `#pricing` (scroll to Toolboxes): *"See the Toolboxes"*
-- Secondary CTA → `/browse`: *"Browse the tool directory →"*
-- Remove trailing credibility line's stale "deal analysis, lead conversion, pricing, follow-up, KPIs" phrasing; keep a shorter operator-built line that names the two wings.
+### 2. Featured section adaptive layout
+`src/components/home/FeaturedTabsSection.tsx` currently uses a fixed `grid-cols-1 sm:grid-cols-2 lg:grid-cols-3` which leaves large empty space with 1–2 cards. Change so the grid column count adapts to `list.length`:
 
-## 2. Homepage section order
+- 1 card: single centered column, card capped at ~420px width, centered in the row.
+- 2 cards: two-column centered pair on desktop, capped at ~840px total.
+- 3–6 cards: current 3-up grid.
 
-Rewrite `src/pages/Index.tsx` to this order:
+Implemented by choosing a `max-w` + `mx-auto` wrapper and column count based on `list.length`. Same treatment for `FeaturedSection.tsx` since it uses the identical grid.
 
-```text
-1. Hero
-2. PricingSection            (Toolboxes — flagship offer, id="pricing")
-3. InvestorArcSection        (supporting depth for the Investor Toolbox)
-4. FeaturedTabsSection       (Featured + Just Launched from directory)
-5. BrowseSection             (category rail + grid, home preview)
-6. Deal Screen lead-magnet strip  (new small strip → /skills/deal-screen with free-account CTA)
-7. NewsletterCard            (existing)
-```
+### 3. Hero secondary CTA threshold
+`src/components/home/Hero.tsx` line 41 currently renders `Browse the tool directory (${toolCount}) →` whenever `toolCount` is truthy. Change to render the count only when `toolCount >= 25`; below that show plain "Browse the tool directory →". Automatic — restores itself once the directory grows.
 
-Fetch tools + categories in `Index.tsx` via existing `useTools`/`useCategories` and pass to Featured/Browse. Split tools into `featured` and `justLaunched` via existing flags (mirror how `BrowsePage` already reads them). Cap `BrowseSection` at ~12 cards on home with a "Browse all tools →" link to `/browse`.
+### 4. Category rail ordering + hide-empty
+Two changes, both in the data layer so every surface (`BrowseSection` on home, `BrowsePage`, `CategoryPage` sidebar) benefits.
 
-**ChooseYourStageSection** and **SkillsHomeSection** / **SkillsAnnouncementStrip** are dropped from the homepage — their message is now absorbed by the rewritten PricingSection + InvestorArc. Files stay in the repo (no deletions) in case they're wanted elsewhere.
+- **Ordering:** update `useCategories()` in `src/hooks/useDirectory.ts` to apply a client-side sort that puts real-estate-native categories first, then general-purpose ones, then everything else alphabetically. Uses an explicit priority list on category slug:
 
-**New file `src/components/home/DealScreenStrip.tsx`**: compact one-row strip — "Free forever: the Deal Screen. Create a free account and run the numbers on any deal." → `/skills/deal-screen` (which already routes signed-out users through `/auth?next=...`).
+  ```text
+  RE-native lead group (in order):
+    deal-sourcing, deal-analysis, sales-marketing, listing-marketing,
+    lead-generation, crm-pipeline, contracts-legal, commercial-real-estate,
+    construction, property-management, customer-service, analytics-reporting,
+    virtual-staging, interior-design, architectural-design, surveying
+  General-purpose group (in order):
+    image-generators, video-creation, 3d-modelling, chatbots, app-builders,
+    website-builders, no-code-tools, ai-writers, copywriting,
+    presentation-design, productivity, automation, research,
+    machine-learning, phone-agents
+  ```
 
-## 3. Navigation
+  Any category not in either list falls to the end, sorted by name. Keeps the DB `sort_order` untouched.
 
-**`src/components/layout/Topbar.tsx`** — primary nav:
-```text
-Toolbox (→ /#pricing) · Browse Tools (→ /browse) · Resources · Blog
-```
-Keep "Start free" CTA button. Mobile menu mirrors this order and adds Integrations + Agents below the primary set.
+- **Hide-empty on public surfaces:** the rail must exclude categories with zero published tools. Compute the counts from the `tools` prop already passed to `BrowseSection` and filter `categories` before handing to `CategoryRail`. Admin surfaces are untouched. On `CategoryPage`, all categories remain reachable by direct URL.
 
-**`src/components/layout/Footer.tsx`** — expand link columns:
-- Product: Toolbox, Deal Screen (free), Skills
-- Directory: Browse Tools, Categories, Integrations, Agents
-- Company: Resources, Blog, Contact
-- Legal bar unchanged.
+### Verification after build
+- Homepage renders new copy on Investor card and skills hero.
+- With current DB (7 published-covered categories), rail shows only those 7 in the new order; "All" remains first.
+- Featured tab with 1 featured tool shows a single centered card, not a lopsided grid.
+- Hero shows "Browse the tool directory →" (no number) because published count is ~7.
 
-## 4. Supporting section copy pass
-
-- **InvestorArcSection**: tighten intro/CTA copy to "one-time toolbox" framing; no subscription words. Keep the 7-step visual.
-- **PricingSection**: already correct — no structural change. Verify id="pricing" (it does) so Hero's primary CTA anchors.
-- **SkillsAnnouncementStrip / SkillsHomeSection / ChooseYourStageSection**: not rendered on home anymore, but do a copy pass so `/skills` and any lingering references drop membership/subscription language ("KPI systems … push toward real monthly profit" → operator-safe rewrite that removes the ambiguous "monthly").
-
-## 5. Full-site language sweep
-
-Grep and rewrite all user-facing hits for: `All-Access`, `all access`, `membership`, `subscribe` (except newsletter), `$39`, `$390`, `/mo`, `monthly` (except admin affiliate history), `annual`, `trialing`, `trial`.
-
-Known targets to check and rewrite as needed:
-- `src/components/home/ChooseYourStageSection.tsx` — "real monthly profit" line
-- `src/pages/WelcomePage.tsx`, `src/components/capture/CaptureDialog.tsx` — spot-verify (previously reported clean)
-- `src/pages/SkillsPage.tsx`, `src/pages/SkillDetailPage.tsx` — FAQ / microcopy
-- `src/pages/PrivacyPage.tsx`, `src/pages/TermsPage.tsx` — any subscription references
-- `index.html` — title/description sweep in step 6
-
-The final report will list every file touched.
-
-## 6. SEO / head
-
-**`index.html`**:
-- Title: `RealToolbox.ai — Real estate AI tools directory + operator-grade AI toolboxes`
-- Description: dual-positioning, ~150 chars. Reflects both directory and Toolboxes.
-- Update `og:title`, `twitter:title`, `og:description`, `twitter:description` to match.
-
-Internal linking: restored Topbar + Footer links make `/browse`, `/integrations`, `/agents`, `/resources`, `/blog`, `/skills` all reachable from the homepage. Verify each is linked from either nav or footer.
-
-## 7. Verification
-
-At the end I'll:
-- List every file changed.
-- Print the final top-to-bottom homepage section order.
-- Confirm the language-sweep grep returns zero user-facing hits.
-
-## Out of scope
-
-- No backend, RLS, or edge function changes.
-- No new pages.
-- No component-token or design changes.
-- File deletions avoided (unused-on-home sections stay in repo).
+### Technical notes
+- Category priority arrays live as a `const` in `useDirectory.ts` and are applied via `.sort()` with an index-based comparator.
+- Hide-empty is derived in `BrowseSection` via `useMemo` counting `tools.flatMap(t => t.categories)`. No new query.
+- Featured grid width caps use existing token spacing; no new tokens.
