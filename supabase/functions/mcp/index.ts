@@ -119,7 +119,7 @@ var list_integrations_default = defineTool3({
   handler: async ({ category }) => {
     const supabase = createClient3(
       process.env.SUPABASE_URL,
-      process.env.SUPABASE_PUBLISHABLE_KEY,
+      process.env.SUPABASE_ANON_KEY,
       { auth: { persistSession: false, autoRefreshToken: false } }
     );
     let q = supabase.from("integrations").select("name,slug,tagline,category,difficulty,setup_url").eq("is_published", true).order("sort_order", { ascending: true });
