@@ -12,6 +12,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useCheckout } from "@/hooks/useCheckout";
 import { useAuth } from "@/hooks/useAuth";
 import { SkillPreviewCard, type SkillCardData } from "@/components/skills/SkillPreviewCard";
+import { McpDifferentiatorCallout } from "@/components/toolbox/McpDifferentiatorCallout";
 
 type SkillRow = SkillCardData & { id: string; sort_order?: number };
 
@@ -188,6 +189,9 @@ export default function InvestorToolboxPage() {
               </li>
             ))}
           </ul>
+          <div className="mt-6">
+            <McpDifferentiatorCallout />
+          </div>
         </div>
       </section>
 

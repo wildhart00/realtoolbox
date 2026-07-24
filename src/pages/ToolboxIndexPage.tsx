@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { z } from "zod";
-import { ArrowRight, Check, CheckCircle2, Loader2 } from "lucide-react";
+import { ArrowRight, BookOpen, Check, CheckCircle2, Loader2 } from "lucide-react";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,6 +10,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useCheckout } from "@/hooks/useCheckout";
 import { useAuth } from "@/hooks/useAuth";
 import { SkillPreviewCard, type SkillCardData } from "@/components/skills/SkillPreviewCard";
+import { McpDifferentiatorCallout } from "@/components/toolbox/McpDifferentiatorCallout";
 
 type SkillRow = SkillCardData & { id: string; toolbox?: string | null };
 
@@ -42,6 +43,7 @@ export default function ToolboxIndexPage() {
         .from("skills" as any)
         .select("id, name, slug, tagline, description, audience, file_url, access_level, price, toolbox")
         .eq("is_published", true)
+        .neq("slug", "setup-guide")
         .order("sort_order", { ascending: true });
       setSkills((data as unknown as SkillRow[]) ?? []);
       setLoadingSkills(false);
@@ -114,6 +116,11 @@ export default function ToolboxIndexPage() {
         </div>
       </section>
 
+      {/* MCP differentiator */}
+      <section className="mx-auto max-w-[1200px] px-6 lg:px-10 pb-10">
+        <McpDifferentiatorCallout />
+      </section>
+
       {/* Product cards */}
       <section className="mx-auto max-w-[1200px] px-6 lg:px-10 pb-14">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-stretch">
@@ -140,8 +147,9 @@ export default function ToolboxIndexPage() {
               <ul className="flex flex-col gap-2.5">
                 {[
                   "7 operator-grade skills",
-                  "Lifetime updates as new investor skills drop",
+                  "Connects directly to Claude & ChatGPT (MCP)",
                   "Works in ChatGPT, Claude, and Gemini",
+                  "Lifetime updates as new investor skills drop",
                   "One payment — own it forever",
                 ].map((item) => (
                   <li key={item} className="flex items-start gap-2.5 text-[13px] text-foreground/80">
@@ -190,6 +198,7 @@ export default function ToolboxIndexPage() {
               {[
                 "Every investor skill",
                 "Agent Toolbox included free at release",
+                "Connects directly to Claude & ChatGPT (MCP)",
                 "Lifetime updates on both",
                 "One payment — own it forever",
               ].map((item) => (
@@ -261,23 +270,43 @@ export default function ToolboxIndexPage() {
           </div>
         </div>
 
-        {/* Try free strip */}
-        <div className="mt-6 rounded-2xl border border-foreground/10 bg-foreground/[0.03] px-6 py-5 lg:px-8 flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:justify-between">
-          <div>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">Try before you buy</p>
-            <h4 className="mt-1 font-display text-[18px] text-foreground tracking-tight">
-              Deal Screen — free forever
-            </h4>
-            <p className="mt-1 text-[13px] text-muted-foreground leading-[1.6]">
-              Paste in any deal and get a fast, conservative read on whether the numbers work.
-            </p>
+        {/* Try free + Setup guide row */}
+        <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="rounded-2xl border border-foreground/10 bg-foreground/[0.03] px-6 py-5 flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:justify-between">
+            <div>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">Try before you buy</p>
+              <h4 className="mt-1 font-display text-[18px] text-foreground tracking-tight">
+                Deal Screen — free forever
+              </h4>
+              <p className="mt-1 text-[13px] text-muted-foreground leading-[1.6]">
+                Paste in any deal and get a fast, conservative read on whether the numbers work.
+              </p>
+            </div>
+            <Link
+              to={freeCtaTarget}
+              className="inline-flex items-center gap-1.5 rounded-[10px] border border-foreground/15 bg-foreground/[0.04] px-4 py-2 text-[13px] font-semibold text-foreground hover:bg-foreground/[0.08] transition-base whitespace-nowrap"
+            >
+              Start free <ArrowRight className="h-4 w-4" />
+            </Link>
           </div>
-          <Link
-            to={freeCtaTarget}
-            className="inline-flex items-center gap-1.5 rounded-[10px] border border-foreground/15 bg-foreground/[0.04] px-4 py-2 text-[13px] font-semibold text-foreground hover:bg-foreground/[0.08] transition-base whitespace-nowrap"
-          >
-            Start free <ArrowRight className="h-4 w-4" />
-          </Link>
+
+          <div className="rounded-2xl border border-foreground/10 bg-foreground/[0.03] px-6 py-5 flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:justify-between">
+            <div>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">New here?</p>
+              <h4 className="mt-1 font-display text-[18px] text-foreground tracking-tight flex items-center gap-2">
+                <BookOpen className="h-4 w-4 text-[hsl(229_94%_82%)]" /> Setup guide
+              </h4>
+              <p className="mt-1 text-[13px] text-muted-foreground leading-[1.6]">
+                How to load any skill into ChatGPT, Claude, or Gemini — plus MCP setup.
+              </p>
+            </div>
+            <Link
+              to="/setup-guide"
+              className="inline-flex items-center gap-1.5 rounded-[10px] border border-foreground/15 bg-foreground/[0.04] px-4 py-2 text-[13px] font-semibold text-foreground hover:bg-foreground/[0.08] transition-base whitespace-nowrap"
+            >
+              Read the guide <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
         </div>
       </section>
 

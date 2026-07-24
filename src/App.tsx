@@ -47,6 +47,7 @@ import ContactPage from "./pages/ContactPage.tsx";
 import ContactMessagesAdmin from "./pages/admin/ContactMessagesAdmin.tsx";
 import { ScrollToTop } from "./components/ScrollToTop.tsx";
 import WelcomePage from "./pages/WelcomePage.tsx";
+import SetupGuidePage from "./pages/SetupGuidePage.tsx";
 import OAuthConsentPage from "./pages/OAuthConsentPage.tsx";
 import { ErrorBoundary } from "./components/ErrorBoundary.tsx";
 
@@ -87,6 +88,7 @@ const App = () => (
               <Route path="/terms" element={<TermsPage />} />
               <Route path="/contact" element={<ContactPage />} />
               <Route path="/welcome" element={<WelcomePage />} />
+              <Route path="/setup-guide" element={<SetupGuidePage />} />
               <Route path="/.lovable/oauth/consent" element={<OAuthConsentPage />} />
               <Route path="/auth" element={<AuthPage />} />
               <Route path="/reset-password" element={<ResetPasswordPage />} />

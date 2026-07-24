@@ -117,6 +117,7 @@ export function PricingSection() {
               {[
                 "Every investor skill (7 at launch)",
                 "Deal Analyzer & Underwriter — your safe offer",
+                "Connects directly to Claude & ChatGPT (MCP)",
                 "Lifetime updates as new investor skills drop",
                 "One payment — own it forever",
               ].map((item) => (
@@ -168,6 +169,7 @@ export function PricingSection() {
             {[
               "Every investor skill",
               "Agent Toolbox included free when it releases",
+              "Connects directly to Claude & ChatGPT (MCP)",
               "Lifetime updates on both",
               "One payment — own it forever",
             ].map((item) => (

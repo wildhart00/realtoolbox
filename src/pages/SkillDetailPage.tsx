@@ -296,27 +296,35 @@ export default function SkillDetailPage() {
                 </div>
               </div>
             ) : isPaid ? (
-              <div className="flex flex-wrap items-center gap-3">
-                <button
-                  type="button"
-                  onClick={fetchAndCopySkill}
-                  disabled={copying}
-                  className="inline-flex items-center justify-center gap-2 rounded-[10px] bg-gradient-to-r from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] px-6 py-3 text-[14px] font-semibold text-white shadow-lg shadow-[hsl(252_84%_50%)]/25 hover:shadow-[hsl(252_84%_50%)]/40 transition-base disabled:opacity-70"
-                >
-                  {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-                  {copying ? "Copying…" : copied ? "Copied!" : "Copy skill"}
-                </button>
-                {LLM_LINKS.map((l) => (
-                  <a
-                    key={l.href}
-                    href={l.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center rounded-[10px] border border-foreground/15 bg-background/40 px-4 py-3 text-[13.5px] font-semibold text-foreground/85 hover:border-[hsl(239_84%_67%)]/45 hover:text-foreground transition-base"
+              <div className="space-y-3">
+                <div className="flex flex-wrap items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={fetchAndCopySkill}
+                    disabled={copying}
+                    className="inline-flex items-center justify-center gap-2 rounded-[10px] bg-gradient-to-r from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] px-6 py-3 text-[14px] font-semibold text-white shadow-lg shadow-[hsl(252_84%_50%)]/25 hover:shadow-[hsl(252_84%_50%)]/40 transition-base disabled:opacity-70"
                   >
-                    {l.label} →
-                  </a>
-                ))}
+                    {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                    {copying ? "Copying…" : copied ? "Copied!" : "Copy skill"}
+                  </button>
+                  {LLM_LINKS.map((l) => (
+                    <a
+                      key={l.href}
+                      href={l.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center justify-center rounded-[10px] border border-foreground/15 bg-background/40 px-4 py-3 text-[13.5px] font-semibold text-foreground/85 hover:border-[hsl(239_84%_67%)]/45 hover:text-foreground transition-base"
+                    >
+                      {l.label} →
+                    </a>
+                  ))}
+                </div>
+                <Link
+                  to="/setup-guide"
+                  className="inline-block text-[13px] text-[hsl(229_94%_82%)] underline-offset-2 hover:underline"
+                >
+                  First time? How to load a skill →
+                </Link>
               </div>
             ) : (
               <div className="space-y-3">
@@ -351,6 +359,12 @@ export default function SkillDetailPage() {
                     </a>
                   ))}
                 </div>
+                <Link
+                  to="/setup-guide"
+                  className="inline-block text-[13px] text-[hsl(229_94%_82%)] underline-offset-2 hover:underline"
+                >
+                  First time? How to load a skill →
+                </Link>
               </div>
             )}
           </section>
