@@ -1,57 +1,90 @@
-## Homepage polish pass
+# Toolbox Product Pages
 
-Four scoped fixes. No new features, no design changes.
+Build three new dedicated pages under `/toolbox`, redirect the legacy `/skills` routes, and repoint existing CTAs. Design system, tokens, and existing components (SkillPreviewCard, PricingSection styling, surface-card, gradient tokens) stay exactly as they are.
 
-### 1. Investor Toolbox skill list copy
-Replace the stale "deal analysis, underwriting, follow-up, KPIs" phrase everywhere it appears in user-facing surfaces with copy that reflects the actual 7 Investor Toolbox skills (buy box, deal screening, triage, input auditing, strategy selection, walk-away calls, full underwriting).
+## Routes
 
-Files touched:
-- `src/components/home/PricingSection.tsx` — Investor card description line (line 112). Complete card body already reads "Everything in Investor plus the Agent Toolbox" and doesn't repeat the stale list; leave as-is.
-- `src/pages/SkillsPage.tsx` — meta description (line 75) and hero body copy (line 123): rewrite to the accurate 7-skill list.
+Added in `src/App.tsx`:
 
-`SkillsAnnouncementStrip.tsx` and `ChooseYourStageSection.tsx` mention "follow-up" / "KPI" but in the context of the *future Agent Toolbox* / stage-of-business narrative, not the Investor Toolbox contents. Leave those untouched.
+- `/toolbox` — product index (new `ToolboxIndexPage`)
+- `/toolbox/investor` — Investor Toolbox sales page (new `InvestorToolboxPage`)
+- `/toolbox/agent` — Agent Toolbox coming-soon page (new `AgentToolboxPage`)
+- `/toolbox/:slug` — skill detail (reuses existing `SkillDetailPage`)
 
-### 2. Featured section adaptive layout
-`src/components/home/FeaturedTabsSection.tsx` currently uses a fixed `grid-cols-1 sm:grid-cols-2 lg:grid-cols-3` which leaves large empty space with 1–2 cards. Change so the grid column count adapts to `list.length`:
+Redirects (via `<Navigate replace>`):
 
-- 1 card: single centered column, card capped at ~420px width, centered in the row.
-- 2 cards: two-column centered pair on desktop, capped at ~840px total.
-- 3–6 cards: current 3-up grid.
+- `/skills` → `/toolbox`
+- `/skills/:slug` → `/toolbox/:slug` (preserves slug via a tiny wrapper component reading `useParams`)
 
-Implemented by choosing a `max-w` + `mx-auto` wrapper and column count based on `list.length`. Same treatment for `FeaturedSection.tsx` since it uses the identical grid.
+Existing `SkillDetailPage` internal links (breadcrumbs, related-skill links) are updated to point at `/toolbox/:slug`.
 
-### 3. Hero secondary CTA threshold
-`src/components/home/Hero.tsx` line 41 currently renders `Browse the tool directory (${toolCount}) →` whenever `toolCount` is truthy. Change to render the count only when `toolCount >= 25`; below that show plain "Browse the tool directory →". Automatic — restores itself once the directory grows.
+## Pages
 
-### 4. Category rail ordering + hide-empty
-Two changes, both in the data layer so every surface (`BrowseSection` on home, `BrowsePage`, `CategoryPage` sidebar) benefits.
+### `/toolbox` — `src/pages/ToolboxIndexPage.tsx`
 
-- **Ordering:** update `useCategories()` in `src/hooks/useDirectory.ts` to apply a client-side sort that puts real-estate-native categories first, then general-purpose ones, then everything else alphabetically. Uses an explicit priority list on category slug:
+- Hero: "The toolbox that fits how you invest." Short honest positioning line.
+- Product row (3 cards, existing pricing card styling reused from `PricingSection`):
+  - **Investor Toolbox** — $79 founding / ~~$99~~ · "Available now" · CTA button `Get the Investor Toolbox → $79` (calls `useCheckout('investor', '/toolbox')`) · secondary link `Learn more → /toolbox/investor`
+  - **Complete Toolbox** — $149 founding · "Agent Toolbox included free when it releases" · CTA `Get the Complete Toolbox → $149` (calls `useCheckout('complete', '/toolbox')`)
+  - **Agent Toolbox** — Coming soon · waitlist email input → inserts into `newsletter_subscribers` with `source: 'agent_toolbox_waitlist'` · success state with sonner toast
+- Free entry strip: Deal Screen card with "Try before you buy" copy → `/toolbox/deal-screen` (auth-gated for copy through existing flow).
+- Below products: full skill library grid using existing `SkillPreviewCard`, grouped by `toolbox` field (Investor / Agent / Free) with section headers. Fetches all published skills the same way `SkillsPage` does today.
 
-  ```text
-  RE-native lead group (in order):
-    deal-sourcing, deal-analysis, sales-marketing, listing-marketing,
-    lead-generation, crm-pipeline, contracts-legal, commercial-real-estate,
-    construction, property-management, customer-service, analytics-reporting,
-    virtual-staging, interior-design, architectural-design, surveying
-  General-purpose group (in order):
-    image-generators, video-creation, 3d-modelling, chatbots, app-builders,
-    website-builders, no-code-tools, ai-writers, copywriting,
-    presentation-design, productivity, automation, research,
-    machine-learning, phone-agents
-  ```
+### `/toolbox/investor` — `src/pages/InvestorToolboxPage.tsx`
 
-  Any category not in either list falls to the end, sorted by name. Keeps the DB `sort_order` untouched.
+Long-form sales page in the existing visual language:
 
-- **Hide-empty on public surfaces:** the rail must exclude categories with zero published tools. Compute the counts from the `tools` prop already passed to `BrowseSection` and filter `categories` before handing to `CategoryRail`. Admin surfaces are untouched. On `CategoryPage`, all categories remain reachable by direct URL.
+1. **Headline block** — "Make your first safe deal decision without losing your shirt." Subhead framing operator-grade, conservative-by-design tone. Single primary CTA (`Get the Investor Toolbox — $79`) that calls `useCheckout('investor', '/toolbox/investor')`. Secondary "Try Deal Screen free" link.
+2. **The 7-skill arc** — numbered timeline visual reusing tokens from `InvestorArcSection`: define your buy box → screen → triage → audit your inputs → pick your strategy → know when to walk → underwrite. Each step renders as a `SkillPreviewCard` linked to `/toolbox/:slug` (fetches all `is_published` skills where `toolbox = 'investor'`, ordered by `sort_order`).
+3. **What you get** — checklist block:
+   - 7 operator-grade skills
+   - Universal setup guide
+   - Lifetime updates as new investor skills drop
+   - Copy-to-clipboard delivery
+   - Works with ChatGPT, Claude, and Gemini
+   - Connect directly to Claude/ChatGPT via our MCP integration
+4. **Price + buy** — repeats the primary CTA with founding price note.
+5. **FAQ** — accordion using existing shadcn `Accordion`:
+   - What is a skill?
+   - Which AI do I need?
+   - Is this a subscription? (No — one payment, yours forever, updates included.)
+   - Do I need a paid ChatGPT/Claude account?
+   - How do I load a skill?
+6. **Credibility footer line** — "Built and torture-tested by a 12-year operator. Conservative by design."
 
-### Verification after build
-- Homepage renders new copy on Investor card and skills hero.
-- With current DB (7 published-covered categories), rail shows only those 7 in the new order; "All" remains first.
-- Featured tab with 1 featured tool shows a single centered card, not a lopsided grid.
-- Hero shows "Browse the tool directory →" (no number) because published count is ~7.
+Auth-aware CTA: `useCheckout` already handles unauthenticated → `/auth?mode=signup&next=...`.
 
-### Technical notes
-- Category priority arrays live as a `const` in `useDirectory.ts` and are applied via `.sort()` with an index-based comparator.
-- Hide-empty is derived in `BrowseSection` via `useMemo` counting `tools.flatMap(t => t.categories)`. No new query.
-- Featured grid width caps use existing token spacing; no new tokens.
+### `/toolbox/agent` — `src/pages/AgentToolboxPage.tsx`
+
+Same layout template as investor page but in coming-soon state:
+
+- Headline: "The agent toolbox is coming." Honest positioning.
+- **What it will contain** section (no cards, list format since skills don't exist yet):
+  listing descriptions · seller lead response · follow-up sequences · pricing narratives · objection handling · listing presentations · buyer consultations · offer & negotiation strategy
+- **Waitlist capture** — email input → inserts into `newsletter_subscribers` with `source: 'agent_toolbox_waitlist'`. Handles `23505` duplicate gracefully like `SkillsPage`.
+- **Note callout**: "Already bought the Complete Toolbox? You'll get the Agent Toolbox free the day it releases."
+- Same FAQ block (adjusted for agent context).
+
+## CTA repointing
+
+- `src/components/layout/Topbar.tsx` — nav "Skills" → "Toolbox", `href: "/toolbox"`.
+- `src/components/layout/Footer.tsx` — "Skills" link → "Toolbox" `/toolbox`; keep Deal Screen free link but point at `/toolbox/deal-screen`.
+- `src/components/home/PricingSection.tsx` — pricing cards keep direct checkout CTAs; add a small "Learn more" secondary link under each toolbox card pointing at `/toolbox/investor` (investor + complete cards both link to `/toolbox/investor` for now; complete gets an extra "See Agent details" → `/toolbox/agent`).
+- Any homepage skill-related "Learn more / Browse skills" CTA in `SkillsHomeSection` → `/toolbox`.
+- `useCheckout` `nextPath` parameter values updated at call sites so post-auth resume lands back on the same toolbox page.
+
+## Voice guardrails
+
+All copy across the three new pages: operator-grade, honest, no hype, no income claims, no "get rich" framing. Credibility line ("Built and torture-tested by a 12-year operator. Conservative by design.") appears once per page, understated.
+
+## Technical notes
+
+- New files: `src/pages/ToolboxIndexPage.tsx`, `src/pages/InvestorToolboxPage.tsx`, `src/pages/AgentToolboxPage.tsx`. Optional small wrapper `SkillsSlugRedirect.tsx` that reads `useParams().slug` and renders `<Navigate to={\`/toolbox/${slug}\`} replace />`.
+- No DB schema changes. `newsletter_subscribers` insert uses existing columns (`email`, `source`). No `investor_stage`.
+- No new dependencies. Uses existing `SkillPreviewCard`, `useCheckout`, `useAuth`, shadcn `Accordion`, `Button`, `Input`, sonner, `AppLayout`.
+- Old `SkillsPage.tsx` is left in place but no longer routed (safe to keep as reference; can be deleted in a follow-up).
+- SEO: each new page sets `document.title` and meta description in a `useEffect`, matching the pattern used by `SkillsPage`.
+
+## Deliverable at end of build
+
+Reply lists the four created routes and confirms the two redirects (`/skills` and `/skills/:slug`) resolve correctly.
