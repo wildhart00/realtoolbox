@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { z } from "zod";
-import { ArrowRight, Check, CheckCircle2, Loader2 } from "lucide-react";
+import { ArrowRight, BookOpen, Check, CheckCircle2, Loader2 } from "lucide-react";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,6 +10,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useCheckout } from "@/hooks/useCheckout";
 import { useAuth } from "@/hooks/useAuth";
 import { SkillPreviewCard, type SkillCardData } from "@/components/skills/SkillPreviewCard";
+import { McpDifferentiatorCallout } from "@/components/toolbox/McpDifferentiatorCallout";
 
 type SkillRow = SkillCardData & { id: string; toolbox?: string | null };
 
@@ -42,6 +43,7 @@ export default function ToolboxIndexPage() {
         .from("skills" as any)
         .select("id, name, slug, tagline, description, audience, file_url, access_level, price, toolbox")
         .eq("is_published", true)
+        .neq("slug", "setup-guide")
         .order("sort_order", { ascending: true });
       setSkills((data as unknown as SkillRow[]) ?? []);
       setLoadingSkills(false);

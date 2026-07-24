@@ -88,6 +88,7 @@ const App = () => (
               <Route path="/terms" element={<TermsPage />} />
               <Route path="/contact" element={<ContactPage />} />
               <Route path="/welcome" element={<WelcomePage />} />
+              <Route path="/setup-guide" element={<SetupGuidePage />} />
               <Route path="/.lovable/oauth/consent" element={<OAuthConsentPage />} />
               <Route path="/auth" element={<AuthPage />} />
               <Route path="/reset-password" element={<ResetPasswordPage />} />
