@@ -15,9 +15,14 @@ function json(body: unknown, status = 200) {
 }
 
 function pathFromFileUrl(fileUrl: string): string | null {
-  // Matches both .../object/public/skill-files/<path> and .../object/skill-files/<path>
   const m = fileUrl.match(/\/skill-files\/(.+)$/);
   return m ? decodeURIComponent(m[1]) : null;
+}
+
+function requiredToolboxFor(skillToolbox: string | null | undefined): "investor_toolbox" | "agent_toolbox" | null {
+  if (skillToolbox === "investor") return "investor_toolbox";
+  if (skillToolbox === "agent") return "agent_toolbox";
+  return null;
 }
 
 Deno.serve(async (req) => {
@@ -36,7 +41,7 @@ Deno.serve(async (req) => {
 
     const { data: skill, error: skillErr } = await admin
       .from("skills")
-      .select("slug, access_level, file_url, is_published")
+      .select("slug, access_level, file_url, is_published, toolbox")
       .eq("slug", slug)
       .eq("is_published", true)
       .maybeSingle();
@@ -48,26 +53,34 @@ Deno.serve(async (req) => {
     const isPaid = skill.access_level === "paid";
 
     if (isPaid) {
+      const requiredToolbox = requiredToolboxFor(skill.toolbox);
+      if (!requiredToolbox) {
+        return json({ error: "skill_misconfigured" }, 500);
+      }
+
       const authHeader = req.headers.get("Authorization") ?? "";
       if (!authHeader.startsWith("Bearer ")) {
-        return json({ error: "auth_required" }, 401);
+        return json({ error: "auth_required", required_toolbox: requiredToolbox }, 401);
       }
       const token = authHeader.slice("Bearer ".length);
       const userClient = createClient(SUPABASE_URL, ANON_KEY, {
         global: { headers: { Authorization: `Bearer ${token}` } },
       });
       const { data: userData, error: userErr } = await userClient.auth.getUser(token);
-      if (userErr || !userData?.user) return json({ error: "auth_invalid" }, 401);
+      if (userErr || !userData?.user) {
+        return json({ error: "auth_invalid", required_toolbox: requiredToolbox }, 401);
+      }
 
-      const { data: sub } = await admin
-        .from("subscriptions")
-        .select("status")
+      const { data: purchases } = await admin
+        .from("purchases")
+        .select("toolbox_slug, status")
         .eq("user_id", userData.user.id)
-        .maybeSingle();
+        .eq("status", "paid");
 
-      const status = sub?.status ?? "inactive";
-      if (status !== "active" && status !== "trialing") {
-        return json({ error: "subscription_required" }, 403);
+      const owned = new Set((purchases ?? []).map((p) => p.toolbox_slug as string));
+      const hasAccess = owned.has("complete_toolbox") || owned.has(requiredToolbox);
+      if (!hasAccess) {
+        return json({ error: "purchase_required", required_toolbox: requiredToolbox }, 403);
       }
     }
 
@@ -81,7 +94,6 @@ Deno.serve(async (req) => {
 
     const content = await blob.text();
 
-    // Best-effort download count
     try {
       await admin.rpc("increment_skill_download", { skill_slug: slug });
     } catch (_) { /* ignore */ }

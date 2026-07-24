@@ -11,6 +11,24 @@ function getStripe(): Stripe {
   return _stripe;
 }
 
+type ToolboxInput = "investor" | "complete";
+type Tier = "founding" | "regular";
+
+function lookupKeyFor(toolbox: ToolboxInput, tier: Tier): string | null {
+  if (toolbox === "investor") {
+    return tier === "regular" ? "investor_toolbox_regular" : "investor_toolbox_founding";
+  }
+  if (toolbox === "complete") {
+    // Only founding exists today
+    return "complete_toolbox_founding";
+  }
+  return null;
+}
+
+function toolboxSlugFor(toolbox: ToolboxInput): string {
+  return toolbox === "investor" ? "investor_toolbox" : "complete_toolbox";
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
 
@@ -32,28 +50,57 @@ Deno.serve(async (req) => {
     const email = claimsData.claims.email as string | undefined;
 
     const body = await req.json().catch(() => ({}));
-    const plan = body?.plan === "annual" ? "annual" : "monthly";
-    const lookup_key = plan === "annual" ? "all_access_annual" : "all_access_monthly";
+    const toolboxRaw = body?.toolbox;
+    const tierRaw = body?.tier;
+    if (toolboxRaw !== "investor" && toolboxRaw !== "complete") {
+      return json({ error: "invalid_toolbox", message: "toolbox must be 'investor' or 'complete'" }, 400);
+    }
+    const tier: Tier = tierRaw === "regular" ? "regular" : "founding";
+    const toolbox: ToolboxInput = toolboxRaw;
+    const lookup_key = lookupKeyFor(toolbox, tier);
+    if (!lookup_key) return json({ error: "invalid_selection" }, 400);
+    const toolbox_slug = toolboxSlugFor(toolbox);
 
     const origin = req.headers.get("origin") ?? "https://realtoolbox.ai";
 
-    // Find price by lookup_key
-    const prices = await getStripe().prices.list({ lookup_keys: [lookup_key], limit: 1, active: true });
+    // Look up price by lookup_key
+    const prices = await getStripe().prices.list({
+      lookup_keys: [lookup_key],
+      limit: 1,
+      active: true,
+    });
     const price = prices.data[0];
-    if (!price) return json({ error: `Price ${lookup_key} not found. Run stripe-bootstrap first.` }, 500);
+    if (!price) {
+      return json({ error: `Price ${lookup_key} not found. Run stripe-bootstrap first.` }, 500);
+    }
 
-    // Use service role to read subscriptions for existing customer ID
+    // Service role: look up any existing Stripe customer for this user
+    // (from either the deprecated subscriptions table or an existing purchase).
     const admin = createClient(
       Deno.env.get("SUPABASE_URL")!,
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
     );
-    const { data: existing } = await admin
-      .from("subscriptions")
+
+    let customerId: string | undefined;
+
+    const { data: existingPurchase } = await admin
+      .from("purchases")
       .select("stripe_customer_id")
       .eq("user_id", userId)
+      .not("stripe_customer_id", "is", null)
+      .limit(1)
       .maybeSingle();
+    customerId = (existingPurchase?.stripe_customer_id as string | undefined) ?? undefined;
 
-    let customerId = existing?.stripe_customer_id ?? undefined;
+    if (!customerId) {
+      const { data: existingSub } = await admin
+        .from("subscriptions")
+        .select("stripe_customer_id")
+        .eq("user_id", userId)
+        .maybeSingle();
+      customerId = (existingSub?.stripe_customer_id as string | undefined) ?? undefined;
+    }
+
     if (!customerId) {
       const customer = await getStripe().customers.create({
         email,
@@ -63,14 +110,22 @@ Deno.serve(async (req) => {
     }
 
     const session = await getStripe().checkout.sessions.create({
-      mode: "subscription",
+      mode: "payment",
       customer: customerId,
       client_reference_id: userId,
       line_items: [{ price: price.id, quantity: 1 }],
-      subscription_data: {
-        metadata: { supabase_user_id: userId },
+      payment_intent_data: {
+        metadata: {
+          supabase_user_id: userId,
+          toolbox_slug,
+          tier,
+        },
       },
-      metadata: { supabase_user_id: userId },
+      metadata: {
+        supabase_user_id: userId,
+        toolbox_slug,
+        tier,
+      },
       success_url: `${origin}/welcome?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/#pricing`,
       allow_promotion_codes: true,

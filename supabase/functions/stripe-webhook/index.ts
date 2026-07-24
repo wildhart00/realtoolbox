@@ -20,28 +20,6 @@ function getAdmin() {
   return _admin;
 }
 
-function mapStatus(s: string): string {
-  switch (s) {
-    case "active":
-      return "active";
-    case "trialing":
-      return "trialing";
-    case "past_due":
-    case "unpaid":
-      return "past_due";
-    case "canceled":
-    case "incomplete_expired":
-      return "canceled";
-    default:
-      return "inactive";
-  }
-}
-
-function planFromLookupKey(key: string | null | undefined): string | null {
-  if (key === "all_access_monthly" || key === "all_access_annual") return key;
-  return null;
-}
-
 async function resolveUserId(opts: {
   session?: Stripe.Checkout.Session;
   subscription?: Stripe.Subscription;
@@ -68,26 +46,54 @@ async function resolveUserId(opts: {
   return null;
 }
 
-async function upsertFromSubscription(sub: Stripe.Subscription, userId: string) {
-  const item = sub.items.data[0];
-  const lookupKey = (item?.price?.lookup_key as string | null | undefined) ?? null;
-  const customerId = typeof sub.customer === "string" ? sub.customer : sub.customer.id;
-  const periodEnd = (sub as unknown as { current_period_end?: number }).current_period_end;
+function isValidToolboxSlug(v: unknown): v is "investor_toolbox" | "agent_toolbox" | "complete_toolbox" {
+  return v === "investor_toolbox" || v === "agent_toolbox" || v === "complete_toolbox";
+}
+
+async function recordPurchase(session: Stripe.Checkout.Session) {
+  if (session.mode !== "payment") {
+    console.log("stripe-webhook: ignoring non-payment session", session.id, session.mode);
+    return;
+  }
+  if (session.payment_status !== "paid") {
+    console.log("stripe-webhook: session not paid yet", session.id, session.payment_status);
+    return;
+  }
+  const userId = await resolveUserId({ session });
+  if (!userId) {
+    console.error("stripe-webhook: no user id on session", session.id);
+    return;
+  }
+  const toolbox_slug = session.metadata?.toolbox_slug;
+  if (!isValidToolboxSlug(toolbox_slug)) {
+    console.error("stripe-webhook: missing/invalid toolbox_slug on session", session.id, toolbox_slug);
+    return;
+  }
+  const customerId =
+    typeof session.customer === "string" ? session.customer : session.customer?.id ?? null;
+  const paymentIntentId =
+    typeof session.payment_intent === "string"
+      ? session.payment_intent
+      : session.payment_intent?.id ?? null;
 
   const { error } = await getAdmin()
-    .from("subscriptions")
+    .from("purchases")
     .upsert(
       {
         user_id: userId,
+        toolbox_slug,
         stripe_customer_id: customerId,
-        stripe_subscription_id: sub.id,
-        plan: planFromLookupKey(lookupKey),
-        status: mapStatus(sub.status),
-        current_period_end: periodEnd ? new Date(periodEnd * 1000).toISOString() : null,
+        stripe_session_id: session.id,
+        stripe_payment_intent_id: paymentIntentId,
+        amount_cents: session.amount_total ?? null,
+        currency: (session.currency ?? "usd").toLowerCase(),
+        status: "paid",
+        purchased_at: new Date().toISOString(),
       },
-      { onConflict: "user_id" },
+      { onConflict: "user_id,toolbox_slug" },
     );
-  if (error) console.error("upsert subscription error:", error);
+  if (error) console.error("stripe-webhook: upsert purchase error", error);
+  else console.log("stripe-webhook: recorded purchase", { userId, toolbox_slug, session: session.id });
 }
 
 Deno.serve(async (req) => {
@@ -112,28 +118,18 @@ Deno.serve(async (req) => {
     switch (event.type) {
       case "checkout.session.completed": {
         const session = event.data.object as Stripe.Checkout.Session;
-        const userId = await resolveUserId({ session });
-        if (!userId) {
-          console.error("no user id on checkout.session.completed", session.id);
+        // Legacy subscription checkouts: inert (subscriptions table is deprecated).
+        if (session.mode === "subscription") {
+          console.log("stripe-webhook: legacy subscription session ignored", session.id);
           break;
         }
-        if (session.subscription) {
-          const subId =
-            typeof session.subscription === "string" ? session.subscription : session.subscription.id;
-          const sub = await getStripe().subscriptions.retrieve(subId);
-          await upsertFromSubscription(sub, userId);
-        }
+        await recordPurchase(session);
         break;
       }
       case "customer.subscription.updated":
       case "customer.subscription.deleted": {
-        const sub = event.data.object as Stripe.Subscription;
-        const userId = await resolveUserId({ subscription: sub });
-        if (!userId) {
-          console.error("no user id on", event.type, sub.id);
-          break;
-        }
-        await upsertFromSubscription(sub, userId);
+        // Legacy events kept inert to avoid 500s on any lingering test data.
+        console.log("stripe-webhook: legacy subscription event ignored", event.type);
         break;
       }
       default:
