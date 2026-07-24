@@ -35,7 +35,7 @@ import SkillsAdmin from "./pages/admin/SkillsAdmin.tsx";
 import { Navigate } from "react-router-dom";
 import AgentsPage from "./pages/AgentsPage.tsx";
 import ResourcesPage from "./pages/ResourcesPage.tsx";
-import SkillsPage from "./pages/SkillsPage.tsx";
+
 import SkillDetailPage from "./pages/SkillDetailPage.tsx";
 import ToolboxIndexPage from "./pages/ToolboxIndexPage.tsx";
 import InvestorToolboxPage from "./pages/InvestorToolboxPage.tsx";
