@@ -1,90 +1,62 @@
-# Toolbox Product Pages
+# Setup Guide + MCP as first-class feature
 
-Build three new dedicated pages under `/toolbox`, redirect the legacy `/skills` routes, and repoint existing CTAs. Design system, tokens, and existing components (SkillPreviewCard, PricingSection styling, surface-card, gradient tokens) stay exactly as they are.
+## Part A — Setup guide as gated content
 
-## Routes
+**Storage & delivery**
+- Reuse the existing `skills` table + `get-skill-content` edge function (no new infra). Insert one skill row:
+  - `slug: "setup-guide"`, `toolbox: null`, `access_level: "free"`, `is_published: true`
+  - `title: "How to load a skill into any AI"`, category `"Setup"`
+  - `file_url` → uploaded markdown in the `skill-files` private bucket
+- Because it is `access_level: "free"`, the existing edge function will return it to anyone with a valid session (matches your "free account or above" requirement). No function changes needed.
 
-Added in `src/App.tsx`:
+**Where to paste the guide content:** once this plan is approved, upload the markdown to `skill-files/setup/setup-guide.md` (I'll do the upload as one step — you paste the markdown into chat and I'll write it to storage and insert the skill row).
 
-- `/toolbox` — product index (new `ToolboxIndexPage`)
-- `/toolbox/investor` — Investor Toolbox sales page (new `InvestorToolboxPage`)
-- `/toolbox/agent` — Agent Toolbox coming-soon page (new `AgentToolboxPage`)
-- `/toolbox/:slug` — skill detail (reuses existing `SkillDetailPage`)
+**Rendering** — new page `src/pages/SetupGuidePage.tsx` at route `/setup-guide`:
+- Signed-out → redirect to `/auth?next=/setup-guide`
+- Signed-in → fetches via `get-skill-content` (same path `useSkillAccess` uses), renders with the existing `ReactMarkdown` pipeline used on `SkillDetailPage`
+- "Copy entire guide" button (copies raw markdown to clipboard) + anchor links for major sections (auto-generated from H2s), including a `#connect` anchor for the MCP section
+- Excluded from the toolbox library grid on `/toolbox` (filter out slug `setup-guide` in `ToolboxIndexPage` skill query so it doesn't appear twice)
 
-Redirects (via `<Navigate replace>`):
+**Entry points**
+1. `WelcomePage.tsx` — add "Setup guide" primary button (shown for both purchase and free-signup states)
+2. `SkillDetailPage.tsx` — small "First time? How to load a skill →" link right next to the Copy skill button (both paid and free skills, but not on the setup guide itself)
+3. `ToolboxIndexPage.tsx` — add a "Setup guide" tile in the products row (next to Deal Screen), styled as a secondary/utility card
 
-- `/skills` → `/toolbox`
-- `/skills/:slug` → `/toolbox/:slug` (preserves slug via a tiny wrapper component reading `useParams`)
+## Part B — MCP as headline feature
 
-Existing `SkillDetailPage` internal links (breadcrumbs, related-skill links) are updated to point at `/toolbox/:slug`.
+**New reusable component** `src/components/mcp/ConnectMcpBlock.tsx`
+- Short copy: "Your toolbox plugs directly into your AI — always current, no copying."
+- Read-only input showing the MCP URL: `https://pcnsuyadfqrmythikwpa.supabase.co/functions/v1/mcp` (built from `VITE_SUPABASE_PROJECT_ID` so it stays env-correct)
+- Copy button + link to `/setup-guide#connect`
+- `variant` prop (`"full"` for welcome/account, `"compact"` for inline uses)
 
-## Pages
+**Placements**
+1. `WelcomePage.tsx` — add `<ConnectMcpBlock variant="full" />` below the Setup Guide CTA
+2. Account page — `src/pages/MembersPage.tsx` is the members/account surface today; add the block there. (If you'd rather have a distinct `/account` route, tell me.)
 
-### `/toolbox` — `src/pages/ToolboxIndexPage.tsx`
+**Differentiator callout** — new small component `src/components/toolbox/McpDifferentiatorCallout.tsx`, single factual sentence:
+> "The only real estate toolbox that connects directly to Claude, ChatGPT, and other AI apps — your skills load themselves and stay current automatically."
+- Added to `InvestorToolboxPage.tsx` in the "what you get" area
+- Added to `ToolboxIndexPage.tsx` near the top of the products section
 
-- Hero: "The toolbox that fits how you invest." Short honest positioning line.
-- Product row (3 cards, existing pricing card styling reused from `PricingSection`):
-  - **Investor Toolbox** — $79 founding / ~~$99~~ · "Available now" · CTA button `Get the Investor Toolbox → $79` (calls `useCheckout('investor', '/toolbox')`) · secondary link `Learn more → /toolbox/investor`
-  - **Complete Toolbox** — $149 founding · "Agent Toolbox included free when it releases" · CTA `Get the Complete Toolbox → $149` (calls `useCheckout('complete', '/toolbox')`)
-  - **Agent Toolbox** — Coming soon · waitlist email input → inserts into `newsletter_subscribers` with `source: 'agent_toolbox_waitlist'` · success state with sonner toast
-- Free entry strip: Deal Screen card with "Try before you buy" copy → `/toolbox/deal-screen` (auth-gated for copy through existing flow).
-- Below products: full skill library grid using existing `SkillPreviewCard`, grouped by `toolbox` field (Investor / Agent / Free) with section headers. Fetches all published skills the same way `SkillsPage` does today.
-
-### `/toolbox/investor` — `src/pages/InvestorToolboxPage.tsx`
-
-Long-form sales page in the existing visual language:
-
-1. **Headline block** — "Make your first safe deal decision without losing your shirt." Subhead framing operator-grade, conservative-by-design tone. Single primary CTA (`Get the Investor Toolbox — $79`) that calls `useCheckout('investor', '/toolbox/investor')`. Secondary "Try Deal Screen free" link.
-2. **The 7-skill arc** — numbered timeline visual reusing tokens from `InvestorArcSection`: define your buy box → screen → triage → audit your inputs → pick your strategy → know when to walk → underwrite. Each step renders as a `SkillPreviewCard` linked to `/toolbox/:slug` (fetches all `is_published` skills where `toolbox = 'investor'`, ordered by `sort_order`).
-3. **What you get** — checklist block:
-   - 7 operator-grade skills
-   - Universal setup guide
-   - Lifetime updates as new investor skills drop
-   - Copy-to-clipboard delivery
-   - Works with ChatGPT, Claude, and Gemini
-   - Connect directly to Claude/ChatGPT via our MCP integration
-4. **Price + buy** — repeats the primary CTA with founding price note.
-5. **FAQ** — accordion using existing shadcn `Accordion`:
-   - What is a skill?
-   - Which AI do I need?
-   - Is this a subscription? (No — one payment, yours forever, updates included.)
-   - Do I need a paid ChatGPT/Claude account?
-   - How do I load a skill?
-6. **Credibility footer line** — "Built and torture-tested by a 12-year operator. Conservative by design."
-
-Auth-aware CTA: `useCheckout` already handles unauthenticated → `/auth?mode=signup&next=...`.
-
-### `/toolbox/agent` — `src/pages/AgentToolboxPage.tsx`
-
-Same layout template as investor page but in coming-soon state:
-
-- Headline: "The agent toolbox is coming." Honest positioning.
-- **What it will contain** section (no cards, list format since skills don't exist yet):
-  listing descriptions · seller lead response · follow-up sequences · pricing narratives · objection handling · listing presentations · buyer consultations · offer & negotiation strategy
-- **Waitlist capture** — email input → inserts into `newsletter_subscribers` with `source: 'agent_toolbox_waitlist'`. Handles `23505` duplicate gracefully like `SkillsPage`.
-- **Note callout**: "Already bought the Complete Toolbox? You'll get the Agent Toolbox free the day it releases."
-- Same FAQ block (adjusted for agent context).
-
-## CTA repointing
-
-- `src/components/layout/Topbar.tsx` — nav "Skills" → "Toolbox", `href: "/toolbox"`.
-- `src/components/layout/Footer.tsx` — "Skills" link → "Toolbox" `/toolbox`; keep Deal Screen free link but point at `/toolbox/deal-screen`.
-- `src/components/home/PricingSection.tsx` — pricing cards keep direct checkout CTAs; add a small "Learn more" secondary link under each toolbox card pointing at `/toolbox/investor` (investor + complete cards both link to `/toolbox/investor` for now; complete gets an extra "See Agent details" → `/toolbox/agent`).
-- Any homepage skill-related "Learn more / Browse skills" CTA in `SkillsHomeSection` → `/toolbox`.
-- `useCheckout` `nextPath` parameter values updated at call sites so post-auth resume lands back on the same toolbox page.
-
-## Voice guardrails
-
-All copy across the three new pages: operator-grade, honest, no hype, no income claims, no "get rich" framing. Credibility line ("Built and torture-tested by a 12-year operator. Conservative by design.") appears once per page, understated.
+**Pricing card feature bullets** — in `PricingSection.tsx` (and any mirrored feature lists on `InvestorToolboxPage` / `ToolboxIndexPage`), append one line to each toolbox card's feature list:
+- "Connects directly to Claude & ChatGPT (MCP)"
 
 ## Technical notes
 
-- New files: `src/pages/ToolboxIndexPage.tsx`, `src/pages/InvestorToolboxPage.tsx`, `src/pages/AgentToolboxPage.tsx`. Optional small wrapper `SkillsSlugRedirect.tsx` that reads `useParams().slug` and renders `<Navigate to={\`/toolbox/${slug}\`} replace />`.
-- No DB schema changes. `newsletter_subscribers` insert uses existing columns (`email`, `source`). No `investor_stage`.
-- No new dependencies. Uses existing `SkillPreviewCard`, `useCheckout`, `useAuth`, shadcn `Accordion`, `Button`, `Input`, sonner, `AppLayout`.
-- Old `SkillsPage.tsx` is left in place but no longer routed (safe to keep as reference; can be deleted in a follow-up).
-- SEO: each new page sets `document.title` and meta description in a `useEffect`, matching the pattern used by `SkillsPage`.
+- No schema changes. No new edge functions. No new tables.
+- Setup guide's `access_level = "free"` means `get-skill-content` returns content to any signed-in user; signed-out users are redirected to `/auth` client-side (consistent with current Deal Screen gating).
+- `ToolboxIndexPage` skill grid gets a `.neq("slug", "setup-guide")` filter so the guide appears only as a product tile, not in the library.
+- MCP URL is derived at build time from `import.meta.env.VITE_SUPABASE_PROJECT_ID` — no hardcoding, survives project moves.
 
-## Deliverable at end of build
+## Deliverables checklist
 
-Reply lists the four created routes and confirms the two redirects (`/skills` and `/skills/:slug`) resolve correctly.
+- [ ] Upload `setup-guide.md` to `skill-files/setup/` and insert `skills` row
+- [ ] `src/pages/SetupGuidePage.tsx` + route in `App.tsx`
+- [ ] `ConnectMcpBlock` component
+- [ ] `McpDifferentiatorCallout` component
+- [ ] Edits to `WelcomePage`, `MembersPage`, `SkillDetailPage`, `ToolboxIndexPage`, `InvestorToolboxPage`, `PricingSection`
+
+## Next step from you
+
+Approve this plan. On approval I'll ask you to paste the setup guide markdown in chat, then upload it and wire everything above.
