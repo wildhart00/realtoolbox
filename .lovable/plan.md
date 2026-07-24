@@ -1,34 +1,35 @@
-## Goal
-Run a complete test purchase of the Investor Toolbox in Stripe test mode and verify the entitlement flows through to the app and MCP.
+We'll walk through a single test-mode purchase end-to-end. I'll drive the backend steps; you just click and confirm. We do ONE step at a time — after each, you tell me what happened and we move on.
 
-## Step 1 — Bootstrap Stripe products ✅ DONE
-Stripe test products/prices are now created:
-- Investor Toolbox founding: `price_1TwgrZQPyf47Aq8AeeqSqe9a`
-- Investor Toolbox regular: `price_1TwgrZQPyf47Aq8AQHqlnwcT`
-- Complete Toolbox founding: `price_1TwgraQPyf47Aq8A0ufP3rVg`
+## Step 1 — Confirm you're signed in (you)
+On the preview site, check the top-right corner. You should see your account (not a "Sign In" button). Reply: "signed in as <email>".
 
-## Step 2 — Create a checkout session
-Use the `create-checkout-session` edge function with `toolbox=investor_toolbox`. This returns a Stripe Checkout URL.
+## Step 2 — I create a Stripe test checkout session (me)
+I'll call `create-checkout-session` for the **Investor Toolbox ($79 founding)** using your logged-in session. I'll paste back a `checkout.stripe.com/...` URL.
 
-## Step 3 — Pay with a Stripe test card
-Open the checkout URL in an incognito/private window and use Stripe's standard test card:
-- Card number: `4242 4242 4242 4242`
-- Any future expiry date
-- Any 3-digit CVC
-- Any ZIP code
+## Step 3 — You pay with the test card (you)
+Open the URL from Step 2 in the **same browser where you're logged in**. Use Stripe's test card:
 
-## Step 4 — Verify the purchase row
-After checkout succeeds, the `stripe-webhook` edge function records a row in the `public.purchases` table for your user with `toolbox_slug = 'investor_toolbox'` and `status = 'paid'`.
+```text
+Card:  4242 4242 4242 4242
+Exp:   any future date (e.g. 12/34)
+CVC:   any 3 digits (e.g. 123)
+ZIP:   any 5 digits (e.g. 12345)
+```
 
-## Step 5 — Check /welcome
-Visit `/welcome?checkout=investor_toolbox` (or let the success URL redirect you). The page should show the Investor Toolbox as purchased.
+Complete checkout. Stripe redirects you to `/welcome?session_id=...` on the site.
 
-## Step 6 — Verify skill gating
-Open a paid skill detail page while logged in as the same user. The "Get All-Access" button should now be replaced with the normal copy/download actions.
+## Step 4 — Confirm the Welcome page unlocks (you)
+On `/welcome` you should see a green check and "Investor Toolbox — You're in." Reply with what you see. If it's still spinning after ~10 seconds, tell me and I'll check the webhook.
 
-## Step 7 — Verify MCP entitlement
-Call the MCP `get_my_purchases` tool as the same user. It should return `["investor_toolbox"]`. Then call `get_skill` for a paid skill — it should return the full content instead of a locked preview.
+## Step 5 — I verify the purchase landed in the database (me)
+I'll query the `purchases` table for your user and confirm a row with `toolbox_slug = 'investor_toolbox'` and `status = 'paid'`.
 
-## Notes
-- Use a real email address at checkout so the webhook can map the Stripe customer to a Lovable Cloud user account.
-- If you want me to run any of these steps for you (e.g., trigger the checkout session or inspect the purchases table), just say the word.
+## Step 6 — You confirm skill gating unlocked (you)
+Visit `/skills`, open any Investor skill, and confirm the "Get All-Access / locked" state is gone and the content/copy action works.
+
+## Step 7 — MCP gate check (optional, me)
+If you want, I'll hit the MCP `get_my_purchases` and `get_skill` tools as your user and confirm they return the unlocked content.
+
+---
+
+**Right now, only do Step 1** and reply. I'll take Step 2 as soon as you confirm.
