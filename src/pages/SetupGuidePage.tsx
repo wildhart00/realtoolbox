@@ -143,7 +143,7 @@ export default function SetupGuidePage() {
             {copied ? "Copied!" : "Copy entire guide"}
           </button>
           <a
-            href="#connect"
+            href="#connect-your-toolbox-via-mcp"
             className="text-[13px] text-muted-foreground hover:text-foreground underline-offset-2 hover:underline transition-base"
           >
             Jump to MCP connection →
