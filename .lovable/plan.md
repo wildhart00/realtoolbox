@@ -1,35 +1,29 @@
-We'll walk through a single test-mode purchase end-to-end. I'll drive the backend steps; you just click and confirm. We do ONE step at a time — after each, you tell me what happened and we move on.
+## Root cause
 
-## Step 1 — Confirm you're signed in (you)
-On the preview site, check the top-right corner. You should see your account (not a "Sign In" button). Reply: "signed in as <email>".
+All three MCP tool calls fail synchronously (~0.3ms, `stack: "supabase"`) inside `createClient(...)`. The tools read `process.env.SUPABASE_PUBLISHABLE_KEY`, but the Supabase Edge Function runtime only auto-injects `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, and `SUPABASE_DB_URL`. Custom secrets prefixed with `SUPABASE_` cannot be set by users, so `SUPABASE_PUBLISHABLE_KEY` is `undefined` at runtime and `createClient(url, undefined)` throws "supabaseKey is required." before any DB call runs.
 
-## Step 2 — I create a Stripe test checkout session (me)
-I'll call `create-checkout-session` for the **Investor Toolbox ($79 founding)** using your logged-in session. I'll paste back a `checkout.stripe.com/...` URL.
+This is why even public `search_skills` fails — it's not gating, it's client construction.
 
-## Step 3 — You pay with the test card (you)
-Open the URL from Step 2 in the **same browser where you're logged in**. Use Stripe's test card:
+## Fix
 
-```text
-Card:  4242 4242 4242 4242
-Exp:   any future date (e.g. 12/34)
-CVC:   any 3 digits (e.g. 123)
-ZIP:   any 5 digits (e.g. 12345)
-```
+Swap every tool to `SUPABASE_ANON_KEY`, which the runtime always injects. RLS behavior is identical (anon key + optional user Bearer for RLS-scoped reads).
 
-Complete checkout. Stripe redirects you to `/welcome?session_id=...` on the site.
+Files to edit:
+- `src/lib/mcp/tools/search-skills.ts`
+- `src/lib/mcp/tools/get-skill.ts` (both `anonClient` and `userClient`)
+- `src/lib/mcp/tools/get-my-purchases.ts`
+- `src/lib/mcp/tools/list-integrations.ts` (same pattern, keep consistent)
 
-## Step 4 — Confirm the Welcome page unlocks (you)
-On `/welcome` you should see a green check and "Investor Toolbox — You're in." Reply with what you see. If it's still spinning after ~10 seconds, tell me and I'll check the webhook.
+Change: `process.env.SUPABASE_PUBLISHABLE_KEY!` → `process.env.SUPABASE_ANON_KEY!`
 
-## Step 5 — I verify the purchase landed in the database (me)
-I'll query the `purchases` table for your user and confirm a row with `toolbox_slug = 'investor_toolbox'` and `status = 'paid'`.
+## Deploy + verify
 
-## Step 6 — You confirm skill gating unlocked (you)
-Visit `/skills`, open any Investor skill, and confirm the "Get All-Access / locked" state is gone and the content/copy action works.
+1. Regenerate manifest with `app_mcp_server--extract_mcp_manifest` (rebundles the emitted function source).
+2. Deploy the `mcp` edge function.
+3. Verify via `supabase--curl_edge_functions` against `/functions/v1/mcp`:
+   - **search_skills** (unauth + authed) → returns skill list.
+   - **get_my_purchases** (authed as the signed-in test user `9d2644e1…`) → `owned_toolboxes: ["investor_toolbox"]`.
+   - **get_skill** for an investor paid skill authed as that user → returns `overview`; anonymous call returns `locked: true`.
+4. Check `edge_function_logs` for `mcp` → expect `outcome: "ok"` on each `tool.invoked` line.
 
-## Step 7 — MCP gate check (optional, me)
-If you want, I'll hit the MCP `get_my_purchases` and `get_skill` tools as your user and confirm they return the unlocked content.
-
----
-
-**Right now, only do Step 1** and reply. I'll take Step 2 as soon as you confirm.
+No schema or entitlement-logic changes; the purchases table and gating code are correct — only the Supabase client env var name is wrong.
