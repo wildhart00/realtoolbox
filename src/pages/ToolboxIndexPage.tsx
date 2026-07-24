@@ -147,8 +147,9 @@ export default function ToolboxIndexPage() {
               <ul className="flex flex-col gap-2.5">
                 {[
                   "7 operator-grade skills",
-                  "Lifetime updates as new investor skills drop",
+                  "Connects directly to Claude & ChatGPT (MCP)",
                   "Works in ChatGPT, Claude, and Gemini",
+                  "Lifetime updates as new investor skills drop",
                   "One payment — own it forever",
                 ].map((item) => (
                   <li key={item} className="flex items-start gap-2.5 text-[13px] text-foreground/80">
@@ -197,6 +198,7 @@ export default function ToolboxIndexPage() {
               {[
                 "Every investor skill",
                 "Agent Toolbox included free at release",
+                "Connects directly to Claude & ChatGPT (MCP)",
                 "Lifetime updates on both",
                 "One payment — own it forever",
               ].map((item) => (
