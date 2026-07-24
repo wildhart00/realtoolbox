@@ -13,6 +13,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { SkillPreviewCard, type SkillCardData } from "@/components/skills/SkillPreviewCard";
 import { HowToUseSteps } from "@/components/skills/HowToUseSteps";
+import { useAnimationActive } from "@/hooks/useAnimationActive";
 
 const STAGE_OPTIONS = [
   { value: "first_deal", label: "Working on my first deal" },
