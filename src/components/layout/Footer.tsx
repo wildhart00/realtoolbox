@@ -1,16 +1,22 @@
 import { Link } from "react-router-dom";
 import { NewsletterCard } from "@/components/home/NewsletterCard";
 
-const quickLinks = [
+const product = [
+  { name: "Toolbox", href: "/#pricing" },
+  { name: "Deal Screen (free)", href: "/skills/deal-screen" },
   { name: "Skills", href: "/skills" },
-  { name: "Resources", href: "/resources" },
-  { name: "Blog", href: "/blog" },
 ];
 
-const byStage = [
-  { name: "First Deal", href: "/skills" },
-  { name: "Actively Investing", href: "/skills" },
-  { name: "Scaling", href: "/skills" },
+const directory = [
+  { name: "Browse Tools", href: "/browse" },
+  { name: "Integrations", href: "/integrations" },
+  { name: "Agents", href: "/agents" },
+];
+
+const company = [
+  { name: "Resources", href: "/resources" },
+  { name: "Blog", href: "/blog" },
+  { name: "Contact", href: "/contact" },
 ];
 
 const linkClass =
@@ -22,14 +28,12 @@ const headerClass =
 export function Footer() {
   return (
     <footer className="border-t border-foreground/[0.06] mt-auto">
-      {/* Section 1: Newsletter band */}
       <div>
         <NewsletterCard source="newsletter" />
       </div>
 
-      {/* Section 2: 3-column links */}
       <div className="border-t border-foreground/[0.06] mx-auto max-w-[1200px] px-6 lg:px-10 py-14">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-10 md:gap-12">
           {/* Brand */}
           <div>
             <Link to="/" className="flex items-center gap-[9px]">
@@ -44,38 +48,39 @@ export function Footer() {
               </span>
             </Link>
             <p className="mt-4 text-[13px] text-foreground/50 leading-[1.65] max-w-[280px]">
-              The AI toolkit built for real estate investors and operators — workflows drawn from real flipping and rental experience.
+              The real estate AI toolkit — a curated directory of the best software and AI tools, plus operator-grade skill toolboxes built from real flipping and rental experience.
             </p>
           </div>
 
-          {/* Quick Links */}
           <div>
-            <h3 className={headerClass}>Quick Links</h3>
+            <h3 className={headerClass}>Product</h3>
             <ul className="space-y-2.5">
-              {quickLinks.map((l) => (
-                <li key={l.href}>
-                  <Link to={l.href} className={linkClass}>{l.name}</Link>
-                </li>
+              {product.map((l) => (
+                <li key={l.name}><Link to={l.href} className={linkClass}>{l.name}</Link></li>
               ))}
             </ul>
           </div>
 
-          {/* By Stage */}
           <div>
-            <h3 className={headerClass}>By Stage</h3>
+            <h3 className={headerClass}>Directory</h3>
             <ul className="space-y-2.5">
-              {byStage.map((l) => (
-                <li key={l.name}>
-                  <Link to={l.href} className={linkClass}>{l.name}</Link>
-                </li>
+              {directory.map((l) => (
+                <li key={l.name}><Link to={l.href} className={linkClass}>{l.name}</Link></li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <h3 className={headerClass}>Company</h3>
+            <ul className="space-y-2.5">
+              {company.map((l) => (
+                <li key={l.name}><Link to={l.href} className={linkClass}>{l.name}</Link></li>
               ))}
             </ul>
           </div>
         </div>
       </div>
 
-
-      {/* Section 3: Legal bar */}
       <div className="border-t border-foreground/[0.06]">
         <div className="mx-auto max-w-[1200px] px-6 lg:px-10 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-[12px] text-foreground/35">

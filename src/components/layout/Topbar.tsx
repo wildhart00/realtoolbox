@@ -16,9 +16,16 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 const navLinks = [
-  { name: "Skills", href: "/skills" },
+  { name: "Toolbox", href: "/#pricing" },
+  { name: "Browse Tools", href: "/browse" },
   { name: "Resources", href: "/resources" },
   { name: "Blog", href: "/blog" },
+];
+
+const mobileExtraLinks = [
+  { name: "Skills", href: "/skills" },
+  { name: "Integrations", href: "/integrations" },
+  { name: "Agents", href: "/agents" },
 ];
 
 export function Topbar() {
@@ -176,6 +183,17 @@ export function Topbar() {
                 {l.name}
               </Link>
             ))}
+            {mobileExtraLinks.map((l) => (
+              <Link
+                key={l.name}
+                to={l.href}
+                onClick={() => setOpen(false)}
+                className="block rounded-md px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-foreground/[0.05]"
+              >
+                {l.name}
+              </Link>
+            ))}
+
 
             <div className="my-2 border-t border-foreground/[0.06]" />
 

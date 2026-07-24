@@ -67,13 +67,13 @@ export function InvestorArcSection() {
     <section className="px-6 lg:px-10 py-14 lg:py-16 mx-auto" style={{ maxWidth: 1100 }}>
       <div className="mb-10 max-w-2xl">
         <p className="text-[11px] uppercase tracking-[0.16em] text-foreground/50 font-semibold mb-2">
-          The Investor Arc
+          Inside the Investor Toolbox
         </p>
         <h2 className="font-display text-[28px] sm:text-[34px] text-foreground tracking-[-0.02em] leading-tight">
-          Seven skills. One decision path.
+          Seven skills. One decision path. Yours to keep.
         </h2>
         <p className="mt-3 text-[14.5px] text-muted-foreground leading-relaxed">
-          Most prompt packs hand you a pile of disconnected tricks. RealToolbox is a system — each skill picks up where the last one leaves off, walking you from &ldquo;what should I even buy&rdquo; to a defensible offer.
+          Most prompt packs hand you a pile of disconnected tricks. The Investor Toolbox is a system — each skill picks up where the last one leaves off, walking you from &ldquo;what should I even buy&rdquo; to a defensible offer. One payment, own it forever.
         </p>
       </div>
 
