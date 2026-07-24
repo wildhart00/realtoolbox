@@ -70,7 +70,8 @@ const AuthPage = () => {
       email,
       password,
       options: {
-        emailRedirectTo: `${window.location.origin}/`,
+        emailRedirectTo: `${window.location.origin}${next}`,
+
         data: { display_name: displayName || email.split("@")[0] },
       },
     });
