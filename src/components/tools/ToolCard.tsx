@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import type { Tool } from "@/lib/types";
 import { ToolLogo, domainFromUrl } from "./ToolLogo";
@@ -6,6 +6,8 @@ import { PricingBadge } from "./PricingBadge";
 import { getBrandPalette } from "@/lib/brandColor";
 
 type Stage = "screenshot" | "hero" | "mshots" | "fallback";
+
+const MAX_MSHOTS_RETRIES = 2;
 
 function ToolScreenshot({ tool }: { tool: Tool }) {
   const domain = domainFromUrl(tool.website_url);
