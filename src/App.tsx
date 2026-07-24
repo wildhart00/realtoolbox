@@ -47,6 +47,7 @@ import ContactPage from "./pages/ContactPage.tsx";
 import ContactMessagesAdmin from "./pages/admin/ContactMessagesAdmin.tsx";
 import { ScrollToTop } from "./components/ScrollToTop.tsx";
 import WelcomePage from "./pages/WelcomePage.tsx";
+import SetupGuidePage from "./pages/SetupGuidePage.tsx";
 import OAuthConsentPage from "./pages/OAuthConsentPage.tsx";
 import { ErrorBoundary } from "./components/ErrorBoundary.tsx";
 
