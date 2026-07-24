@@ -1,0 +1,114 @@
+{
+  "version": 1,
+  "sdk_version": "0.24.0",
+  "path": "/functions/v1/mcp",
+  "auth": {
+    "type": "oauth",
+    "issuer": "https://pcnsuyadfqrmythikwpa.supabase.co/auth/v1",
+    "accepted_audiences": [
+      "authenticated"
+    ]
+  },
+  "mcp": {
+    "server": {
+      "name": "realtoolbox-mcp",
+      "version": "0.1.0",
+      "title": "RealToolbox.ai"
+    },
+    "tools": [
+      {
+        "name": "search_skills",
+        "title": "Search skills",
+        "description": "Search or browse published real estate AI skills in the RealToolbox.ai library. Returns skill metadata (name, slug, tagline, tier, access_level, price). Use get_skill to retrieve full content for a specific skill.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "query": {
+              "description": "Optional search text matched against skill name, tagline, and description.",
+              "type": "string"
+            },
+            "tier": {
+              "description": "Optional tier filter (e.g. 'free', 'pro').",
+              "type": "string"
+            },
+            "limit": {
+              "description": "Max results (default 20).",
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_skill",
+        "title": "Get skill",
+        "description": "Fetch a full skill by slug. Metadata is public. The `overview` (full markdown skill content) is included for free skills, or for paid skills only when the signed-in user has an active All-Access subscription. Otherwise a `locked` flag is returned.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "slug": {
+              "type": "string",
+              "minLength": 1,
+              "description": "The skill slug, e.g. 'deal-screen'."
+            }
+          },
+          "required": [
+            "slug"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_integrations",
+        "title": "List integrations",
+        "description": "List published integrations in the RealToolbox.ai directory (MCP servers and other tools that connect AI assistants to real estate workflows). Optionally filter by category.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "category": {
+              "description": "Optional category slug: property-data, crm, communication, productivity, content-creation, automation, developer.",
+              "type": "string"
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_my_subscription",
+        "title": "Get my subscription",
+        "description": "Return the signed-in user's RealToolbox.ai subscription status (plan, status, current period end). Requires an authenticated caller.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {}
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}
