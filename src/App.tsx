@@ -37,6 +37,10 @@ import AgentsPage from "./pages/AgentsPage.tsx";
 import ResourcesPage from "./pages/ResourcesPage.tsx";
 import SkillsPage from "./pages/SkillsPage.tsx";
 import SkillDetailPage from "./pages/SkillDetailPage.tsx";
+import ToolboxIndexPage from "./pages/ToolboxIndexPage.tsx";
+import InvestorToolboxPage from "./pages/InvestorToolboxPage.tsx";
+import AgentToolboxPage from "./pages/AgentToolboxPage.tsx";
+import SkillsSlugRedirect from "./pages/SkillsSlugRedirect.tsx";
 import PrivacyPage from "./pages/PrivacyPage.tsx";
 import TermsPage from "./pages/TermsPage.tsx";
 import ContactPage from "./pages/ContactPage.tsx";
@@ -70,8 +74,12 @@ const App = () => (
               <Route path="/blog/:slug" element={<BlogPage />} />
               <Route path="/integrations" element={<IntegrationsPage />} />
               <Route path="/mcps" element={<Navigate to="/integrations" replace />} />
-              <Route path="/skills" element={<SkillsPage />} />
-              <Route path="/skills/:slug" element={<SkillDetailPage />} />
+              <Route path="/toolbox" element={<ToolboxIndexPage />} />
+              <Route path="/toolbox/investor" element={<InvestorToolboxPage />} />
+              <Route path="/toolbox/agent" element={<AgentToolboxPage />} />
+              <Route path="/toolbox/:slug" element={<SkillDetailPage />} />
+              <Route path="/skills" element={<Navigate to="/toolbox" replace />} />
+              <Route path="/skills/:slug" element={<SkillsSlugRedirect />} />
               <Route path="/agents" element={<AgentsPage />} />
               <Route path="/resources" element={<ResourcesPage />} />
               <Route path="/submit" element={<SubmitPage />} />

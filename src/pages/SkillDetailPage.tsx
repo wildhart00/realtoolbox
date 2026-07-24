@@ -110,7 +110,7 @@ export default function SkillDetailPage() {
   function handleFreeCopyClick() {
     if (!skill) return;
     if (!user) {
-      const next = `/skills/${skill.slug}?copy=1`;
+      const next = `/toolbox/${skill.slug}?copy=1`;
       navigate(`/auth?mode=signup&next=${encodeURIComponent(next)}`);
       return;
     }
@@ -145,7 +145,7 @@ export default function SkillDetailPage() {
     autoCheckedOut.current = true;
     params.delete("checkout");
     setParams(params, { replace: true });
-    startCheckout(target as "investor" | "complete", `/skills/${skill.slug}`);
+    startCheckout(target as "investor" | "complete", `/toolbox/${skill.slug}`);
   }, [authLoading, user, skill, params, setParams, startCheckout]);
 
   const isAgent = requiredToolbox === "agent_toolbox";
@@ -154,7 +154,7 @@ export default function SkillDetailPage() {
     <AppLayout>
       <section className="mx-auto max-w-[900px] px-6 lg:px-10 pt-12 lg:pt-16 pb-10">
         <Link
-          to="/skills"
+          to="/toolbox"
           className="inline-flex items-center gap-1.5 text-[13px] text-muted-foreground hover:text-foreground transition-base"
         >
           <ArrowLeft className="h-3.5 w-3.5" />
@@ -165,7 +165,7 @@ export default function SkillDetailPage() {
           <div className="mt-10 text-sm text-muted-foreground">Loading…</div>
         ) : !skill ? (
           <div className="mt-10 text-sm text-muted-foreground">
-            Skill not found. <Link to="/skills" className="underline">Back to all skills</Link>.
+            Skill not found. <Link to="/toolbox" className="underline">Back to all skills</Link>.
           </div>
         ) : (
           <>
@@ -270,7 +270,7 @@ export default function SkillDetailPage() {
                   ) : (
                     <button
                       type="button"
-                      onClick={() => startCheckout("investor", `/skills/${skill.slug}`)}
+                      onClick={() => startCheckout("investor", `/toolbox/${skill.slug}`)}
                       disabled={checkoutLoading}
                       className="inline-flex items-center justify-center gap-2 rounded-[10px] bg-gradient-to-r from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] px-6 py-3 text-[14px] font-semibold text-white shadow-lg shadow-[hsl(252_84%_50%)]/25 hover:shadow-[hsl(252_84%_50%)]/40 transition-base disabled:opacity-70"
                     >
@@ -281,14 +281,14 @@ export default function SkillDetailPage() {
                   )}
                   <button
                     type="button"
-                    onClick={() => startCheckout("complete", `/skills/${skill.slug}`)}
+                    onClick={() => startCheckout("complete", `/toolbox/${skill.slug}`)}
                     disabled={checkoutLoading}
                     className="inline-flex items-center justify-center rounded-[10px] border border-foreground/15 bg-background/40 px-4 py-3 text-[13.5px] font-semibold text-foreground/85 hover:border-[hsl(239_84%_67%)]/45 hover:text-foreground transition-base disabled:opacity-70"
                   >
                     Or get the Complete Toolbox — $149
                   </button>
                   <Link
-                    to="/skills"
+                    to="/toolbox"
                     className="text-[13px] text-muted-foreground hover:text-foreground underline-offset-2 hover:underline transition-base"
                   >
                     Browse other skills
