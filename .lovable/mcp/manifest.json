@@ -50,7 +50,7 @@
       {
         "name": "get_skill",
         "title": "Get skill",
-        "description": "Fetch a full skill by slug. Metadata is public. The `overview` (full markdown skill content) is included for free skills, or for paid skills only when the signed-in user has purchased the toolbox that unlocks it (or the Complete Toolbox). Otherwise a `locked` flag is returned.",
+        "description": "Fetch a full skill by slug. Metadata and `overview` (marketing description) are public. For entitled callers (free skills, or paid skills where the signed-in user has purchased the matching toolbox or the Complete Toolbox), the actual skill markdown is returned in `content`. Otherwise `content` is omitted and a `locked` flag is set.",
         "annotations": {
           "readOnlyHint": true,
           "idempotentHint": true,

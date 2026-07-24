@@ -53,6 +53,13 @@ function anonClient() {
     { auth: { persistSession: false, autoRefreshToken: false } }
   );
 }
+function adminClient() {
+  return createClient2(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_SERVICE_ROLE_KEY,
+    { auth: { persistSession: false, autoRefreshToken: false } }
+  );
+}
 function userClient(ctx) {
   return createClient2(
     process.env.SUPABASE_URL,
@@ -68,17 +75,21 @@ function requiredToolboxFor(skillToolbox) {
   if (skillToolbox === "agent") return "agent_toolbox";
   return null;
 }
+function pathFromFileUrl(fileUrl) {
+  const m = fileUrl.match(/\/skill-files\/(.+)$/);
+  return m ? decodeURIComponent(m[1]) : null;
+}
 var get_skill_default = defineTool2({
   name: "get_skill",
   title: "Get skill",
-  description: "Fetch a full skill by slug. Metadata is public. The `overview` (full markdown skill content) is included for free skills, or for paid skills only when the signed-in user has purchased the toolbox that unlocks it (or the Complete Toolbox). Otherwise a `locked` flag is returned.",
+  description: "Fetch a full skill by slug. Metadata and `overview` (marketing description) are public. For entitled callers (free skills, or paid skills where the signed-in user has purchased the matching toolbox or the Complete Toolbox), the actual skill markdown is returned in `content`. Otherwise `content` is omitted and a `locked` flag is set.",
   inputSchema: {
     slug: z2.string().min(1).describe("The skill slug, e.g. 'deal-screen'.")
   },
   annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
   handler: async ({ slug }, ctx) => {
     const supabase = anonClient();
-    const { data: skill, error } = await supabase.from("skills").select("slug,name,tagline,description,tier,access_level,price,overview,file_url,toolbox").eq("slug", slug).eq("is_published", true).maybeSingle();
+    const { data: skill, error } = await supabase.from("skills").select("slug,name,tagline,description,tier,access_level,price,overview,toolbox,file_url").eq("slug", slug).eq("is_published", true).maybeSingle();
     if (error) return { content: [{ type: "text", text: error.message }], isError: true };
     if (!skill) return { content: [{ type: "text", text: `No skill with slug '${slug}'.` }], isError: true };
     const isPaid = skill.access_level === "paid";
@@ -89,14 +100,33 @@ var get_skill_default = defineTool2({
       const owned = new Set((purchases ?? []).map((p) => p.toolbox_slug));
       unlocked = owned.has("complete_toolbox") || owned.has(requiredToolbox);
     }
-    const payload = unlocked ? skill : {
-      ...skill,
-      overview: null,
-      file_url: null,
-      locked: true,
-      required_toolbox: requiredToolbox,
-      unlock_hint: "Requires a one-time toolbox purchase. Sign in and buy the matching Toolbox at https://realtoolbox.ai to unlock."
-    };
+    const { file_url, ...meta } = skill;
+    let payload;
+    if (unlocked) {
+      let content = null;
+      let content_error = null;
+      const path = file_url ? pathFromFileUrl(file_url) : null;
+      if (!file_url) {
+        content_error = "no_file";
+      } else if (!path) {
+        content_error = "bad_file_url";
+      } else {
+        const { data: blob, error: dlErr } = await adminClient().storage.from("skill-files").download(path);
+        if (dlErr || !blob) {
+          content_error = "download_failed";
+        } else {
+          content = await blob.text();
+        }
+      }
+      payload = { ...meta, content, ...content_error ? { content_error } : {} };
+    } else {
+      payload = {
+        ...meta,
+        locked: true,
+        required_toolbox: requiredToolbox,
+        unlock_hint: "Requires a one-time toolbox purchase. Sign in and buy the matching Toolbox at https://realtoolbox.ai to unlock."
+      };
+    }
     return {
       content: [{ type: "text", text: JSON.stringify(payload, null, 2) }],
       structuredContent: payload
