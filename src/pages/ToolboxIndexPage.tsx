@@ -268,23 +268,43 @@ export default function ToolboxIndexPage() {
           </div>
         </div>
 
-        {/* Try free strip */}
-        <div className="mt-6 rounded-2xl border border-foreground/10 bg-foreground/[0.03] px-6 py-5 lg:px-8 flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:justify-between">
-          <div>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">Try before you buy</p>
-            <h4 className="mt-1 font-display text-[18px] text-foreground tracking-tight">
-              Deal Screen — free forever
-            </h4>
-            <p className="mt-1 text-[13px] text-muted-foreground leading-[1.6]">
-              Paste in any deal and get a fast, conservative read on whether the numbers work.
-            </p>
+        {/* Try free + Setup guide row */}
+        <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="rounded-2xl border border-foreground/10 bg-foreground/[0.03] px-6 py-5 flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:justify-between">
+            <div>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">Try before you buy</p>
+              <h4 className="mt-1 font-display text-[18px] text-foreground tracking-tight">
+                Deal Screen — free forever
+              </h4>
+              <p className="mt-1 text-[13px] text-muted-foreground leading-[1.6]">
+                Paste in any deal and get a fast, conservative read on whether the numbers work.
+              </p>
+            </div>
+            <Link
+              to={freeCtaTarget}
+              className="inline-flex items-center gap-1.5 rounded-[10px] border border-foreground/15 bg-foreground/[0.04] px-4 py-2 text-[13px] font-semibold text-foreground hover:bg-foreground/[0.08] transition-base whitespace-nowrap"
+            >
+              Start free <ArrowRight className="h-4 w-4" />
+            </Link>
           </div>
-          <Link
-            to={freeCtaTarget}
-            className="inline-flex items-center gap-1.5 rounded-[10px] border border-foreground/15 bg-foreground/[0.04] px-4 py-2 text-[13px] font-semibold text-foreground hover:bg-foreground/[0.08] transition-base whitespace-nowrap"
-          >
-            Start free <ArrowRight className="h-4 w-4" />
-          </Link>
+
+          <div className="rounded-2xl border border-foreground/10 bg-foreground/[0.03] px-6 py-5 flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:justify-between">
+            <div>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">New here?</p>
+              <h4 className="mt-1 font-display text-[18px] text-foreground tracking-tight flex items-center gap-2">
+                <BookOpen className="h-4 w-4 text-[hsl(229_94%_82%)]" /> Setup guide
+              </h4>
+              <p className="mt-1 text-[13px] text-muted-foreground leading-[1.6]">
+                How to load any skill into ChatGPT, Claude, or Gemini — plus MCP setup.
+              </p>
+            </div>
+            <Link
+              to="/setup-guide"
+              className="inline-flex items-center gap-1.5 rounded-[10px] border border-foreground/15 bg-foreground/[0.04] px-4 py-2 text-[13px] font-semibold text-foreground hover:bg-foreground/[0.08] transition-base whitespace-nowrap"
+            >
+              Read the guide <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
         </div>
       </section>
 
