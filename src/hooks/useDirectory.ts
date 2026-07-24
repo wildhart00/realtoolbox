@@ -17,13 +17,41 @@ function shapeTool(t: any): Tool {
   } as Tool;
 }
 
+const RE_NATIVE_ORDER = [
+  "deal-sourcing", "deal-analysis", "sales-marketing", "listing-marketing",
+  "lead-generation", "crm-pipeline", "contracts-legal", "commercial-real-estate",
+  "construction", "property-management", "customer-service", "analytics-reporting",
+  "virtual-staging", "interior-design", "architectural-design", "surveying",
+];
+const GENERAL_ORDER = [
+  "image-generators", "video-creation", "3d-modelling", "chatbots", "app-builders",
+  "website-builders", "no-code-tools", "ai-writers", "copywriting",
+  "presentation-design", "productivity", "automation", "research",
+  "machine-learning", "phone-agents",
+];
+
+function categoryRank(slug: string): [number, number] {
+  const re = RE_NATIVE_ORDER.indexOf(slug);
+  if (re !== -1) return [0, re];
+  const gen = GENERAL_ORDER.indexOf(slug);
+  if (gen !== -1) return [1, gen];
+  return [2, 0];
+}
+
 export function useCategories() {
   return useQuery({
     queryKey: ["categories"],
     queryFn: async (): Promise<Category[]> => {
       const { data, error } = await supabase.from("categories").select("*").order("sort_order");
       if (error) throw error;
-      return data as Category[];
+      const list = (data ?? []) as Category[];
+      return [...list].sort((a, b) => {
+        const [ga, ia] = categoryRank(a.slug);
+        const [gb, ib] = categoryRank(b.slug);
+        if (ga !== gb) return ga - gb;
+        if (ga === 2) return a.name.localeCompare(b.name);
+        return ia - ib;
+      });
     },
   });
 }
