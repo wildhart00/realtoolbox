@@ -30,7 +30,15 @@ export function FeaturedSection({ featured }: { featured: Tool[] }) {
       {featured.length === 0 ? (
         <EmptyState />
       ) : (
-        <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+        <div
+          className={
+            featured.length === 1
+              ? "grid gap-4 grid-cols-1 max-w-[420px] mx-auto"
+              : featured.length === 2
+                ? "grid gap-4 grid-cols-1 sm:grid-cols-2 max-w-[840px] mx-auto"
+                : "grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+          }
+        >
           {featured.slice(0, 6).map((t) => (
             <ToolCard key={t.id} tool={t} />
           ))}
