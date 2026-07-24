@@ -1,49 +1,34 @@
-## What's happening
+## Goal
+Run a complete test purchase of the Investor Toolbox in Stripe test mode and verify the entitlement flows through to the app and MCP.
 
-- Fresh headless Chromium hits `realtoolbox.ai` and the homepage stays put — no errors, no redirects, no navigations. The code as deployed is fine.
-- It only blanks in **your logged-in Chrome**, works in **Chrome incognito**. That points at something persisted in your normal Chrome profile — almost certainly a stale value in `localStorage` (most likely the Supabase auth token from an earlier build) that throws during render on hydration.
-- The app has **no top-level React ErrorBoundary**, so any throw during render unmounts the whole tree — which matches "appears for a second and then vanishes." That's the real bug worth fixing in code; the specific trigger is a downstream symptom.
+## Step 1 — Bootstrap Stripe products ✅ DONE
+Stripe test products/prices are now created:
+- Investor Toolbox founding: `price_1TwgrZQPyf47Aq8AeeqSqe9a`
+- Investor Toolbox regular: `price_1TwgrZQPyf47Aq8AQHqlnwcT`
+- Complete Toolbox founding: `price_1TwgraQPyf47Aq8A0ufP3rVg`
 
-## Fix
+## Step 2 — Create a checkout session
+Use the `create-checkout-session` edge function with `toolbox=investor_toolbox`. This returns a Stripe Checkout URL.
 
-### 1. Add a global ErrorBoundary (the real fix)
+## Step 3 — Pay with a Stripe test card
+Open the checkout URL in an incognito/private window and use Stripe's standard test card:
+- Card number: `4242 4242 4242 4242`
+- Any future expiry date
+- Any 3-digit CVC
+- Any ZIP code
 
-New file `src/components/ErrorBoundary.tsx`: a small class component that catches render errors, logs them to the console with the full stack, and renders a branded fallback ("Something went wrong" + Reload button + a "Clear session and reload" button that wipes `localStorage`/`sessionStorage` before reloading — this gets stuck users unstuck without asking them to open DevTools).
+## Step 4 — Verify the purchase row
+After checkout succeeds, the `stripe-webhook` edge function records a row in the `public.purchases` table for your user with `toolbox_slug = 'investor_toolbox'` and `status = 'paid'`.
 
-Wrap the app in `src/App.tsx`:
+## Step 5 — Check /welcome
+Visit `/welcome?checkout=investor_toolbox` (or let the success URL redirect you). The page should show the Investor Toolbox as purchased.
 
-```text
-<QueryClientProvider>
-  <TooltipProvider>
-    <ErrorBoundary>            <-- new
-      <BrowserRouter> ... </BrowserRouter>
-    </ErrorBoundary>
-  </TooltipProvider>
-</QueryClientProvider>
-```
+## Step 6 — Verify skill gating
+Open a paid skill detail page while logged in as the same user. The "Get All-Access" button should now be replaced with the normal copy/download actions.
 
-After this, even if something throws in `AuthProvider`, `SearchProvider`, or any page, users see a message and a recovery button instead of a white screen.
+## Step 7 — Verify MCP entitlement
+Call the MCP `get_my_purchases` tool as the same user. It should return `["investor_toolbox"]`. Then call `get_skill` for a paid skill — it should return the full content instead of a locked preview.
 
-### 2. Capture the real trigger from your Chrome
-
-While I ship the boundary, here's how to grab the actual error so I can fix the root cause too:
-
-1. On `realtoolbox.ai` in your normal Chrome, right-click the page → **Inspect** → **Console** tab.
-2. Reload the page. When it blanks, screenshot the first red error line (and the stack under it) and paste it back.
-
-If you'd rather just make it work right now without diagnosing:
-
-- DevTools → **Application** tab → **Storage** → **Clear site data** for `realtoolbox.ai`, then reload. That will remove the stale token/cache that Chrome is holding.
-- Or once the ErrorBoundary ships, click its "Clear session and reload" button.
-
-### 3. Not changing anything else
-
-- No page/component rewrites, no route changes, no auth logic changes. Just the boundary + fallback.
-
-## Technical notes
-
-- ErrorBoundary must be a class component (React hooks don't support `componentDidCatch`).
-- Place it **inside** `QueryClientProvider`/`TooltipProvider` but **outside** `BrowserRouter` so navigation state isn't required for the fallback to render.
-- Log with `console.error(error, errorInfo.componentStack)` so the stack survives in production.
-- Fallback uses existing design tokens (`bg-background`, `text-foreground`, gradient button matching the "Start free" CTA) — no new styling system.
-- No dependency changes.
+## Notes
+- Use a real email address at checkout so the webhook can map the Stripe customer to a Lovable Cloud user account.
+- If you want me to run any of these steps for you (e.g., trigger the checkout session or inspect the purchases table), just say the word.
