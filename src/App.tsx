@@ -44,6 +44,7 @@ import ContactMessagesAdmin from "./pages/admin/ContactMessagesAdmin.tsx";
 import { ScrollToTop } from "./components/ScrollToTop.tsx";
 import WelcomePage from "./pages/WelcomePage.tsx";
 import OAuthConsentPage from "./pages/OAuthConsentPage.tsx";
+import { ErrorBoundary } from "./components/ErrorBoundary.tsx";
 
 
 const queryClient = new QueryClient();
@@ -53,6 +54,7 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
+      <ErrorBoundary>
       <BrowserRouter>
         <ScrollToTop />
         <AuthProvider>
@@ -102,6 +104,7 @@ const App = () => (
           </SearchProvider>
         </AuthProvider>
       </BrowserRouter>
+      </ErrorBoundary>
     </TooltipProvider>
   </QueryClientProvider>
 );
