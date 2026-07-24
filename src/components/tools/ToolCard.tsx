@@ -19,6 +19,8 @@ function ToolScreenshot({ tool }: { tool: Tool }) {
         ? "mshots"
         : "fallback";
   const [stage, setStage] = useState<Stage>(initial);
+  const retriesRef = useRef(0);
+
 
   const advance = () => {
     setStage((s) =>
