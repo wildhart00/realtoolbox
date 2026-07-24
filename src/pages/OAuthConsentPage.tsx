@@ -139,8 +139,8 @@ export default function OAuthConsentPage() {
             <div className="flex items-start gap-2 text-muted-foreground">
               <ShieldCheck className="mt-0.5 h-4 w-4 text-accent shrink-0" />
               <p>
-                This connection does not bypass your account's permissions or subscription
-                limits. Paid skills remain gated by your All-Access status.
+                This connection does not bypass your account's permissions. Paid skills
+                remain gated by the Toolboxes you own.
               </p>
             </div>
           </div>
