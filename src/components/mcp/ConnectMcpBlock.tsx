@@ -75,7 +75,7 @@ export function ConnectMcpBlock({ variant = "full" }: { variant?: Variant }) {
 
       <div className="mt-4">
         <Link
-          to="/setup-guide#connect"
+          to="/setup-guide#connect-your-toolbox-via-mcp"
           className="text-[13px] font-semibold text-[hsl(229_94%_82%)] underline-offset-2 hover:underline"
         >
           See the connect walkthrough →
