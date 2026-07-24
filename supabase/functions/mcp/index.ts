@@ -22,7 +22,7 @@ var search_skills_default = defineTool({
   handler: async ({ query, tier, limit }) => {
     const supabase = createClient(
       process.env.SUPABASE_URL,
-      process.env.SUPABASE_PUBLISHABLE_KEY,
+      process.env.SUPABASE_ANON_KEY,
       { auth: { persistSession: false, autoRefreshToken: false } }
     );
     let q = supabase.from("skills").select("slug,name,tagline,description,tier,access_level,price,download_count").eq("is_published", true).order("sort_order", { ascending: true }).limit(limit ?? 20);
