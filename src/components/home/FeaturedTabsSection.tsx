@@ -60,7 +60,15 @@ export function FeaturedTabsSection({
       {list.length === 0 ? (
         <EmptyState />
       ) : (
-        <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+        <div
+          className={
+            list.length === 1
+              ? "grid gap-4 grid-cols-1 max-w-[420px] mx-auto"
+              : list.length === 2
+                ? "grid gap-4 grid-cols-1 sm:grid-cols-2 max-w-[840px] mx-auto"
+                : "grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+          }
+        >
           {list.slice(0, 6).map((t) => (
             <ToolCard key={t.id} tool={t} />
           ))}

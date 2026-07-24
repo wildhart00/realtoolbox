@@ -38,7 +38,7 @@ export function Hero({ toolCount }: { toolCount: number }) {
           to="/browse"
           className="text-[14px] font-semibold text-foreground/80 hover:text-foreground transition-base"
         >
-          Browse the tool directory{toolCount ? ` (${toolCount})` : ""} →
+          Browse the tool directory{toolCount >= 25 ? ` (${toolCount})` : ""} →
         </Link>
       </div>
 
