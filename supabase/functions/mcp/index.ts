@@ -49,7 +49,7 @@ import { z as z2 } from "npm:zod@^4.4.3";
 function anonClient() {
   return createClient2(
     process.env.SUPABASE_URL,
-    process.env.SUPABASE_PUBLISHABLE_KEY,
+    process.env.SUPABASE_ANON_KEY,
     { auth: { persistSession: false, autoRefreshToken: false } }
   );
 }
