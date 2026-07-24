@@ -10,6 +10,7 @@ import { useTools, useSavedToolIds, usePremiumResources } from "@/hooks/useDirec
 import { ToolCard } from "@/components/tools/ToolCard";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { ConnectMcpBlock } from "@/components/mcp/ConnectMcpBlock";
 
 const MembersPage = () => {
   const { user, loading } = useAuth();
@@ -127,6 +128,10 @@ function MemberDashboard() {
           </div>
           <Button asChild variant="outline"><Link to="/submit">Submit a tool</Link></Button>
         </div>
+      </section>
+
+      <section className="px-6 pt-8 lg:px-10">
+        <ConnectMcpBlock variant="full" />
       </section>
 
       <section className="px-6 py-10 lg:px-10">
