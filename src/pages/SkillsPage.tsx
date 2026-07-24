@@ -72,7 +72,7 @@ export default function SkillsPage() {
       })();
     meta.setAttribute(
       "content",
-      "Operator-grade AI workflows for real estate investors — deal analysis, lead conversion, pricing, follow-up, and KPIs. Drop into Claude, ChatGPT or Gemini.",
+      "Operator-grade AI workflows for real estate investors — buy box, deal screening, triage, input auditing, strategy selection, walk-away calls, and full underwriting. Drop into Claude, ChatGPT or Gemini.",
     );
   }, []);
 
