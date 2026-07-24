@@ -62,7 +62,7 @@ export function SkillsHomeSection() {
                 size="lg"
                 className="bg-white text-[hsl(239_84%_55%)] hover:bg-white/90 shadow-elevated"
               >
-                <Link to="/skills">
+                <Link to="/toolbox">
                   Browse the skills <ArrowRight className="h-4 w-4" />
                 </Link>
               </Button>
@@ -81,7 +81,7 @@ export function SkillsHomeSection() {
 
             <div className="mt-5 flex justify-end">
               <Link
-                to="/skills"
+                to="/toolbox"
                 className="text-[12px] text-muted-foreground hover:text-foreground transition-base"
               >
                 Browse all skills →

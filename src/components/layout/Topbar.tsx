@@ -16,14 +16,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 const navLinks = [
-  { name: "Toolbox", href: "/#pricing" },
+  { name: "Toolbox", href: "/toolbox" },
   { name: "Browse Tools", href: "/browse" },
   { name: "Resources", href: "/resources" },
   { name: "Blog", href: "/blog" },
 ];
 
 const mobileExtraLinks = [
-  { name: "Skills", href: "/skills" },
   { name: "Integrations", href: "/integrations" },
   { name: "Agents", href: "/agents" },
 ];

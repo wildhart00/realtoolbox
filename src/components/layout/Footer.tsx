@@ -3,8 +3,8 @@ import { NewsletterCard } from "@/components/home/NewsletterCard";
 
 const product = [
   { name: "Toolbox", href: "/#pricing" },
-  { name: "Deal Screen (free)", href: "/skills/deal-screen" },
-  { name: "Skills", href: "/skills" },
+  { name: "Deal Screen (free)", href: "/toolbox/deal-screen" },
+  { name: "Toolbox", href: "/toolbox" },
 ];
 
 const directory = [

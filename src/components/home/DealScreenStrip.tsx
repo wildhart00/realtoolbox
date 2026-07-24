@@ -18,7 +18,7 @@ export function DealScreenStrip() {
             </p>
           </div>
           <Link
-            to="/skills/deal-screen"
+            to="/toolbox/deal-screen"
             className="inline-flex shrink-0 items-center justify-center gap-2 rounded-[10px] bg-gradient-to-r from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] px-5 py-3 text-[13px] font-semibold text-white shadow-lg shadow-[hsl(252_84%_50%)]/25 hover:shadow-[hsl(252_84%_50%)]/40 transition-base"
           >
             Get the free Deal Screen <ArrowRight className="h-4 w-4" />

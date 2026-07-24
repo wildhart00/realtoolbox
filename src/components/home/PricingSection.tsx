@@ -36,7 +36,7 @@ export function PricingSection() {
     })();
   }, [user, authLoading, params, setParams]);
 
-  const freeCtaTarget = user ? "/skills/deal-screen" : "/auth?mode=signup&next=" + encodeURIComponent("/skills/deal-screen?copy=1");
+  const freeCtaTarget = user ? "/toolbox/deal-screen" : "/auth?mode=signup&next=" + encodeURIComponent("/toolbox/deal-screen?copy=1");
 
   return (
     <section id="pricing" className="px-6 lg:px-10 py-14 lg:py-16 mx-auto" style={{ maxWidth: 1200 }}>

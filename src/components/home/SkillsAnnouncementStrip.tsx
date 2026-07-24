@@ -37,7 +37,7 @@ export function SkillsAnnouncementStrip() {
               size="lg"
               className="bg-white text-[hsl(239_84%_55%)] hover:bg-white/90 shadow-elevated"
             >
-              <Link to="/skills">
+              <Link to="/toolbox">
                 Browse the skills <ArrowRight className="h-4 w-4" />
               </Link>
             </Button>
