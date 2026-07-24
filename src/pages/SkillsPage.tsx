@@ -48,6 +48,7 @@ export default function SkillsPage() {
   const [success, setSuccess] = useState(false);
   const [skills, setSkills] = useState<SkillRow[]>([]);
   const [loadingSkills, setLoadingSkills] = useState(true);
+  const floatCluster = useAnimationActive<HTMLDivElement>();
 
   useEffect(() => {
     (async () => {
