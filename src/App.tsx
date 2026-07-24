@@ -43,6 +43,8 @@ import ContactPage from "./pages/ContactPage.tsx";
 import ContactMessagesAdmin from "./pages/admin/ContactMessagesAdmin.tsx";
 import { ScrollToTop } from "./components/ScrollToTop.tsx";
 import WelcomePage from "./pages/WelcomePage.tsx";
+import OAuthConsentPage from "./pages/OAuthConsentPage.tsx";
+
 
 const queryClient = new QueryClient();
 
@@ -75,8 +77,10 @@ const App = () => (
               <Route path="/terms" element={<TermsPage />} />
               <Route path="/contact" element={<ContactPage />} />
               <Route path="/welcome" element={<WelcomePage />} />
+              <Route path="/.lovable/oauth/consent" element={<OAuthConsentPage />} />
               <Route path="/auth" element={<AuthPage />} />
               <Route path="/reset-password" element={<ResetPasswordPage />} />
+
               <Route path="/admin" element={<AdminLayout />}>
                 <Route index element={<AdminDashboard />} />
                 <Route path="tools" element={<ToolsAdmin />} />
