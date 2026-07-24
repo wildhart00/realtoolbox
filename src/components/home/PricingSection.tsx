@@ -109,7 +109,7 @@ export function PricingSection() {
               </div>
               <p className="mt-1 text-[13px] text-muted-foreground">One-time payment</p>
               <p className="mt-3 text-[13px] text-muted-foreground leading-[1.65]">
-                Every investor skill — deal analysis, underwriting, follow-up, KPIs — yours to keep.
+                Every investor skill — buy box, deal screening, triage, input auditing, strategy selection, walk-away calls, and full underwriting — yours to keep.
               </p>
             </div>
 
