@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { Lock, Sparkles } from "lucide-react";
 import { useSkillAccess } from "@/hooks/useSkillAccess";
+import { useCheckout } from "@/hooks/useCheckout";
 import { cn } from "@/lib/utils";
 
 export interface SkillCardData {
@@ -12,6 +13,7 @@ export interface SkillCardData {
   file_url: string | null;
   access_level: string;
   price: number;
+  toolbox?: string | null;
 }
 
 export function SkillPreviewCard({
@@ -20,12 +22,20 @@ export function SkillPreviewCard({
   tagline,
   description,
   access_level,
+  toolbox,
 }: SkillCardData) {
   const navigate = useNavigate();
-  const { isPaid, locked } = useSkillAccess(access_level);
+  const { isPaid, locked, requiredToolbox } = useSkillAccess({ access_level, toolbox });
+  const { startCheckout, loading } = useCheckout();
+
+  const isAgent = requiredToolbox === "agent_toolbox";
 
   function handleCardClick() {
     navigate(`/skills/${slug}`);
+  }
+
+  function stop(e: React.MouseEvent | React.KeyboardEvent) {
+    e.stopPropagation();
   }
 
   return (
@@ -50,7 +60,7 @@ export function SkillPreviewCard({
         {isPaid && (
           locked ? (
             <span className="inline-flex items-center gap-1 text-[10px] font-semibold uppercase tracking-[0.08em] text-muted-foreground/80">
-              <Lock className="h-3 w-3" aria-hidden /> All-Access
+              <Lock className="h-3 w-3" aria-hidden /> Locked
             </span>
           ) : (
             <span className="inline-flex items-center gap-1 text-[10px] font-semibold uppercase tracking-[0.08em] text-[hsl(229_94%_82%)]">
@@ -72,19 +82,47 @@ export function SkillPreviewCard({
         <div className="flex-1" />
       )}
 
-      <div className="mt-5 flex items-center gap-2.5">
+      <div className="mt-5 flex flex-col items-start gap-2">
         {isPaid && locked ? (
-          <Link
-            to="/#pricing"
-            onClick={(e) => e.stopPropagation()}
-            className="inline-flex items-center justify-center rounded-[10px] bg-gradient-to-r from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] px-4 py-2 text-[13px] font-semibold text-white shadow-md shadow-[hsl(252_84%_50%)]/20 hover:shadow-[hsl(252_84%_50%)]/35 transition-base"
-          >
-            Get All-Access
-          </Link>
+          <>
+            {isAgent ? (
+              <button
+                type="button"
+                disabled
+                onClick={stop}
+                className="inline-flex items-center justify-center rounded-[10px] border border-foreground/15 bg-foreground/[0.04] px-4 py-2 text-[13px] font-semibold text-muted-foreground cursor-not-allowed"
+              >
+                Agent Toolbox — coming soon
+              </button>
+            ) : (
+              <button
+                type="button"
+                disabled={loading}
+                onClick={(e) => {
+                  stop(e);
+                  startCheckout("investor", "/");
+                }}
+                className="inline-flex items-center justify-center rounded-[10px] bg-gradient-to-r from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] px-4 py-2 text-[13px] font-semibold text-white shadow-md shadow-[hsl(252_84%_50%)]/20 hover:shadow-[hsl(252_84%_50%)]/35 transition-base disabled:opacity-70"
+              >
+                Get the Investor Toolbox — $79
+              </button>
+            )}
+            <button
+              type="button"
+              disabled={loading}
+              onClick={(e) => {
+                stop(e);
+                startCheckout("complete", "/");
+              }}
+              className="text-[12px] text-muted-foreground hover:text-foreground underline-offset-2 hover:underline transition-base disabled:opacity-70"
+            >
+              Or the Complete Toolbox — $149
+            </button>
+          </>
         ) : isPaid ? (
           <Link
             to={`/skills/${slug}`}
-            onClick={(e) => e.stopPropagation()}
+            onClick={stop}
             className="inline-flex items-center justify-center rounded-[10px] bg-gradient-to-r from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] px-4 py-2 text-[13px] font-semibold text-white shadow-md shadow-[hsl(252_84%_50%)]/20 hover:shadow-[hsl(252_84%_50%)]/35 transition-base"
           >
             Open skill
@@ -92,7 +130,7 @@ export function SkillPreviewCard({
         ) : (
           <Link
             to={`/skills/${slug}`}
-            onClick={(e) => e.stopPropagation()}
+            onClick={stop}
             className="inline-flex items-center justify-center rounded-[10px] bg-gradient-to-r from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] px-4 py-2 text-[13px] font-semibold text-white shadow-md shadow-[hsl(252_84%_50%)]/20 hover:shadow-[hsl(252_84%_50%)]/35 transition-base"
           >
             Start free

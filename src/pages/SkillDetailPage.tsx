@@ -1,14 +1,15 @@
 import { useEffect, useRef, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowLeft, Check, Copy, Lock, Sparkles } from "lucide-react";
+import { ArrowLeft, Check, Copy, Loader2, Lock, Sparkles } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { toast } from "sonner";
 import { AppLayout } from "@/components/layout/AppLayout";
-import { CaptureDialog, type StageKey } from "@/components/capture/CaptureDialog";
 import { supabase } from "@/integrations/supabase/client";
 import { useSkillAccess } from "@/hooks/useSkillAccess";
+import { useCheckout } from "@/hooks/useCheckout";
+import { useAuth } from "@/hooks/useAuth";
 
 type SkillRow = {
   id: string;
@@ -21,14 +22,8 @@ type SkillRow = {
   file_url: string | null;
   access_level: string;
   price: number;
+  toolbox: string | null;
 };
-
-function stageFromTagline(tagline: string | null): StageKey {
-  const t = (tagline ?? "").toLowerCase();
-  if (t.includes("scaling")) return "scaling";
-  if (t.includes("active")) return "active";
-  return "first";
-}
 
 const LLM_LINKS = [
   { label: "Open ChatGPT", href: "https://chatgpt.com" },
@@ -38,10 +33,14 @@ const LLM_LINKS = [
 
 export default function SkillDetailPage() {
   const { slug } = useParams<{ slug: string }>();
-  const [open, setOpen] = useState(false);
+  const [params, setParams] = useSearchParams();
+  const navigate = useNavigate();
+  const { user, loading: authLoading } = useAuth();
   const [copied, setCopied] = useState(false);
   const [copying, setCopying] = useState(false);
   const copyTimer = useRef<number | null>(null);
+  const autoCopied = useRef(false);
+  const autoCheckedOut = useRef(false);
 
   const { data: skill, isLoading } = useQuery({
     queryKey: ["skill-detail", slug],
@@ -49,7 +48,7 @@ export default function SkillDetailPage() {
     queryFn: async (): Promise<SkillRow | null> => {
       const { data, error } = await supabase
         .from("skills" as any)
-        .select("id, name, slug, tagline, description, overview, audience, file_url, access_level, price")
+        .select("id, name, slug, tagline, description, overview, audience, file_url, access_level, price, toolbox")
         .eq("slug", slug!)
         .eq("is_published", true)
         .maybeSingle();
@@ -58,7 +57,11 @@ export default function SkillDetailPage() {
     },
   });
 
-  const { isPaid, locked } = useSkillAccess(skill?.access_level);
+  const { isPaid, locked, requiredToolbox } = useSkillAccess({
+    access_level: skill?.access_level,
+    toolbox: skill?.toolbox,
+  });
+  const { startCheckout, loading: checkoutLoading } = useCheckout();
 
   useEffect(() => {
     if (!skill) return;
@@ -104,6 +107,49 @@ export default function SkillDetailPage() {
     }
   }
 
+  function handleFreeCopyClick() {
+    if (!skill) return;
+    if (!user) {
+      const next = `/skills/${skill.slug}?copy=1`;
+      navigate(`/auth?mode=signup&next=${encodeURIComponent(next)}`);
+      return;
+    }
+    fetchAndCopySkill();
+  }
+
+  // Auto-copy after returning from /auth?next=/skills/<slug>?copy=1
+  useEffect(() => {
+    if (authLoading || !skill || !user || isPaid) return;
+    if (params.get("copy") !== "1" || autoCopied.current) return;
+    autoCopied.current = true;
+    // Fire-and-forget list capture with source tag
+    (async () => {
+      const email = user.email;
+      if (email) {
+        await supabase
+          .from("newsletter_subscribers")
+          .insert({ email, source: "deal_screen_free" } as any);
+      }
+    })();
+    params.delete("copy");
+    setParams(params, { replace: true });
+    fetchAndCopySkill();
+  }, [authLoading, user, skill, isPaid, params, setParams]);
+
+  // Auto-resume checkout after returning from /auth?next=/skills/<slug>?checkout=investor|complete
+  useEffect(() => {
+    if (authLoading || !skill || !user) return;
+    const target = params.get("checkout");
+    if (!target || autoCheckedOut.current) return;
+    if (target !== "investor" && target !== "complete") return;
+    autoCheckedOut.current = true;
+    params.delete("checkout");
+    setParams(params, { replace: true });
+    startCheckout(target as "investor" | "complete", `/skills/${skill.slug}`);
+  }, [authLoading, user, skill, params, setParams, startCheckout]);
+
+  const isAgent = requiredToolbox === "agent_toolbox";
+
   return (
     <AppLayout>
       <section className="mx-auto max-w-[900px] px-6 lg:px-10 pt-12 lg:pt-16 pb-10">
@@ -130,7 +176,7 @@ export default function SkillDetailPage() {
               {isPaid && (
                 locked ? (
                   <span className="inline-flex items-center gap-1 text-[10px] font-semibold uppercase tracking-[0.08em] text-muted-foreground/80">
-                    <Lock className="h-3 w-3" aria-hidden /> All-Access
+                    <Lock className="h-3 w-3" aria-hidden /> Locked
                   </span>
                 ) : (
                   <span className="inline-flex items-center gap-1 text-[10px] font-semibold uppercase tracking-[0.08em] text-[hsl(229_94%_82%)]">
@@ -206,21 +252,44 @@ export default function SkillDetailPage() {
             {isPaid && locked ? (
               <div className="rounded-2xl p-6 lg:p-7 surface-card border border-foreground/10">
                 <div className="flex items-center gap-2 text-[12px] uppercase tracking-[0.14em] text-muted-foreground font-semibold">
-                  <Lock className="h-3.5 w-3.5" /> Members-only skill
+                  <Lock className="h-3.5 w-3.5" />
+                  Own the {isAgent ? "Agent" : "Investor"} Toolbox
                 </div>
                 <p className="mt-3 text-[15px] text-foreground/85 leading-[1.65]">
-                  This skill unlocks with All-Access. Get every paid skill — plus new ones every month — for one flat price.
+                  One payment, lifetime updates. Every skill in this toolbox unlocks the moment you buy.
                 </p>
                 <div className="mt-5 flex flex-wrap items-center gap-3">
-                  <Link
-                    to="/#pricing"
-                    className="inline-flex items-center justify-center rounded-[10px] bg-gradient-to-r from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] px-6 py-3 text-[14px] font-semibold text-white shadow-lg shadow-[hsl(252_84%_50%)]/25 hover:shadow-[hsl(252_84%_50%)]/40 transition-base"
+                  {isAgent ? (
+                    <button
+                      type="button"
+                      disabled
+                      className="inline-flex items-center justify-center rounded-[10px] border border-foreground/15 bg-foreground/[0.04] px-6 py-3 text-[14px] font-semibold text-muted-foreground cursor-not-allowed"
+                    >
+                      Agent Toolbox — coming soon
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => startCheckout("investor", `/skills/${skill.slug}`)}
+                      disabled={checkoutLoading}
+                      className="inline-flex items-center justify-center gap-2 rounded-[10px] bg-gradient-to-r from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] px-6 py-3 text-[14px] font-semibold text-white shadow-lg shadow-[hsl(252_84%_50%)]/25 hover:shadow-[hsl(252_84%_50%)]/40 transition-base disabled:opacity-70"
+                    >
+                      {checkoutLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
+                      Get the Investor Toolbox — $79{" "}
+                      <span className="opacity-70 font-normal">(founding, reg $99)</span>
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => startCheckout("complete", `/skills/${skill.slug}`)}
+                    disabled={checkoutLoading}
+                    className="inline-flex items-center justify-center rounded-[10px] border border-foreground/15 bg-background/40 px-4 py-3 text-[13.5px] font-semibold text-foreground/85 hover:border-[hsl(239_84%_67%)]/45 hover:text-foreground transition-base disabled:opacity-70"
                   >
-                    Get All-Access →
-                  </Link>
+                    Or get the Complete Toolbox — $149
+                  </button>
                   <Link
                     to="/skills"
-                    className="inline-flex items-center justify-center rounded-[10px] border border-foreground/15 bg-background/40 px-4 py-3 text-[13.5px] font-semibold text-foreground/85 hover:border-[hsl(239_84%_67%)]/45 hover:text-foreground transition-base"
+                    className="text-[13px] text-muted-foreground hover:text-foreground underline-offset-2 hover:underline transition-base"
                   >
                     Browse other skills
                   </Link>
@@ -250,41 +319,41 @@ export default function SkillDetailPage() {
                 ))}
               </div>
             ) : (
-              <div className="flex flex-wrap items-center gap-3">
-                <button
-                  type="button"
-                  onClick={() => setOpen(true)}
-                  className="inline-flex items-center justify-center gap-2 rounded-[10px] bg-gradient-to-r from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] px-6 py-3 text-[14px] font-semibold text-white shadow-lg shadow-[hsl(252_84%_50%)]/25 hover:shadow-[hsl(252_84%_50%)]/40 transition-base"
-                >
-                  {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-                  {copied ? "Copied!" : "Copy skill"}
-                </button>
-                {LLM_LINKS.map((l) => (
-                  <a
-                    key={l.href}
-                    href={l.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center rounded-[10px] border border-foreground/15 bg-background/40 px-4 py-3 text-[13.5px] font-semibold text-foreground/85 hover:border-[hsl(239_84%_67%)]/45 hover:text-foreground transition-base"
+              <div className="space-y-3">
+                <p className="text-[13px] text-muted-foreground">
+                  Free forever — just create your free account.
+                </p>
+                <div className="flex flex-wrap items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={handleFreeCopyClick}
+                    disabled={copying}
+                    className="inline-flex items-center justify-center gap-2 rounded-[10px] bg-gradient-to-r from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] px-6 py-3 text-[14px] font-semibold text-white shadow-lg shadow-[hsl(252_84%_50%)]/25 hover:shadow-[hsl(252_84%_50%)]/40 transition-base disabled:opacity-70"
                   >
-                    {l.label} →
-                  </a>
-                ))}
+                    {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                    {copying
+                      ? "Copying…"
+                      : copied
+                        ? "Copied!"
+                        : user
+                          ? "Copy skill"
+                          : "Copy skill — free with account"}
+                  </button>
+                  {LLM_LINKS.map((l) => (
+                    <a
+                      key={l.href}
+                      href={l.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center justify-center rounded-[10px] border border-foreground/15 bg-background/40 px-4 py-3 text-[13.5px] font-semibold text-foreground/85 hover:border-[hsl(239_84%_67%)]/45 hover:text-foreground transition-base"
+                    >
+                      {l.label} →
+                    </a>
+                  ))}
+                </div>
               </div>
             )}
           </section>
-
-          {!isPaid && (
-            <CaptureDialog
-              open={open}
-              onOpenChange={setOpen}
-              mode="free-skill"
-              source={`skill_detail_${skill.slug}`}
-              initialStage={stageFromTagline(skill.tagline)}
-              suppressDefaultDownload
-              onSuccess={fetchAndCopySkill}
-            />
-          )}
         </>
       )}
     </AppLayout>

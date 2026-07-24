@@ -52,7 +52,7 @@ export default function SkillsPage() {
     (async () => {
       const { data } = await supabase
         .from("skills" as any)
-        .select("id, name, slug, tagline, description, audience, file_url, access_level, price")
+        .select("id, name, slug, tagline, description, audience, file_url, access_level, price, toolbox")
         .eq("is_published", true)
         .order("sort_order", { ascending: true });
       setSkills((data as unknown as SkillRow[]) ?? []);
