@@ -22,7 +22,7 @@ var search_skills_default = defineTool({
   handler: async ({ query, tier, limit }) => {
     const supabase = createClient(
       process.env.SUPABASE_URL,
-      process.env.SUPABASE_PUBLISHABLE_KEY,
+      process.env.SUPABASE_ANON_KEY,
       { auth: { persistSession: false, autoRefreshToken: false } }
     );
     let q = supabase.from("skills").select("slug,name,tagline,description,tier,access_level,price,download_count").eq("is_published", true).order("sort_order", { ascending: true }).limit(limit ?? 20);
@@ -49,14 +49,14 @@ import { z as z2 } from "npm:zod@^4.4.3";
 function anonClient() {
   return createClient2(
     process.env.SUPABASE_URL,
-    process.env.SUPABASE_PUBLISHABLE_KEY,
+    process.env.SUPABASE_ANON_KEY,
     { auth: { persistSession: false, autoRefreshToken: false } }
   );
 }
 function userClient(ctx) {
   return createClient2(
     process.env.SUPABASE_URL,
-    process.env.SUPABASE_PUBLISHABLE_KEY,
+    process.env.SUPABASE_ANON_KEY,
     {
       global: { headers: { Authorization: `Bearer ${ctx.getToken()}` } },
       auth: { persistSession: false, autoRefreshToken: false }
@@ -119,7 +119,7 @@ var list_integrations_default = defineTool3({
   handler: async ({ category }) => {
     const supabase = createClient3(
       process.env.SUPABASE_URL,
-      process.env.SUPABASE_PUBLISHABLE_KEY,
+      process.env.SUPABASE_ANON_KEY,
       { auth: { persistSession: false, autoRefreshToken: false } }
     );
     let q = supabase.from("integrations").select("name,slug,tagline,category,difficulty,setup_url").eq("is_published", true).order("sort_order", { ascending: true });
@@ -148,7 +148,7 @@ var get_my_purchases_default = defineTool4({
     }
     const supabase = createClient4(
       process.env.SUPABASE_URL,
-      process.env.SUPABASE_PUBLISHABLE_KEY,
+      process.env.SUPABASE_ANON_KEY,
       {
         global: { headers: { Authorization: `Bearer ${ctx.getToken()}` } },
         auth: { persistSession: false, autoRefreshToken: false }
