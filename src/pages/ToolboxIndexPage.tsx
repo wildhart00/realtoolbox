@@ -116,6 +116,11 @@ export default function ToolboxIndexPage() {
         </div>
       </section>
 
+      {/* MCP differentiator */}
+      <section className="mx-auto max-w-[1200px] px-6 lg:px-10 pb-10">
+        <McpDifferentiatorCallout />
+      </section>
+
       {/* Product cards */}
       <section className="mx-auto max-w-[1200px] px-6 lg:px-10 pb-14">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-stretch">
