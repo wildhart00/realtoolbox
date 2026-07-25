@@ -15,9 +15,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
+// Stacks (/stacks/investor, /stacks/agent) are intentionally absent — unpublished
+// from navigation while the routes stay live. See the note in App.tsx.
 const navLinks = [
   { name: "Toolbox", href: "/toolbox" },
-  { name: "Stacks", href: "/stacks/investor" },
+  { name: "How it works", href: "/how-it-works" },
   { name: "Browse Tools", href: "/browse" },
   { name: "Resources", href: "/resources" },
   { name: "Blog", href: "/blog" },

@@ -2,14 +2,16 @@ import { Link } from "react-router-dom";
 import { NewsletterCard } from "@/components/home/NewsletterCard";
 
 const product = [
-  { name: "Toolbox", href: "/#pricing" },
+  { name: "Toolbox", href: "/toolbox" },
+  { name: "Investor Toolbox", href: "/toolbox/investor" },
   { name: "Deal Screen (free)", href: "/toolbox/deal-screen" },
+  { name: "How it works", href: "/how-it-works" },
   { name: "Setup guide", href: "/setup-guide" },
 ];
 
+// Stacks (/stacks/investor, /stacks/agent) are intentionally absent — unpublished
+// from navigation while the routes stay live. See the note in App.tsx.
 const directory = [
-  { name: "Investor Stack", href: "/stacks/investor" },
-  { name: "Agent Stack", href: "/stacks/agent" },
   { name: "Browse Tools", href: "/browse" },
   { name: "Integrations", href: "/integrations" },
   { name: "Agents", href: "/agents" },
@@ -17,6 +19,7 @@ const directory = [
 
 const company = [
   { name: "Resources", href: "/resources" },
+  { name: "Glossary", href: "/resources/glossary" },
   { name: "Blog", href: "/blog" },
   { name: "Contact", href: "/contact" },
 ];

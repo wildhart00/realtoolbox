@@ -35,6 +35,10 @@ import SkillsAdmin from "./pages/admin/SkillsAdmin.tsx";
 import { Navigate } from "react-router-dom";
 import AgentsPage from "./pages/AgentsPage.tsx";
 import ResourcesPage from "./pages/ResourcesPage.tsx";
+import GlossaryPage from "./pages/resources/GlossaryPage.tsx";
+import VerifyingCompsPage from "./pages/resources/VerifyingCompsPage.tsx";
+import OfferChecklistPage from "./pages/resources/OfferChecklistPage.tsx";
+import HowItWorksPage from "./pages/HowItWorksPage.tsx";
 
 import SkillDetailPage from "./pages/SkillDetailPage.tsx";
 import ToolboxIndexPage from "./pages/ToolboxIndexPage.tsx";
@@ -84,7 +88,21 @@ const App = () => (
               <Route path="/skills" element={<Navigate to="/toolbox" replace />} />
               <Route path="/skills/:slug" element={<SkillsSlugRedirect />} />
               <Route path="/agents" element={<AgentsPage />} />
+              <Route path="/how-it-works" element={<HowItWorksPage />} />
               <Route path="/resources" element={<ResourcesPage />} />
+              <Route path="/resources/glossary" element={<GlossaryPage />} />
+              <Route path="/resources/verifying-comps" element={<VerifyingCompsPage />} />
+              <Route path="/resources/offer-checklist" element={<OfferChecklistPage />} />
+
+              {/*
+                Stacks are UNPUBLISHED, not removed. The routes, pages, admin screens,
+                and stack data all stay live and working — they're just not linked from
+                the topbar, footer, homepage, or sitemap, because the curated stacks
+                overlapped confusingly with the tool directory and pulled attention away
+                from the toolbox narrative. Re-enable by restoring the nav entries in
+                Topbar.tsx / Footer.tsx, dropping <StacksHomeStrip /> back into Index.tsx,
+                and re-adding the two /stacks URLs to public/sitemap.xml.
+              */}
               <Route path="/stacks/investor" element={<StackPage kind="investor" />} />
               <Route path="/stacks/agent" element={<StackPage kind="agent" />} />
               <Route path="/submit" element={<SubmitPage />} />

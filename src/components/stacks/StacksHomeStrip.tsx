@@ -1,6 +1,14 @@
 import { Link } from "react-router-dom";
 import { ArrowRight, Layers } from "lucide-react";
 
+/**
+ * UNPUBLISHED — this strip is no longer rendered on the homepage.
+ *
+ * Kept intact (along with the /stacks routes, pages, admin, and data) so stacks
+ * can be switched back on by dropping <StacksHomeStrip /> into Index.tsx. See the
+ * note in App.tsx for the full re-enable checklist.
+ */
+
 const stacks = [
   {
     href: "/stacks/investor",
