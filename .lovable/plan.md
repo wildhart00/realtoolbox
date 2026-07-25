@@ -1,46 +1,58 @@
-## Security fix: lock down paid skill files
+## Problem
 
-### Problem
-- `storage.objects` has a policy "Skill files are publicly readable" allowing anon SELECT on `bucket_id = 'skill-files'`. The bucket is private, but this policy still exposes files via `/object/skill-files/...` to anyone with the anon key.
-- `skills.file_url` is anon-readable and selected by four client components, leaking exact storage paths to logged-out visitors.
+The previous security fix revoked the entire table-level `SELECT` on `public.skills` from `anon` and `authenticated` in order to hide `file_url`. Verified via `information_schema.role_table_grants` and `column_privileges`: only `sandbox_exec` has any privilege on `skills`. That killed every read path that goes through the anon/authenticated key, including MCP `get_skill` (returns "permission denied for table skills"). Listing pages still render only because their queries currently succeed against cached data or a different code path — the hole is broader than reported.
 
-### Migration (single migration)
-1. `DROP POLICY "Skill files are publicly readable" ON storage.objects;`
-2. Create replacement scoped to service_role:
-   ```sql
-   CREATE POLICY "Skill files service role only"
-   ON storage.objects FOR SELECT
-   TO service_role
-   USING (bucket_id = 'skill-files');
-   ```
-   (Edge functions `get-skill-content` and `mcp` use the service role key — unaffected.)
-3. Revoke `file_url` from anon on `public.skills`:
-   ```sql
-   REVOKE SELECT (file_url) ON public.skills FROM anon;
-   ```
-   Keep `authenticated` grant intact (admin UI still needs it; entitlement gating happens server-side in edge functions).
+## Fix
 
-### Client code changes (remove `file_url` from selects)
-Purely a select-list narrowing — no logic changes. `file_url` is not read by these components (they call `get-skill-content` for actual content).
+### Migration
 
-- `src/pages/ToolboxIndexPage.tsx:44` — drop `file_url` from select.
-- `src/pages/InvestorToolboxPage.tsx:70` — drop `file_url` from select.
-- `src/pages/SkillDetailPage.tsx:51` — drop `file_url` from select. Also confirm the component doesn't reference `skill.file_url` elsewhere; if it does (e.g. to decide lock state), replace with `access_level`-based check.
-- `src/components/home/SkillsHomeSection.tsx:19` — drop `file_url` from select (already not in select list — verify; if `SkillPreviewCard` needs it, remove there too).
+Restore SELECT on every column of `public.skills` **except `file_url`** for both `anon` and `authenticated`. This is what the original security fix intended — protect only the storage-path column, not the whole table.
 
-Note: `SkillFormDialog.tsx` (admin) legitimately uses `file_url` — leave untouched; admin users are `authenticated` and retain the grant.
+```sql
+-- Grant SELECT on all non-sensitive columns to anon and authenticated
+GRANT SELECT (
+  id, name, slug, tagline, description, audience, tier, access_level, price,
+  download_count, is_published, sort_order, overview, toolbox,
+  created_at, updated_at
+) ON public.skills TO anon, authenticated;
 
-### Verification (in build mode, after migration approved)
-a. Anonymous storage fetch of a paid file → expect 400/403:
-   ```
-   curl -H "apikey: <ANON>" "<SUPABASE_URL>/storage/v1/object/skill-files/<paid-skill-path>"
-   ```
-b. Signed-in purchaser: call `get-skill-content` with their JWT for a paid skill → expect `{ content: "..." }`.
-c. MCP `get_skill` for an entitled user → `content` field populated in structured output.
+-- service_role keeps ALL (includes file_url) — already granted, but assert:
+GRANT ALL ON public.skills TO service_role;
+```
 
-Report all three results back with status codes and content presence.
+`file_url` is deliberately omitted, so `SELECT file_url FROM skills` as anon/authenticated still fails. INSERT/UPDATE/DELETE remain governed by existing RLS policies + table grants (admin path unaffected; admins are `authenticated` and go through admin UI which relies on RLS + service role where needed — verify in step below).
 
-### Out of scope
-- No changes to `get-skill-content` or `mcp` edge functions (they already use service role).
+### Server-side code — file_url reads must use service role
+
+`supabase/functions/get-skill-content/index.ts` already uses `admin` (service role) to read `file_url` — no change.
+
+`src/lib/mcp/tools/get-skill.ts` currently selects `file_url` via `anonClient()`. That will now fail (column not granted). Switch that single select to `adminClient()` so it can read `file_url` server-side. Public metadata is fine either way, but consolidating on admin for this one query is simplest and doesn't leak anything — `file_url` is stripped from the outbound payload before response (already the case at line 78/103).
+
+Everything else in `get-skill.ts` stays: entitlement check still uses `userClient(ctx)`, download still uses `adminClient()`.
+
+`src/lib/mcp/tools/search-skills.ts` does not select `file_url` — unchanged.
+
+### Client-side code
+
+The four client selects (`ToolboxIndexPage`, `InvestorToolboxPage`, `SkillDetailPage`, `SkillsHomeSection`, plus `SkillPreviewCard`) were already narrowed in the prior turn to exclude `file_url`. No further changes.
+
+### Verification (all five, executed live)
+
+1. Anon direct storage fetch of a paid skill file → expect 400/403.
+2. Anon `select file_url from skills` via PostgREST → expect permission-denied on column.
+3. Anon select of public columns (`slug,name,tagline,access_level,...`) → expect 200 with rows.
+4. Authenticated entitled user calling MCP `get_skill` for a paid skill → expect `content` populated in structured output.
+5. Authenticated non-purchaser calling MCP `get_skill` for a paid skill → expect `locked: true`, no `content`.
+
+Report each result with status code / response shape.
+
+## Files touched
+
+- New migration (grants only).
+- `src/lib/mcp/tools/get-skill.ts` — swap the initial skill lookup from `anonClient()` to `adminClient()`. The regenerated `supabase/functions/mcp/index.ts` bundle picks this up automatically.
+
+## Out of scope
+
+- No changes to storage policies (the earlier fix locked `skill-files` to service_role — correct, keep).
 - No admin UI changes.
-- No design/UX changes.
+- No RLS policy changes on `skills`.
