@@ -1,10 +1,16 @@
 import { Link } from "react-router-dom";
 import { NewsletterCard } from "@/components/home/NewsletterCard";
 
+// "For agents" lives here rather than in the topbar on purpose: agents with
+// investor clients are a real audience for the same seven skills, but they're the
+// secondary one. The topbar stays investor-first; this plus the homepage routing
+// band and the pointer on /toolbox are enough to find it.
 const product = [
   { name: "Toolbox", href: "/toolbox" },
   { name: "Investor Toolbox", href: "/toolbox/investor" },
   { name: "Deal Screen (free)", href: "/toolbox/deal-screen" },
+  { name: "For agents", href: "/for-agents" },
+  { name: "Scaling Toolbox (soon)", href: "/toolbox/scaling" },
   { name: "How it works", href: "/how-it-works" },
   { name: "Setup guide", href: "/setup-guide" },
 ];

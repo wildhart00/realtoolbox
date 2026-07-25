@@ -18,8 +18,11 @@ export function Hero() {
     <section className="px-6 lg:px-10 pt-[88px] pb-14 text-center mx-auto" style={{ maxWidth: 880 }}>
       <div className="inline-flex items-center gap-2 bg-accent/[0.08] border border-accent/20 rounded-full px-3.5 py-[5px] mb-[26px]">
         <span className="h-[5px] w-[5px] rounded-full bg-[hsl(229_94%_82%)]" />
+        {/* Investors stay the named audience and come first; agents are added as a
+            qualifier rather than an equal billing, so the positioning widens
+            without going generic. */}
         <span className="text-[11px] tracking-[0.16em] text-[hsl(229_94%_82%)] font-semibold uppercase">
-          For real estate investors
+          For real estate investors &amp; the agents who serve them
         </span>
       </div>
 
