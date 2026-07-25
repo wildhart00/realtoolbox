@@ -146,6 +146,20 @@ export function useReviews(toolId: string | undefined) {
   });
 }
 
+// Stub for the unrouted MembersPage backlog file. The premium_resources table
+// and premium-resources bucket were dropped when the All-Access subscription
+// model was retired. If MembersPage is ever routed again, re-decide whether
+// to reintroduce a real data source or remove the "Premium content" tab.
+export function usePremiumResources() {
+  return useQuery({
+    queryKey: ["premium-resources"],
+    queryFn: async (): Promise<PremiumResource[]> => [],
+    staleTime: Infinity,
+  });
+}
+
+
+
 
 export function useSavedToolIds(userId: string | undefined) {
   return useQuery({
