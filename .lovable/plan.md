@@ -1,124 +1,76 @@
+## Homepage restructure for conversion
 
-## Goal
+Goal: homepage explains + captures free signup + routes out. Selling stays on `/toolbox` and `/toolbox/investor`.
 
-Two curated, editorial "Stack" pages that recommend real tools from the existing `tools` table, grouped by function, each with a first-person "Why this one" note and an affiliate CTA that routes through `/go/:slug` so clicks land in `click_events`. Fully admin-managed. Nothing seeded.
+### Section order in `src/pages/Index.tsx`
 
-## Routes
+```text
+Hero
+WhatThisIsSection       (NEW)
+DealScreenStrip         (moved up, visually amplified)
+InvestorArcSection      (unchanged)
+OfferBand               (NEW — replaces PricingSection)
+FeaturedTabsSection     (unchanged)
+StacksHomeStrip         (unchanged)
+BrowseSection + "Browse all N tools →"  (unchanged)
+NewsletterCard          (added at bottom)
+```
 
-- `/stacks/investor` — "The Investor Stack"
-- `/stacks/agent` — "The Agent Stack"
+Remove `<PricingSection />` from `Index.tsx`. File stays on disk (still used by `/toolbox` etc. if referenced — I'll verify; if unused elsewhere, leave the file in place, just unimport).
 
-## Database (one migration)
+### New: `src/components/home/WhatThisIsSection.tsx`
 
-New enum + two tables in `public`:
+Tight explainer for someone who's never heard of an AI skill. Design tokens/components identical to existing home sections (`surface-card`, same eyebrow + display heading pattern as `InvestorArcSection`).
 
-- `stack_kind` enum: `investor`, `agent`.
-- `stacks` (one row per stack, editable header content):
-  - `kind stack_kind unique`, `title`, `subtitle`, `intro_md text`, `updated_at`.
-  - Seeded on migration with the two rows (empty copy) so admin can just edit them.
-- `stack_entries`:
-  - `stack_kind`, `tool_id → tools.id`, `group_name text` (free text, admin-chosen from the six investor / five agent groups), `sort_order int`, `why_note text` (first-person blurb), timestamps.
-  - Unique on `(stack_kind, tool_id)`.
+- Eyebrow: "What this actually is"
+- Heading: "An AI skill is a complete set of operating instructions."
+- Sub (1–2 lines): loads into ChatGPT, Claude, or Gemini and turns it into a real estate specialist that follows one job conservatively — no invented numbers.
+- Three compact beats in a 3-col grid (icons from lucide, matching `HowToUseSteps` visual weight but lighter):
+  1. Load it — drop the skill into your AI once.
+  2. Paste your deal — address, price, rehab, rents.
+  3. Get an operator-grade answer — conservative math, clear go/no-go.
+- No CTA (the next section is the CTA).
 
-Grants + RLS:
-- `GRANT SELECT` to `anon` and `authenticated` on both tables (public read).
-- Admin-only `INSERT/UPDATE/DELETE` via `has_role(auth.uid(), 'admin')`.
-- `service_role` full.
-- `updated_at` trigger reusing `public.update_updated_at_column()`.
+### Amplified Deal Screen strip
 
-## Public pages
+Edit `src/components/home/DealScreenStrip.tsx` in place to carry more weight as the page's primary CTA:
 
-New `src/pages/StackPage.tsx` used by both routes (kind from route). Uses `AppLayout`, existing tokens, and existing tool components.
+- Wrap in a subtle gradient-bordered card (same gradient tokens used on the Investor pricing card — `hsl(239 84% 60%) → hsl(265 84% 60%)`) so it visually reads as the hero moment on the page.
+- Larger heading size (~28–32px), slightly taller padding, keep the "Free forever" badge.
+- Keep primary CTA button ("Get the free Deal Screen") and add a small secondary line under it: "No card. Create a free account." — reinforcing the offer.
+- Link target unchanged (`/toolbox/deal-screen`).
 
-Layout, top to bottom:
-1. **Header block** — eyebrow ("The Investor Stack" / "The Agent Stack"), H1 from `stacks.title`, subtitle, short affiliate disclosure line rendered via new `<AffiliateDisclosure />` component.
-2. **Intro paragraph** — markdown from `stacks.intro_md` (reuse the same lightweight md rendering already used on skill pages if available, else plain paragraph with line breaks).
-3. **Function groups** — one section per non-empty group. Group order is fixed per stack (Investor: Deal Finding → Deal Analysis & Data → Skip Tracing & Outreach → CRM & Follow-Up → Project & Rehab Management → Back Office; Agent: CRM & Lead Gen → Listing Marketing → Transaction Management → Content & AI → Client Communication). Any group with zero entries is skipped. Within a group, entries render by `sort_order`.
-4. **Tool card** — reuse existing `ToolCard` visuals via a thin `StackToolCard` wrapper that:
-   - Shows logo + name + pricing badge (from `tools`).
-   - CTA button linking to `/go/:slug` (opens in new tab, `rel="sponsored nofollow noopener"`).
-   - Renders the `why_note` beneath the card body as a first-person quote block using existing typography tokens.
-5. **Mid-page cross-promo band** — Investor page links to `/toolbox/investor`; Agent page opens the existing waitlist capture (`CaptureDialog` with the agent-toolbox source already used on `AgentToolboxPage`).
-6. **Bottom email capture** — reuse `NewsletterCard` with a stack-specific `source` value.
-7. **Footer disclosure** — full disclosure paragraph repeated once at bottom.
+### New: `src/components/home/OfferBand.tsx`
 
-Empty state: if a stack has zero entries yet, show only the header/intro + cross-promo + newsletter, no group scaffolding.
+Replaces the three-card PricingSection with one horizontal routing band.
 
-## Reusable disclosure component
+- Container: `surface-card` rounded-2xl, one row on desktop, stacks on mobile.
+- Eyebrow "Own the toolbox" + one-line lede ("Buy once. Own it forever.").
+- Three inline items separated by subtle dividers:
+  - **Investor Toolbox** — `$79` founding (`$99` strikethrough) · "7 skills, one decision path"
+  - **Complete** — `$149` · "Investor + Agent when it releases"
+  - **Agent Toolbox** — muted, "Coming soon"
+- CTAs at the end of the band:
+  - Primary: `See what's inside →` → `/toolbox/investor` (gradient button, matches existing style)
+  - Secondary: `Compare toolboxes` → `/toolbox` (ghost link)
+  - Tertiary micro-link on the Investor row only: `Buy $79 →` calling existing `useCheckout().startCheckout("investor", "/")` so the direct-buy path still works.
+- No feature lists, no check bullets — those live on the toolbox pages.
 
-`src/components/affiliate/AffiliateDisclosure.tsx` — two variants:
-- `inline` (short one-liner used at top of stack pages).
-- `block` (boxed, slightly muted, for tool detail pages and stack page bottom).
+### Newsletter
 
-Copy: "Some links are affiliate links — if you buy through them, RealToolbox earns a commission at no cost to you. Recommendations are based on real operator use, not commission rates."
+Add `<NewsletterCard />` (already exists at `src/components/home/NewsletterCard.tsx`) at the bottom of `Index.tsx`.
 
-Add the `block` variant to `ToolDetailPage` above the primary CTA area so it's site-wide available for tool pages as requested.
+### Topbar
 
-## Admin
+"Start free" already lives in `Topbar.tsx` — leave as is (verify during build).
 
-New sidebar entry "Stacks" in `AdminLayout` (icon: `Layers`), routed at `/admin/stacks`.
+### Out of scope
 
-`src/pages/admin/StacksAdmin.tsx`:
-- Tabs: "Investor Stack" / "Agent Stack".
-- Per tab:
-  - Editable header form: `title`, `subtitle`, `intro_md` (textarea) with Save button.
-  - Entries table grouped by `group_name`, sorted by `sort_order`:
-    - Columns: drag handle / order number, tool (logo + name), group (select from the fixed list for that stack), why_note (textarea, inline edit), actions (edit / remove).
-    - "Add tool" button opens a dialog with a searchable `tools` picker (reuse the same query pattern as existing admin), group select, why_note textarea, initial sort_order.
-  - Order handled with simple up/down buttons or numeric input to keep it lightweight (no dnd dependency).
+- No changes to design tokens, fonts, colors, or shadcn components.
+- No changes to `/toolbox`, `/toolbox/investor`, `/toolbox/deal-screen`, or checkout logic.
+- No copy changes to Hero, Investor Arc, Featured, Stacks, or Browse.
 
-All writes go through the supabase client using admin RLS.
+### Verification
 
-## Navigation and cross-links
-
-- `Topbar.tsx`: add "Stacks" between "Toolbox" and "Browse Tools" on desktop, and in the mobile menu.
-- `Footer.tsx`: add "Stacks" to the Directory column at the top of the list.
-- Homepage directory section (`BrowseSection` area on `Index.tsx`): add a slim two-card strip above or below the tool grid linking to `/stacks/investor` and `/stacks/agent` with one-line pitches. Uses existing card tokens; no new design language.
-- `ToolboxIndexPage` already links to toolboxes; no change needed there.
-
-## SEO
-
-Per-route head via `react-helmet-async` (install if not already present; check `main.tsx` for `HelmetProvider` and add it if missing):
-- `/stacks/investor`: title "The Best Real Estate Investor Tool Stack (2026) — RealToolbox", description operator-voiced summary.
-- `/stacks/agent`: title "The Best Real Estate Agent Tool Stack (2026) — RealToolbox".
-- Canonical + `og:url` self-referencing each route on `https://realtoolbox.ai`.
-- JSON-LD `ItemList` built from the visible entries (name, url = tool website, position).
-
-Sitemap: project currently has no sitemap. Create `scripts/generate-sitemap.ts` per the sitemap knowledge, wired via `predev` / `prebuild` npm scripts, with `BASE_URL = "https://realtoolbox.ai"`, listing the existing public routes plus `/stacks/investor` and `/stacks/agent`. No `<lastmod>` (no authoritative per-page timestamp source).
-
-## Click tracking
-
-Existing `/go/:slug` `GoRedirectPage` already writes to `click_events`. The stack CTA points there — no changes needed to redirect logic. Add a query param like `?ref=stack-investor` / `?ref=stack-agent` so admin can filter later; `GoRedirectPage` will pass through unchanged.
-
-## Files touched
-
-New:
-- `supabase/migrations/<ts>_stacks.sql` (via migration tool)
-- `src/pages/StackPage.tsx`
-- `src/pages/admin/StacksAdmin.tsx`
-- `src/pages/admin/StackEntryDialog.tsx`
-- `src/components/stacks/StackToolCard.tsx`
-- `src/components/stacks/StacksHomeStrip.tsx`
-- `src/components/affiliate/AffiliateDisclosure.tsx`
-- `scripts/generate-sitemap.ts`
-
-Modified:
-- `src/App.tsx` — add `/stacks/investor`, `/stacks/agent`, `/admin/stacks` routes.
-- `src/components/admin/AdminLayout.tsx` — add Stacks nav item.
-- `src/components/layout/Topbar.tsx` — add Stacks link (desktop + mobile).
-- `src/components/layout/Footer.tsx` — add Stacks to Directory column.
-- `src/pages/Index.tsx` — insert `StacksHomeStrip` in the directory section.
-- `src/pages/ToolDetailPage.tsx` — mount `<AffiliateDisclosure variant="block" />`.
-- `src/main.tsx` — add `HelmetProvider` if not present.
-- `package.json` — `predev` / `prebuild` script for sitemap.
-
-## How you'll populate stacks after this ships
-
-1. Sign in as admin → `/admin/stacks`.
-2. Pick the "Investor Stack" tab. Edit title / subtitle / intro paragraph, Save.
-3. Click "Add tool", search a tool from the directory, pick a group (Deal Finding, Deal Analysis & Data, etc.), write the first-person "Why this one" note, set order, Save.
-4. Repeat for each recommendation. Reorder via the arrow buttons or the order number field.
-5. Switch to "Agent Stack" tab and repeat with the agent function groups.
-6. Public pages update immediately — empty groups stay hidden until you add entries.
-
-No entries are seeded — the pages render header + cross-promo + newsletter until you add tools.
+- `tsgo` typecheck.
+- Visual check via Playwright screenshot of `/` at 1280 wide to confirm section order, that DealScreenStrip reads as the primary CTA, and OfferBand fits on one row on desktop / stacks cleanly on mobile.
