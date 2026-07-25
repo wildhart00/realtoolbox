@@ -10,7 +10,7 @@ export interface SkillCardData {
   tagline: string | null;
   description?: string | null;
   audience: string;
-  file_url: string | null;
+  
   access_level: string;
   price: number;
   toolbox?: string | null;
