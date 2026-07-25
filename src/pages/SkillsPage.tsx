@@ -74,7 +74,7 @@ export default function SkillsPage() {
       })();
     meta.setAttribute(
       "content",
-      "Operator-grade AI workflows for real estate investors — buy box, deal screening, triage, input auditing, strategy selection, walk-away calls, and full underwriting. Drop into Claude, ChatGPT or Gemini.",
+      "Conservative AI workflows for real estate investors — buy box, deal screening, triage, input auditing, strategy selection, walk-away calls, and full underwriting. Drop into Claude, ChatGPT or Gemini.",
     );
   }, []);
 
@@ -113,7 +113,7 @@ export default function SkillsPage() {
           <div className="max-w-2xl lg:max-w-none">
             <div className="inline-flex items-center gap-2 rounded-full border border-foreground/10 bg-foreground/[0.03] px-3 py-1 text-[11px] font-semibold tracking-[0.16em] text-muted-foreground uppercase">
               <span className="h-1.5 w-1.5 rounded-full bg-[hsl(229_94%_82%)]" />
-              Operator-grade workflows
+              Conservative AI workflows
             </div>
             <h1 className="mt-5 font-display text-5xl lg:text-[64px] font-bold leading-[1.02] tracking-[-0.03em] text-foreground">
               AI workflows for{" "}
@@ -122,7 +122,7 @@ export default function SkillsPage() {
               </span>
             </h1>
             <p className="mt-6 text-[17px] lg:text-lg text-muted-foreground leading-[1.65]">
-              Each one turns your AI into a specialist for one specific job — buy box, deal screening, triage, input auditing, strategy selection, walk-away calls, and full underwriting — built from real flipping and rental experience. Copy it into your AI and go.
+              Each one turns your AI into a specialist for one specific job — buy box, deal screening, triage, input auditing, strategy selection, walk-away calls, and full underwriting — built from real flips, rentals, and closings. Copy it into your AI and go.
             </p>
           </div>
 

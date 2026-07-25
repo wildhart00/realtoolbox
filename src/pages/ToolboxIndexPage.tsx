@@ -51,7 +51,7 @@ export default function ToolboxIndexPage() {
   }, []);
 
   useEffect(() => {
-    document.title = "Toolbox — Operator-grade AI skills for real estate | RealToolbox.ai";
+    document.title = "Toolbox — Real estate AI skills that plug into Claude & ChatGPT | RealToolbox.ai";
     const meta =
       document.querySelector('meta[name="description"]') ??
       (() => {
@@ -110,8 +110,8 @@ export default function ToolboxIndexPage() {
             </span>
           </h1>
           <p className="mt-5 text-[16.5px] lg:text-lg text-muted-foreground leading-[1.65]">
-            Operator-grade AI skills for real estate. One payment, yours forever — including every new skill we add.
-            Built and torture-tested by a 12-year operator. Conservative by design.
+            Real estate AI skills that plug straight into your AI. One payment, yours forever — including every new skill we add.
+            Skills refuse to invent numbers and flag unverified inputs. Torture-tested across ChatGPT, Claude, Gemini, and Meta before shipping. Built from real flips, rentals, and closings.
           </p>
         </div>
       </section>
@@ -146,7 +146,7 @@ export default function ToolboxIndexPage() {
               </div>
               <ul className="flex flex-col gap-2.5">
                 {[
-                  "7 operator-grade skills",
+                  "7 conservative deal skills",
                   "Connects directly to Claude & ChatGPT (MCP)",
                   "Works in ChatGPT, Claude, and Gemini",
                   "Lifetime updates as new investor skills drop",

@@ -71,7 +71,7 @@ export function PricingSection() {
           <ul className="flex flex-col gap-2.5">
             {[
               "Unlimited deal screens — free forever",
-              "Conservative, operator-grade ARV and offer math",
+              "Conservative ARV and offer math",
               "Instantly flags deals that don't clear",
               "Runs in ChatGPT, Claude, or Gemini",
             ].map((item) => (

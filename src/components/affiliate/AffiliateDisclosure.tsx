@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 
 const COPY =
-  "Some links are affiliate links — if you buy through them, RealToolbox earns a commission at no cost to you. Recommendations are based on real operator use, not commission rates.";
+  "Some links are affiliate links — if you buy through them, RealToolbox earns a commission at no cost to you. Recommendations are based on hands-on use, not commission rates.";
 
 interface Props {
   variant?: "inline" | "block";

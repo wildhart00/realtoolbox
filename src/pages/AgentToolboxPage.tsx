@@ -69,7 +69,7 @@ export default function AgentToolboxPage() {
       })();
     meta.setAttribute(
       "content",
-      "The Agent Toolbox is coming — operator-grade AI skills for licensed agents. Listing descriptions, seller lead response, follow-ups, pricing, objections, and more. Join the waitlist.",
+      "The Agent Toolbox is coming — conservative AI skills for licensed agents. Listing descriptions, seller lead response, follow-ups, pricing, objections, and more. Join the waitlist.",
     );
   }, []);
 
@@ -109,8 +109,7 @@ export default function AgentToolboxPage() {
             </span>
           </h1>
           <p className="mt-5 text-[16.5px] lg:text-lg text-muted-foreground leading-[1.65]">
-            Operator-grade AI skills for licensed agents — written by someone who's actually worked the phones,
-            walked the listings, and taken the tough calls. Conservative by design. No hype.
+            Conservative AI skills for licensed agents — built from real flips, rentals, and closings, and torture-tested across ChatGPT, Claude, Gemini, and Meta until they converge before shipping. Skills refuse to invent facts and flag unverified inputs.
           </p>
         </div>
       </section>
@@ -211,7 +210,7 @@ export default function AgentToolboxPage() {
         </Accordion>
 
         <p className="mt-12 text-center text-[12.5px] text-muted-foreground/70">
-          Built and torture-tested by a 12-year operator. Conservative by design.
+          Built from real flips, rentals, and closings. Conservative by design.
         </p>
 
         <div className="mt-6 text-center">

@@ -119,7 +119,7 @@ function StackTab({ kind }: { kind: StackKind }) {
               rows={5}
               value={stack.intro_md ?? ""}
               onChange={(e) => setStack({ ...stack, intro_md: e.target.value })}
-              placeholder="Operator-voice intro. Blank lines separate paragraphs."
+              placeholder="Editorial intro. Blank lines separate paragraphs."
             />
           </div>
           <div className="flex justify-end">

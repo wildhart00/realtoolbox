@@ -3,7 +3,7 @@ import { ArrowRight, Download, Upload, Sparkles } from "lucide-react";
 const steps = [
   { n: "1", title: "Pick a workflow", subtext: "Choose the one for the job in front of you.", icon: Download },
   { n: "2", title: "Load it into your AI", subtext: "ChatGPT, Claude, Gemini, or any assistant. Copy it in, or save it once.", icon: Upload },
-  { n: "3", title: "Get operator-grade output", subtext: "The numbers and judgment of someone who's run the deals.", icon: Sparkles },
+  { n: "3", title: "Get a conservative, defensible answer", subtext: "Numbers you can defend, guardrails that refuse a bad verdict.", icon: Sparkles },
 ];
 
 export function HowToUseSteps() {

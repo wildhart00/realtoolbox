@@ -33,7 +33,7 @@ export function NewsletterCard({ source = "homepage" }: { source?: string } = {}
           New investor skills, every month
         </h2>
         <p className="mt-2.5 text-[14px] text-muted-foreground leading-[1.65]">
-          New AI workflows for real estate investors — built from real operator experience. Drop your email to hear when they land.
+          New AI workflows for real estate investors — built from real flips, rentals, and closings. Drop your email to hear when they land.
         </p>
 
         {done ? (

@@ -76,7 +76,7 @@ export default function SkillDetailPage() {
       })();
     meta.setAttribute(
       "content",
-      (skill.description ?? skill.tagline ?? "Operator-grade AI workflow for real estate investors.").slice(0, 160),
+      (skill.description ?? skill.tagline ?? "Conservative AI workflow for real estate investors.").slice(0, 160),
     );
   }, [skill]);
 
@@ -213,7 +213,7 @@ export default function SkillDetailPage() {
                 </div>
               ) : (
                 <p className="text-[15px] text-muted-foreground leading-[1.7]">
-                  {skill.description ?? "A complete operator workflow you can drop into ChatGPT, Claude, or Gemini."}
+                  {skill.description ?? "A complete conservative workflow you can drop into ChatGPT, Claude, or Gemini."}
                 </p>
               )}
             </div>

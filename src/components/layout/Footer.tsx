@@ -50,7 +50,7 @@ export function Footer() {
               </span>
             </Link>
             <p className="mt-4 text-[13px] text-foreground/50 leading-[1.65] max-w-[280px]">
-              The real estate AI toolkit — a curated directory of the best software and AI tools, plus operator-grade skill toolboxes built from real flipping and rental experience.
+              The real estate AI toolkit — a curated directory of software and AI tools, plus AI skill toolboxes built from real flips, rentals, and closings. Conservative by design.
             </p>
           </div>
 
