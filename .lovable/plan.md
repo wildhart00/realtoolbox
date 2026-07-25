@@ -1,30 +1,30 @@
 ## Goal
-Ensure the RealToolbox.ai codebase on GitHub reflects the latest changes in Lovable.
+Confirm that the project's current codebase is fully reflected in the connected GitHub repository, and clarify how Lovable's two-way GitHub sync behaves.
 
-## Background
-Lovable has built-in two-way GitHub sync. When connected, edits in Lovable push to GitHub automatically, and pushes to GitHub sync back to Lovable. If sync is not connected or has stalled, the repo will be behind.
+## Current state (verified)
+- Local working tree is clean — no uncommitted changes.
+- Latest local commit: `50f325a Connected GitHub to project`.
+- Git remotes visible in the sandbox are only Lovable's internal `origin` and `secondary`; the GitHub remote is managed by Lovable's backend sync, not a local git remote.
 
-## Steps
+## Plan
 
-1. **Check GitHub connection status**
-   - Inspect project settings / git configuration to confirm whether a GitHub repo is linked.
-   - If no repo is linked, the fix is to connect GitHub in the Lovable editor first.
+1. **Confirm two-way sync is enabled**
+   - Lovable's GitHub integration is bidirectional by default: changes made in Lovable push to GitHub, and commits pushed to GitHub sync back to Lovable.
+   - I will verify the project's sync configuration/status through available signals (recent commits, Lovable backend state).
 
-2. **Verify the local working tree is clean and up to date**
-   - Run a read-only git status check to see if there are uncommitted or unpushed changes.
-   - Note: I will not run state-changing git commands in plan mode.
+2. **Verify the latest commit is on GitHub**
+   - Compare the local HEAD (`50f325a`) against the GitHub repository's default branch.
+   - If the GitHub connector is available, use it to read the repo's latest commit; otherwise, guide you to check the repo directly.
 
-3. **If GitHub is connected but out of sync**
-   - Trigger a sync / push from Lovable to GitHub.
-   - Confirm the commit lands in the linked repository.
+3. **Force a fresh sync if needed**
+   - If the latest local changes are not yet on GitHub, make a no-op or descriptive commit (e.g., a timestamped sync marker) to trigger Lovable's push to GitHub.
+   - Wait for the sync to complete and re-verify.
 
-4. **If GitHub is not connected**
-   - Provide the exact steps to connect: Plus (+) menu → GitHub → Connect project → authorize → create/select repo.
-   - Once connected, Lovable will push the current state automatically.
+4. **Report back**
+   - Confirm whether GitHub is at the same commit as the local project.
+   - Explain the two-way sync behavior and what to expect for future edits.
 
-## Outcome
-Either confirm the repo is already in sync, or give you the exact next action to connect/trigger sync.
-
-## Notes
-- I will not modify app code or run `git push`/`commit` until build mode is active and the plan is approved.
-- If you already have a GitHub repo connected, the fastest path is usually a manual sync trigger in the Lovable editor rather than command-line git.
+## Technical details
+- No code changes are required unless a sync trigger is needed.
+- The GitHub connection was established in commit `50f325a`, so all subsequent work should already be included in what Lovable pushes.
+- Two-way sync means you can edit in Lovable or push commits to GitHub; both directions update the project.
