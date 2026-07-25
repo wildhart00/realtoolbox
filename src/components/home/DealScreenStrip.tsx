@@ -1,7 +1,18 @@
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
+import { freeDealScreenPath } from "@/lib/routes";
 
+/**
+ * Narrative beat 3: the primary conversion.
+ *
+ * The free Deal Screen is the only paid-adjacent thing on the homepage that costs
+ * nothing, so it sits directly after the trust argument and before any mention of
+ * price.
+ */
 export function DealScreenStrip() {
+  const { user } = useAuth();
+
   return (
     <section className="w-full px-6 lg:px-10 py-10">
       <div className="mx-auto max-w-[1100px]">
@@ -14,22 +25,22 @@ export function DealScreenStrip() {
                 Free forever · Start here
               </span>
               <h3 className="mt-3 font-display text-[26px] sm:text-[32px] text-foreground tracking-[-0.02em] leading-[1.15]">
-                Run the numbers on any deal — free.
+                Run the numbers on a real deal — free.
               </h3>
               <p className="mt-3 text-[14.5px] text-muted-foreground leading-[1.6]">
-                Create a free account and load our conservative Deal Screen into ChatGPT, Claude, or Gemini. Fast, conservative read on whether a deal actually clears.
+                Deal Screen is the fast go/no-go: does this property clear at all, before you spend
+                an evening on it? Create a free account, load it into ChatGPT, Claude, or Gemini, and
+                paste in something you&apos;re actually looking at.
               </p>
             </div>
             <div className="flex flex-col items-start md:items-end gap-2 shrink-0">
               <Link
-                to="/toolbox/deal-screen"
+                to={freeDealScreenPath(!!user)}
                 className="inline-flex items-center justify-center gap-2 rounded-[10px] bg-gradient-to-r from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] px-6 py-3.5 text-[14px] font-semibold text-white shadow-lg shadow-[hsl(252_84%_50%)]/25 hover:shadow-[hsl(252_84%_50%)]/40 transition-base"
               >
                 Get the free Deal Screen <ArrowRight className="h-4 w-4" />
               </Link>
-              <p className="text-[12px] text-muted-foreground/80">
-                No card. Create a free account.
-              </p>
+              <p className="text-[12px] text-muted-foreground/80">No card. Just an account.</p>
             </div>
           </div>
         </div>

@@ -1,24 +1,14 @@
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
+import { INVESTOR_ARC, type ArcStep } from "@/lib/copy/investorArc";
 
-type Step = {
-  num: number;
-  title: string;
-  desc: string;
-  free?: boolean;
-};
-
-const STEPS: Step[] = [
-  { num: 1, title: "Buy Box Builder", desc: "Define exactly what you should be shopping for." },
-  { num: 2, title: "Deal Screen", desc: "Free. Run the numbers in seconds — does this deal even clear?", free: true },
-  { num: 3, title: "Deal Triage", desc: "Decide if a lead earns your next block of diligence time." },
-  { num: 4, title: "Assumption Audit", desc: "Pressure-test your inputs before you trust them." },
-  { num: 5, title: "Path Picker", desc: "Flip, BRRRR, or hold — pick the right exit for this property." },
-  { num: 6, title: "Walk-Away Checklist", desc: "Catch the deal-killers before they cost you money." },
-  { num: 7, title: "Deal Analyzer", desc: "Underwrite it for real and land on a safe offer." },
-];
-
-function StepCard({ step }: { step: Step }) {
+/**
+ * Narrative beat 4: what's in the toolbox.
+ *
+ * Steps come from the shared arc definition so this and /toolbox/investor can't
+ * describe the same seven skills differently.
+ */
+function StepCard({ step }: { step: ArcStep }) {
   return (
     <div
       className={
@@ -36,10 +26,9 @@ function StepCard({ step }: { step: Step }) {
       <span
         className="inline-flex items-center justify-center h-8 w-8 rounded-full text-[13px] font-bold text-white"
         style={{
-          background:
-            step.free
-              ? "linear-gradient(135deg, hsl(239 84% 60%), hsl(265 84% 60%))"
-              : "hsl(230 14% 20%)",
+          background: step.free
+            ? "linear-gradient(135deg, hsl(239 84% 60%), hsl(265 84% 60%))"
+            : "hsl(230 14% 20%)",
         }}
       >
         {step.num}
@@ -47,9 +36,7 @@ function StepCard({ step }: { step: Step }) {
       <h3 className="font-display text-[15px] font-semibold text-foreground tracking-tight leading-snug">
         {step.title}
       </h3>
-      <p className="text-[12.5px] text-muted-foreground leading-[1.55]">
-        {step.desc}
-      </p>
+      <p className="text-[12.5px] text-muted-foreground leading-[1.55]">{step.desc}</p>
     </div>
   );
 }
@@ -70,19 +57,21 @@ export function InvestorArcSection() {
           Inside the Investor Toolbox
         </p>
         <h2 className="font-display text-[28px] sm:text-[34px] text-foreground tracking-[-0.02em] leading-tight">
-          Seven skills. One decision path. Yours to keep.
+          Seven skills. One decision path.
         </h2>
         <p className="mt-3 text-[14.5px] text-muted-foreground leading-relaxed">
-          Most prompt packs hand you a pile of disconnected tricks. The Investor Toolbox is a system — each skill picks up where the last one leaves off, walking you from &ldquo;what should I even buy&rdquo; to a defensible offer. One payment, own it forever.
+          Most prompt packs hand you a pile of disconnected tricks. This is a system — each skill
+          picks up where the last one leaves off, walking you from &ldquo;what should I even be
+          shopping for&rdquo; to a number you can defend at the table.
         </p>
       </div>
 
       {/* Step flow */}
       <div className="flex flex-wrap justify-center gap-3 lg:gap-2">
-        {STEPS.map((step, i) => (
+        {INVESTOR_ARC.map((step, i) => (
           <div key={step.num} className="contents">
             <StepCard step={step} />
-            {i < STEPS.length - 1 && <ConnectorArrow />}
+            {i < INVESTOR_ARC.length - 1 && <ConnectorArrow />}
           </div>
         ))}
       </div>
@@ -90,10 +79,10 @@ export function InvestorArcSection() {
       {/* CTA */}
       <div className="mt-10 flex justify-center">
         <Link
-          to="/skills"
+          to="/toolbox/investor"
           className="text-[14px] font-semibold text-[hsl(229_94%_82%)] hover:text-[hsl(229_94%_90%)] transition-base"
         >
-          Browse all seven skills →
+          See all seven in detail →
         </Link>
       </div>
     </section>

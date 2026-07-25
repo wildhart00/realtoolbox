@@ -1,42 +1,39 @@
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Hero } from "@/components/home/Hero";
-import { WhatThisIsSection } from "@/components/home/WhatThisIsSection";
-import { HowConnectionWorks } from "@/components/home/HowConnectionWorks";
-import { InvestorArcSection } from "@/components/home/InvestorArcSection";
-import { OfferBand } from "@/components/home/OfferBand";
-import { FeaturedTabsSection } from "@/components/home/FeaturedTabsSection";
-import { BrowseSection } from "@/components/home/BrowseSection";
+import { GuardrailsSection } from "@/components/home/GuardrailsSection";
 import { DealScreenStrip } from "@/components/home/DealScreenStrip";
-import { StacksHomeStrip } from "@/components/stacks/StacksHomeStrip";
-import { NewsletterCard } from "@/components/home/NewsletterCard";
-import { Link } from "react-router-dom";
-import { useTools, useCategories, useFeaturedTools, useJustLaunchedTools } from "@/hooks/useDirectory";
+import { InvestorArcSection } from "@/components/home/InvestorArcSection";
+import { HowYouRunItSection } from "@/components/home/HowYouRunItSection";
+import { OfferBand } from "@/components/home/OfferBand";
+import { DirectorySection } from "@/components/home/DirectorySection";
+import { useTools, useFeaturedTools } from "@/hooks/useDirectory";
 
+/**
+ * Homepage — one narrative, in this order:
+ *
+ *   1. What this is            Hero
+ *   2. Why it's trustworthy    GuardrailsSection
+ *   3. Try it free             DealScreenStrip   ← primary conversion
+ *   4. What's in the toolbox   InvestorArcSection
+ *   5. How you run it          HowYouRunItSection → /how-it-works
+ *   6. Price and routing       OfferBand         → /toolbox, /toolbox/investor
+ *   7. The directory           DirectorySection  → /browse
+ *
+ * Newsletter capture is not repeated here — the footer carries it on every page.
+ */
 const Index = () => {
   const { data: tools = [] } = useTools();
-  const { data: categories = [] } = useCategories();
   const { data: featured = [] } = useFeaturedTools();
-  const { data: justLaunched = [] } = useJustLaunchedTools();
-
-  const homeTools = tools.slice(0, 12);
 
   return (
     <AppLayout>
-      <Hero toolCount={tools.length} />
-      <HowConnectionWorks />
-      <WhatThisIsSection />
+      <Hero />
+      <GuardrailsSection />
       <DealScreenStrip />
       <InvestorArcSection />
+      <HowYouRunItSection />
       <OfferBand />
-      <FeaturedTabsSection featured={featured} justLaunched={justLaunched} />
-      <BrowseSection tools={homeTools} categories={categories} />
-      <div className="px-6 lg:px-10 -mt-6 mb-4 mx-auto flex justify-end" style={{ maxWidth: 1100 }}>
-        <Link to="/browse" className="text-[13px] font-semibold text-[hsl(229_94%_82%)] hover:text-[hsl(229_94%_90%)] transition-base">
-          Browse all {tools.length} tools →
-        </Link>
-      </div>
-      <StacksHomeStrip />
-      <NewsletterCard />
+      <DirectorySection featured={featured} toolCount={tools.length} />
     </AppLayout>
   );
 };
