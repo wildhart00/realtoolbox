@@ -46,13 +46,6 @@ var search_skills_default = defineTool({
 import { createClient as createClient2 } from "npm:@supabase/supabase-js@^2.103.3";
 import { defineTool as defineTool2 } from "npm:@lovable.dev/mcp-js@0.24.0";
 import { z as z2 } from "npm:zod@^4.4.3";
-function anonClient() {
-  return createClient2(
-    process.env.SUPABASE_URL,
-    process.env.SUPABASE_ANON_KEY,
-    { auth: { persistSession: false, autoRefreshToken: false } }
-  );
-}
 function adminClient() {
   return createClient2(
     process.env.SUPABASE_URL,
@@ -88,7 +81,7 @@ var get_skill_default = defineTool2({
   },
   annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
   handler: async ({ slug }, ctx) => {
-    const supabase = anonClient();
+    const supabase = adminClient();
     const { data: skill, error } = await supabase.from("skills").select("slug,name,tagline,description,tier,access_level,price,overview,toolbox,file_url").eq("slug", slug).eq("is_published", true).maybeSingle();
     if (error) return { content: [{ type: "text", text: error.message }], isError: true };
     if (!skill) return { content: [{ type: "text", text: `No skill with slug '${slug}'.` }], isError: true };

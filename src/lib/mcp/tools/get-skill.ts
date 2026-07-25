@@ -50,7 +50,8 @@ export default defineTool({
   },
   annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
   handler: async ({ slug }, ctx) => {
-    const supabase = anonClient();
+    // Use service role: file_url column is not readable by anon/authenticated.
+    const supabase = adminClient();
     const { data: skill, error } = await supabase
       .from("skills")
       .select("slug,name,tagline,description,tier,access_level,price,overview,toolbox,file_url")
