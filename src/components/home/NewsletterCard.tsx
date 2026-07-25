@@ -12,12 +12,16 @@ export function NewsletterCard({ source = "homepage" }: { source?: string } = {}
     e.preventDefault();
     if (!email.trim()) return;
     setBusy(true);
+    // Was writing to a "subscribers" table that does not exist in the schema, so
+    // every footer signup failed. The real table is newsletter_subscribers — the
+    // same one the Agent Toolbox waitlist writes to and /admin/subscribers reads.
     const { error } = await supabase
-      .from("subscribers" as any)
-      .insert({ email: email.trim().toLowerCase(), source } as any);
+      .from("newsletter_subscribers")
+      .insert({ email: email.trim().toLowerCase(), source });
     setBusy(false);
-    if (error && !error.message.toLowerCase().includes("duplicate")) {
-      toast.error(error.message);
+    // 23505 is the unique-violation on email: already subscribed, so treat as success.
+    if (error && (error as { code?: string }).code !== "23505") {
+      toast.error("Couldn't add you to the list. Please try again.");
       return;
     }
     setDone(true);
