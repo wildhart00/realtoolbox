@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { POST_TEMPLATES } from "@/lib/copy/postTemplates";
 import {
   Table,
   TableBody,
@@ -227,12 +228,40 @@ export default function BlogAdmin() {
                 />
               </div>
               <div>
-                <Label>Body (markdown)</Label>
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <Label>Body (markdown)</Label>
+                  {/* Starter scaffolds for the two post shapes the renderer is built
+                      for. They append rather than replace, so nothing already
+                      written gets clobbered. */}
+                  <div className="flex flex-wrap gap-1.5">
+                    {POST_TEMPLATES.map((t) => (
+                      <button
+                        key={t.key}
+                        type="button"
+                        onClick={() =>
+                          setEditing({
+                            ...editing,
+                            body: editing.body.trim()
+                              ? `${editing.body.trimEnd()}\n\n${t.body}`
+                              : t.body,
+                          })
+                        }
+                        className="rounded-md border border-foreground/15 bg-foreground/[0.04] px-2.5 py-1 text-[11px] font-medium text-muted-foreground hover:text-foreground hover:bg-foreground/[0.08] transition-base"
+                      >
+                        + {t.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
                 <Textarea
                   rows={12}
                   value={editing.body}
                   onChange={(e) => setEditing({ ...editing, body: e.target.value })}
                 />
+                <p className="mt-1.5 text-[11px] text-muted-foreground">
+                  Supports ## headings, tables, - bullets, 1. numbers, &gt; quotes, **bold**,
+                  `code`, and [links](/toolbox).
+                </p>
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
