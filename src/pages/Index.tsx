@@ -29,13 +29,13 @@ const Index = () => {
       <InvestorArcSection />
       <OfferBand />
       <FeaturedTabsSection featured={featured} justLaunched={justLaunched} />
-      <StacksHomeStrip />
       <BrowseSection tools={homeTools} categories={categories} />
       <div className="px-6 lg:px-10 -mt-6 mb-4 mx-auto flex justify-end" style={{ maxWidth: 1100 }}>
         <Link to="/browse" className="text-[13px] font-semibold text-[hsl(229_94%_82%)] hover:text-[hsl(229_94%_90%)] transition-base">
           Browse all {tools.length} tools →
         </Link>
       </div>
+      <StacksHomeStrip />
       <NewsletterCard />
     </AppLayout>
   );
