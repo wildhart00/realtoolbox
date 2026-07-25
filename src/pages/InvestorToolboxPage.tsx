@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Check, Loader2 } from "lucide-react";
+import { ArrowRight, Check, Loader2 } from "lucide-react";
 import { AppLayout } from "@/components/layout/AppLayout";
 import {
   Accordion,
@@ -13,51 +13,55 @@ import { useCheckout } from "@/hooks/useCheckout";
 import { useAuth } from "@/hooks/useAuth";
 import { SkillPreviewCard, type SkillCardData } from "@/components/skills/SkillPreviewCard";
 import { McpDifferentiatorCallout } from "@/components/toolbox/McpDifferentiatorCallout";
+import { GuardrailCards } from "@/components/shared/GuardrailCards";
+import { INVESTOR_ARC } from "@/lib/copy/investorArc";
+import { freeDealScreenPath } from "@/lib/routes";
 
 type SkillRow = SkillCardData & { id: string; sort_order?: number };
-
-const ARC_STEPS = [
-  "Define your buy box",
-  "Screen the deal",
-  "Triage the pipeline",
-  "Audit your inputs",
-  "Pick your strategy",
-  "Know when to walk",
-  "Underwrite the offer",
-];
 
 const FAQS = [
   {
     q: "What is a skill?",
-    a: "A skill is a carefully written instruction file you paste into ChatGPT, Claude, or Gemini. It turns the AI into a specialist for one specific job — like screening a deal or building a buy box — using conservative prompts and guardrails.",
+    a: "A skill is a long, specific set of operating instructions you hand to ChatGPT, Claude, or Gemini. It tells the AI what job it's doing, in what order, which numbers it may assume, and when to stop and say it doesn't have enough. Loading one turns a general assistant into a specialist for a single job.",
   },
   {
     q: "Which AI do I need?",
-    a: "Any of the big three: ChatGPT, Claude, or Gemini. The skills are written to work in all of them. If you use Claude or ChatGPT, you can also connect directly via our MCP integration.",
+    a: "Any of the big three: ChatGPT, Claude, or Gemini. Every skill is written and tested to behave the same in all of them. If you use Claude or ChatGPT you can also connect your toolbox directly, so skills load themselves.",
   },
   {
     q: "Is this a subscription?",
-    a: "No. One payment, yours forever. Lifetime updates included — every new investor skill we add is yours automatically.",
+    a: "No. One payment, yours forever. Every new investor skill added after you buy is included automatically.",
   },
   {
     q: "Do I need a paid ChatGPT or Claude account?",
-    a: "Free tiers work for basic use. For longer analyses, uploaded documents, and MCP access, a paid plan (ChatGPT Plus or Claude Pro) gives you a much better experience.",
+    a: "Free tiers work for basic use. For longer analyses, uploaded documents, and a direct connection, a paid plan gives you a noticeably better experience.",
+  },
+  {
+    q: "Can I try one first?",
+    a: "Yes — Deal Screen is free with an account, no card. It behaves exactly like the paid skills, including refusing to give you a verdict when the inputs are too thin.",
   },
   {
     q: "How do I load a skill?",
-    a: "Every skill comes with a one-click copy button. Paste it into a new chat as the system prompt (or into a Claude Project / ChatGPT Custom GPT), and start working the deal. Full setup guide included.",
+    a: "Every skill has a one-click copy button. Paste it into a new chat, or save it into a Claude Project or ChatGPT Custom GPT and reuse it. The setup guide walks through both, plus connecting directly.",
   },
 ];
 
 const WHAT_YOU_GET = [
-  "7 conservative deal skills",
+  "7 conservative deal skills covering the full decision path",
   "Universal setup guide (ChatGPT, Claude, Gemini)",
   "Lifetime updates as new investor skills drop",
   "One-click copy-to-clipboard delivery",
-  "Works with ChatGPT, Claude, and Gemini",
-  "Connect directly to Claude and ChatGPT via our MCP integration",
+  "Direct connection to Claude and ChatGPT, so skills load themselves",
+  "One payment — own it forever",
 ];
 
+/**
+ * Investor Toolbox detail page.
+ *
+ * Like /toolbox, this page previously put the price in the hero. It now runs
+ * value first — the seven skills, what you get, how you run it — and the price
+ * appears once, at the bottom, under #pricing.
+ */
 export default function InvestorToolboxPage() {
   const { startCheckout, loading } = useCheckout();
   const { user } = useAuth();
@@ -87,17 +91,15 @@ export default function InvestorToolboxPage() {
       })();
     meta.setAttribute(
       "content",
-      "Make your first safe deal decision without losing your shirt. Seven conservative AI skills — buy box, screening, triage, input audit, strategy, walk-away, underwriting. One payment, yours forever.",
+      "Seven conservative AI skills that walk a deal from a raw address to a defensible offer — buy box, screening, triage, input audit, strategy, walk-away, underwriting.",
     );
   }, []);
 
-  const freeCtaTarget = user
-    ? "/toolbox/deal-screen"
-    : "/auth?mode=signup&next=" + encodeURIComponent("/toolbox/deal-screen?copy=1");
+  const freeCtaTarget = freeDealScreenPath(!!user);
 
   return (
     <AppLayout>
-      {/* Hero */}
+      {/* 1 — What it is */}
       <section className="mx-auto max-w-[1100px] px-6 lg:px-10 pt-16 lg:pt-24 pb-14">
         <div className="max-w-3xl">
           <div className="inline-flex items-center gap-2 rounded-full border border-foreground/10 bg-foreground/[0.03] px-3 py-1 text-[11px] font-semibold tracking-[0.16em] text-muted-foreground uppercase">
@@ -105,46 +107,39 @@ export default function InvestorToolboxPage() {
             Investor Toolbox
           </div>
           <h1 className="mt-5 font-display text-4xl lg:text-[56px] font-bold leading-[1.03] tracking-[-0.03em] text-foreground">
-            Make your first safe deal decision{" "}
+            Make your first real deal decision{" "}
             <span className="bg-gradient-to-r from-[hsl(229_94%_82%)] to-[hsl(265_84%_75%)] bg-clip-text text-transparent">
               without losing your shirt.
             </span>
           </h1>
           <p className="mt-5 text-[16.5px] lg:text-lg text-muted-foreground leading-[1.65]">
-            Seven conservative AI skills that walk you from a raw address to a defensible offer.
-            Skills refuse to invent comps, taxes, or rents — they flag unverified inputs. Torture-tested across ChatGPT, Claude, Gemini, and Meta until they converge before shipping.
+            Seven skills that take a property from a raw address to a number you can defend at the
+            table — each one asking the question a seasoned operator would ask next, and none of
+            them willing to invent a figure to get there.
           </p>
-          <div className="mt-7 flex flex-col sm:flex-row items-start sm:items-center gap-3">
-            <button
-              type="button"
-              onClick={() => startCheckout("investor", "/toolbox/investor")}
-              disabled={loading}
-              className="inline-flex items-center justify-center gap-2 rounded-[10px] bg-gradient-to-r from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] px-5 py-3 text-[14px] font-semibold text-white shadow-lg shadow-[hsl(252_84%_50%)]/20 hover:shadow-[hsl(252_84%_50%)]/35 transition-base disabled:opacity-70"
+          <div className="mt-7 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+            <a
+              href="#the-seven"
+              className="inline-flex items-center justify-center gap-2 rounded-[10px] bg-gradient-to-r from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] px-5 py-3 text-[14px] font-semibold text-white shadow-lg shadow-[hsl(252_84%_50%)]/20 hover:shadow-[hsl(252_84%_50%)]/35 transition-base"
             >
-              {loading ? <><Loader2 className="h-4 w-4 animate-spin" /> Starting…</> : <>Get the Investor Toolbox — $79</>}
-            </button>
+              See the seven skills <ArrowRight className="h-4 w-4" />
+            </a>
             <Link
               to={freeCtaTarget}
-              className="text-[13.5px] text-muted-foreground hover:text-foreground underline-offset-2 hover:underline transition-base"
+              className="text-[13.5px] font-semibold text-foreground/80 hover:text-foreground transition-base"
             >
               Or try Deal Screen free →
             </Link>
           </div>
-          <p className="mt-3 text-[12.5px] text-muted-foreground/70">
-            Founding price. One payment, yours forever. Lifetime updates.
-          </p>
         </div>
       </section>
 
-      {/* MCP differentiator — promoted above feature list */}
-      <section className="mx-auto max-w-[1100px] px-6 lg:px-10 pb-10">
-        <McpDifferentiatorCallout />
-      </section>
-
-      {/* The arc */}
-      <section className="mx-auto max-w-[1200px] px-6 lg:px-10 pb-16">
+      {/* 2 — The arc */}
+      <section id="the-seven" className="mx-auto max-w-[1200px] px-6 lg:px-10 pb-16 scroll-mt-20">
         <div className="max-w-2xl mb-10">
-          <p className="text-[11px] uppercase tracking-[0.16em] text-foreground/50 font-semibold mb-2">The journey</p>
+          <p className="text-[11px] uppercase tracking-[0.16em] text-foreground/50 font-semibold mb-2">
+            The journey
+          </p>
           <h2 className="font-display text-[28px] sm:text-[34px] text-foreground tracking-[-0.02em] leading-tight">
             Seven skills. One arc from address to offer.
           </h2>
@@ -155,15 +150,32 @@ export default function InvestorToolboxPage() {
         </div>
 
         <ol className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-10">
-          {ARC_STEPS.map((step, i) => (
+          {INVESTOR_ARC.map((step) => (
             <li
-              key={step}
-              className="surface-card rounded-xl p-4 flex items-start gap-3 border border-foreground/10"
+              key={step.num}
+              className={
+                "surface-card rounded-xl p-4 flex items-start gap-3 " +
+                (step.free
+                  ? "border-[hsl(239_84%_67%)]/40 ring-1 ring-[hsl(239_84%_67%)]/20"
+                  : "border border-foreground/10")
+              }
             >
               <span className="font-display text-[22px] font-bold text-[hsl(229_94%_82%)] leading-none w-7 shrink-0">
-                {String(i + 1).padStart(2, "0")}
+                {String(step.num).padStart(2, "0")}
               </span>
-              <span className="text-[13.5px] text-foreground/85 leading-[1.5] pt-1">{step}</span>
+              <span className="min-w-0">
+                <span className="block text-[13.5px] font-semibold text-foreground leading-snug">
+                  {step.title}
+                  {step.free && (
+                    <span className="ml-1.5 inline-flex items-center rounded-full bg-gradient-to-r from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] px-1.5 py-[1px] text-[9px] font-bold uppercase tracking-[0.12em] text-white align-middle">
+                      Free
+                    </span>
+                  )}
+                </span>
+                <span className="mt-1 block text-[12.5px] text-muted-foreground leading-[1.5]">
+                  {step.desc}
+                </span>
+              </span>
             </li>
           ))}
         </ol>
@@ -179,10 +191,33 @@ export default function InvestorToolboxPage() {
         )}
       </section>
 
-      {/* What you get */}
+      {/* 3 — Why you can act on it */}
+      <section className="mx-auto max-w-[1100px] px-6 lg:px-10 pb-16">
+        <div className="max-w-2xl mb-8">
+          <p className="text-[11px] uppercase tracking-[0.16em] text-foreground/50 font-semibold mb-2">
+            How they're built
+          </p>
+          <h2 className="font-display text-[28px] sm:text-[34px] text-foreground tracking-[-0.02em] leading-tight">
+            Conservative by construction, not by tone.
+          </h2>
+        </div>
+        <GuardrailCards />
+        <div className="mt-5">
+          <Link
+            to="/how-it-works#why-these-are-different"
+            className="text-[13.5px] font-semibold text-[hsl(229_94%_82%)] underline-offset-2 hover:underline"
+          >
+            What each of those means in practice →
+          </Link>
+        </div>
+      </section>
+
+      {/* 4 — What you get */}
       <section className="mx-auto max-w-[1100px] px-6 lg:px-10 pb-16">
         <div className="rounded-2xl border border-foreground/10 bg-gradient-to-br from-foreground/[0.04] to-foreground/[0.01] px-6 py-8 lg:px-10 lg:py-10">
-          <p className="text-[11px] uppercase tracking-[0.16em] text-foreground/50 font-semibold mb-2">What you get</p>
+          <p className="text-[11px] uppercase tracking-[0.16em] text-foreground/50 font-semibold mb-2">
+            What you get
+          </p>
           <h2 className="font-display text-[26px] sm:text-[30px] text-foreground tracking-[-0.02em] leading-tight">
             Everything you need to run a deal.
           </h2>
@@ -197,8 +232,13 @@ export default function InvestorToolboxPage() {
         </div>
       </section>
 
-      {/* Buy CTA */}
+      {/* 5 — How you run it */}
       <section className="mx-auto max-w-[1100px] px-6 lg:px-10 pb-16">
+        <McpDifferentiatorCallout />
+      </section>
+
+      {/* 6 — Price, last */}
+      <section id="pricing" className="mx-auto max-w-[1100px] px-6 lg:px-10 pb-16 scroll-mt-20">
         <div className="relative overflow-hidden rounded-2xl border border-foreground/10 bg-gradient-to-br from-[hsl(239_84%_60%)]/10 via-[hsl(252_84%_64%)]/10 to-[hsl(265_84%_60%)]/10 px-6 py-10 lg:px-12 lg:py-12 text-center">
           <div className="absolute inset-x-0 -top-px h-px bg-gradient-to-r from-transparent via-[hsl(229_94%_82%)]/60 to-transparent" />
           <h2 className="font-display text-[28px] sm:text-[34px] text-foreground tracking-[-0.02em] leading-tight">
@@ -208,7 +248,9 @@ export default function InvestorToolboxPage() {
             <span className="font-display text-[52px] font-bold text-foreground leading-none">$79</span>
             <span className="text-[16px] text-muted-foreground line-through">$99</span>
           </div>
-          <p className="mt-2 text-[13px] text-muted-foreground">Founding price · Lifetime updates included</p>
+          <p className="mt-2 text-[13px] text-muted-foreground">
+            Founding price · Lifetime updates included
+          </p>
           <button
             type="button"
             onClick={() => startCheckout("investor", "/toolbox/investor")}
@@ -217,12 +259,24 @@ export default function InvestorToolboxPage() {
           >
             {loading ? <><Loader2 className="h-4 w-4 animate-spin" /> Starting…</> : <>Get the Investor Toolbox — $79</>}
           </button>
+          <p className="mt-5 text-[13px] text-muted-foreground">
+            Not ready?{" "}
+            <Link
+              to={freeCtaTarget}
+              className="text-[hsl(229_94%_82%)] font-semibold underline-offset-2 hover:underline"
+            >
+              Start with the free Deal Screen
+            </Link>{" "}
+            — no card.
+          </p>
         </div>
       </section>
 
-      {/* FAQ */}
+      {/* 7 — FAQ */}
       <section className="mx-auto max-w-[820px] px-6 lg:px-10 pb-20">
-        <p className="text-[11px] uppercase tracking-[0.16em] text-foreground/50 font-semibold mb-2">FAQ</p>
+        <p className="text-[11px] uppercase tracking-[0.16em] text-foreground/50 font-semibold mb-2">
+          FAQ
+        </p>
         <h2 className="font-display text-[26px] sm:text-[30px] text-foreground tracking-[-0.02em] leading-tight mb-6">
           Straight answers.
         </h2>
@@ -239,7 +293,18 @@ export default function InvestorToolboxPage() {
           ))}
         </Accordion>
 
-        <p className="mt-12 text-center text-[12.5px] text-muted-foreground/70">
+        <p className="mt-8 text-center text-[13px] text-muted-foreground">
+          Still deciding?{" "}
+          <Link
+            to="/how-it-works"
+            className="text-[hsl(229_94%_82%)] font-semibold underline-offset-2 hover:underline"
+          >
+            Read how it works
+          </Link>
+          .
+        </p>
+
+        <p className="mt-10 text-center text-[12.5px] text-muted-foreground/70">
           Built from real flips, rentals, and closings. Conservative by design.
         </p>
       </section>
