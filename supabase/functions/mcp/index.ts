@@ -195,7 +195,7 @@ var mcp_default = defineMcp({
   name: "realtoolbox-mcp",
   title: "RealToolbox.ai",
   version: "0.2.0",
-  instructions: "Tools for RealToolbox.ai \u2014 a curated library of AI skills and integrations for real estate investors and pros. Skills are unlocked by one-time Toolbox purchases (Investor Toolbox, Agent Toolbox, or Complete Toolbox \u2014 Complete unlocks both). Use search_skills to browse the skill library, get_skill to retrieve a specific skill's full content (paid skills require the matching toolbox purchase on the caller's account), list_integrations to browse integration directory entries, and get_my_purchases to check the signed-in user's owned toolboxes.",
+  instructions: "Tools for RealToolbox.ai \u2014 a curated library of AI skills and integrations for real estate investors and the agents who serve them. Skills are unlocked by one-time Toolbox purchases: the Investor Toolbox (every investor skill), or the Complete Toolbox (every investor skill, plus the Scaling Toolbox free when it releases). Use search_skills to browse the skill library, get_skill to retrieve a specific skill's full content (paid skills require the matching toolbox purchase on the caller's account), list_integrations to browse integration directory entries, and get_my_purchases to check the signed-in user's owned toolboxes.",
   auth: auth.oauth.issuer({
     issuer: `https://${projectRef}.supabase.co/auth/v1`,
     acceptedAudiences: "authenticated"
