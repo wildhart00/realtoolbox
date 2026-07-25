@@ -55,3 +55,16 @@ export interface Review {
   };
 }
 
+// Kept for the unrouted MembersPage backlog file. The underlying
+// premium_resources table and premium-resources bucket were dropped when the
+// All-Access subscription model was retired; the stub hook returns an empty
+// list so the page compiles as a backlog placeholder.
+export interface PremiumResource {
+  id: string;
+  title: string;
+  description: string | null;
+  file_path: string;
+  cover_emoji: string | null;
+  sort_order: number;
+}
+

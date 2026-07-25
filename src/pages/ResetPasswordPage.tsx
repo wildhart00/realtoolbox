@@ -33,7 +33,7 @@ const ResetPasswordPage = () => {
     setLoading(false);
     if (error) return toast.error(error.message);
     toast.success("Password updated");
-    navigate("/", { replace: true });
+    navigate("/members", { replace: true });
   };
 
   return (

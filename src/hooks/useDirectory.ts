@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import type { Category, Tool, Review } from "@/lib/types";
+import type { Category, Tool, Review, PremiumResource } from "@/lib/types";
 
 const toolSelect = "*, tool_categories(category:categories(*))";
 
