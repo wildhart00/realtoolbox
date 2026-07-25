@@ -1,30 +1,31 @@
-## Goal
-Confirm that the project's current codebase is fully reflected in the connected GitHub repository, and clarify how Lovable's two-way GitHub sync behaves.
-
-## Current state (verified)
-- Local working tree is clean — no uncommitted changes.
-- Latest local commit: `50f325a Connected GitHub to project`.
-- Git remotes visible in the sandbox are only Lovable's internal `origin` and `secondary`; the GitHub remote is managed by Lovable's backend sync, not a local git remote.
-
 ## Plan
 
-1. **Confirm two-way sync is enabled**
-   - Lovable's GitHub integration is bidirectional by default: changes made in Lovable push to GitHub, and commits pushed to GitHub sync back to Lovable.
-   - I will verify the project's sync configuration/status through available signals (recent commits, Lovable backend state).
+1. **Inventory and map every object in `skill-files`**
+   - Use the current storage object list as the source of truth.
+   - Include every object in the bucket, including the published `setup-guide` file and older orphaned skill files.
+   - Generate fresh, non-predictable destination paths using a random folder segment plus random filename suffix.
 
-2. **Verify the latest commit is on GitHub**
-   - Compare the local HEAD (`50f325a`) against the GitHub repository's default branch.
-   - If the GitHub connector is available, use it to read the repo's latest commit; otherwise, guide you to check the repo directly.
+2. **Copy first, then update database references**
+   - Copy each existing object to its new randomized path inside the same private bucket.
+   - Update every `skills.file_url` value that points at an affected old object so it points at the new object path.
+   - Confirm `setup-guide` is updated the same way because it is stored in `skill-files`.
 
-3. **Force a fresh sync if needed**
-   - If the latest local changes are not yet on GitHub, make a no-op or descriptive commit (e.g., a timestamped sync marker) to trigger Lovable's push to GitHub.
-   - Wait for the sync to complete and re-verify.
+3. **Delete old storage objects**
+   - After the database points at the new paths, delete the old objects from storage.
+   - Keep a local audit log of `old_path -> new_path` mappings for verification and reporting.
 
-4. **Report back**
-   - Confirm whether GitHub is at the same commit as the local project.
-   - Explain the two-way sync behavior and what to expect for future edits.
+4. **Verify anonymous access with actual counts**
+   - Pick a published paid skill that has a rotated file.
+   - Run **25 unauthenticated requests** against the paid skill’s **old public object URL**.
+   - Run **25 unauthenticated requests** against that paid skill’s **new public object URL**.
+   - Report exact counts by status/content result, for example: `old path: 0 content / 25 blocked`, `new path: 0 content / 25 blocked`, with the actual HTTP distribution.
 
-## Technical details
-- No code changes are required unless a sync trigger is needed.
-- The GitHub connection was established in commit `50f325a`, so all subsequent work should already be included in what Lovable pushes.
-- Two-way sync means you can edit in Lovable or push commits to GitHub; both directions update the project.
+5. **Verify entitled delivery still works**
+   - Confirm `get-skill-content` resolves the rotated `file_url` from the database and returns full markdown for an entitled purchaser.
+   - Confirm MCP `get_skill` resolves the rotated `file_url` and returns `content` for an entitled caller.
+   - If the current preview session is not an entitled purchaser, I’ll complete the storage/security verification and report that the final purchaser/MCP check needs an entitled login session before it can be truthfully confirmed.
+
+6. **Report results**
+   - Provide the exact anonymous request counts for old and new paths.
+   - Confirm the number of storage objects rotated and the number of skill rows updated.
+   - Confirm whether `setup-guide` was included.
