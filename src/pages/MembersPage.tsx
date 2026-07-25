@@ -12,6 +12,20 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { ConnectMcpBlock } from "@/components/mcp/ConnectMcpBlock";
 
+/**
+ * BACKLOG — intentionally unrouted. Not shipping at launch.
+ *
+ * This page has no <Route> in App.tsx and is not reachable. It is kept in the
+ * tree deliberately rather than deleted: the member area is wanted, just not
+ * yet. It surfaces entitlements (saved tools, premium resources, the MCP
+ * connect block) and that behaviour has not been reviewed, so shipping it is a
+ * product decision rather than a routing one.
+ *
+ * The signed-in topbar dropdown used to link here from "Saved tools" and "My
+ * reviews"; both rendered the 404 page, so those links were removed rather than
+ * routed. Re-enabling means adding the route in App.tsx and restoring those two
+ * entries in Topbar.tsx (desktop dropdown and mobile menu).
+ */
 const MembersPage = () => {
   const { user, loading } = useAuth();
 

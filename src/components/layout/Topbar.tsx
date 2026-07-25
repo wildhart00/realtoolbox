@@ -1,6 +1,6 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Menu, X, Heart, MessageSquare, Shield, LogOut, LogIn } from "lucide-react";
+import { Menu, X, Shield, LogOut, LogIn } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -132,21 +132,17 @@ export function Topbar() {
                   {user.email}
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
-                  <Link to="/members"><Heart className="h-4 w-4" /> Saved tools</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/members"><MessageSquare className="h-4 w-4" /> My reviews</Link>
-                </DropdownMenuItem>
+                {/* "Saved tools" and "My reviews" both pointed at /members, which
+                    has no route — they rendered the 404 page. Removed rather than
+                    routed: see the note in MembersPage.tsx. */}
                 {isAdmin && (
                   <>
-                    <DropdownMenuSeparator />
                     <DropdownMenuItem asChild>
                       <Link to="/admin"><Shield className="h-4 w-4" /> Admin</Link>
                     </DropdownMenuItem>
+                    <DropdownMenuSeparator />
                   </>
                 )}
-                <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleSignOut}>
                   <LogOut className="h-4 w-4" /> Sign out
                 </DropdownMenuItem>
@@ -202,12 +198,7 @@ export function Topbar() {
             {user ? (
               <>
                 <div className="px-3 py-2 text-xs text-muted-foreground truncate">{user.email}</div>
-                <Link to="/members" onClick={() => setOpen(false)} className="flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-foreground/[0.05]">
-                  <Heart className="h-4 w-4" /> Saved tools
-                </Link>
-                <Link to="/members" onClick={() => setOpen(false)} className="flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-foreground/[0.05]">
-                  <MessageSquare className="h-4 w-4" /> My reviews
-                </Link>
+                {/* /members links removed here too — same reason as the desktop menu. */}
                 {isAdmin && (
                   <Link to="/admin" onClick={() => setOpen(false)} className="flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-foreground/[0.05]">
                     <Shield className="h-4 w-4" /> Admin
