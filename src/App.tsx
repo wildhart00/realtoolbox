@@ -43,7 +43,8 @@ import HowItWorksPage from "./pages/HowItWorksPage.tsx";
 import SkillDetailPage from "./pages/SkillDetailPage.tsx";
 import ToolboxIndexPage from "./pages/ToolboxIndexPage.tsx";
 import InvestorToolboxPage from "./pages/InvestorToolboxPage.tsx";
-import AgentToolboxPage from "./pages/AgentToolboxPage.tsx";
+import ScalingToolboxPage from "./pages/ScalingToolboxPage.tsx";
+import ForAgentsPage from "./pages/ForAgentsPage.tsx";
 import SkillsSlugRedirect from "./pages/SkillsSlugRedirect.tsx";
 import PrivacyPage from "./pages/PrivacyPage.tsx";
 import TermsPage from "./pages/TermsPage.tsx";
@@ -83,10 +84,24 @@ const App = () => (
               <Route path="/mcps" element={<Navigate to="/integrations" replace />} />
               <Route path="/toolbox" element={<ToolboxIndexPage />} />
               <Route path="/toolbox/investor" element={<InvestorToolboxPage />} />
-              <Route path="/toolbox/agent" element={<AgentToolboxPage />} />
+              <Route path="/toolbox/scaling" element={<ScalingToolboxPage />} />
+              {/*
+                The Agent Toolbox was cancelled as a product. /toolbox/agent was a
+                published, indexed URL, so it redirects to the Scaling Toolbox — the
+                product that took its place in the lineup — rather than 404ing.
+                Agents are now served by /for-agents, which positions the existing
+                Investor Toolbox for them; it is a different pitch to a different
+                reader, so it is not the redirect target.
+
+                Note: the `agent_toolbox` entitlement slug is untouched throughout —
+                it lives in the purchases table CHECK constraint, the Stripe webhook,
+                and the entitlement hooks, none of which are in scope here.
+              */}
+              <Route path="/toolbox/agent" element={<Navigate to="/toolbox/scaling" replace />} />
               <Route path="/toolbox/:slug" element={<SkillDetailPage />} />
               <Route path="/skills" element={<Navigate to="/toolbox" replace />} />
               <Route path="/skills/:slug" element={<SkillsSlugRedirect />} />
+              <Route path="/for-agents" element={<ForAgentsPage />} />
               <Route path="/agents" element={<AgentsPage />} />
               <Route path="/how-it-works" element={<HowItWorksPage />} />
               <Route path="/resources" element={<ResourcesPage />} />
