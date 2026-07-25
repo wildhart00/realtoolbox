@@ -50,6 +50,8 @@ import WelcomePage from "./pages/WelcomePage.tsx";
 import SetupGuidePage from "./pages/SetupGuidePage.tsx";
 import OAuthConsentPage from "./pages/OAuthConsentPage.tsx";
 import { ErrorBoundary } from "./components/ErrorBoundary.tsx";
+import StackPage from "./pages/StackPage.tsx";
+import StacksAdmin from "./pages/admin/StacksAdmin.tsx";
 
 
 const queryClient = new QueryClient();
@@ -83,6 +85,8 @@ const App = () => (
               <Route path="/skills/:slug" element={<SkillsSlugRedirect />} />
               <Route path="/agents" element={<AgentsPage />} />
               <Route path="/resources" element={<ResourcesPage />} />
+              <Route path="/stacks/investor" element={<StackPage kind="investor" />} />
+              <Route path="/stacks/agent" element={<StackPage kind="agent" />} />
               <Route path="/submit" element={<SubmitPage />} />
               <Route path="/privacy" element={<PrivacyPage />} />
               <Route path="/terms" element={<TermsPage />} />
@@ -107,6 +111,7 @@ const App = () => (
                 <Route path="contact-messages" element={<ContactMessagesAdmin />} />
                 <Route path="integrations" element={<IntegrationsAdmin />} />
                 <Route path="skills" element={<SkillsAdmin />} />
+                <Route path="stacks" element={<StacksAdmin />} />
               </Route>
               <Route path="/setup-admin" element={<SetupAdminPage />} />
               <Route path="*" element={<NotFound />} />

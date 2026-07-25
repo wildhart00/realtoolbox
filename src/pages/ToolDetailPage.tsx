@@ -21,6 +21,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { getBrandColor } from "@/lib/brandColor";
 import { MeshGradientBanner } from "@/components/tools/MeshGradientBanner";
+import { AffiliateDisclosure } from "@/components/affiliate/AffiliateDisclosure";
 
 const ToolDetailPage = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -145,6 +146,10 @@ const ToolDetailPage = () => {
           Visit Website
           <ExternalLink className="h-3.5 w-3.5" />
         </Link>
+      </div>
+
+      <div className="px-6 lg:px-10 pb-4 mx-auto" style={{ maxWidth: 1060 }}>
+        <AffiliateDisclosure variant="block" />
       </div>
 
       <div className="mx-6 lg:mx-10 h-px bg-foreground/[0.06]" />
