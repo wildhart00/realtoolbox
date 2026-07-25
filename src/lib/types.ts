@@ -55,11 +55,3 @@ export interface Review {
   };
 }
 
-export interface PremiumResource {
-  id: string;
-  title: string;
-  description: string | null;
-  file_path: string;
-  cover_emoji: string | null;
-  sort_order: number;
-}

@@ -318,39 +318,6 @@ export type Database = {
         }
         Relationships: []
       }
-      premium_resources: {
-        Row: {
-          cover_emoji: string | null
-          created_at: string
-          description: string | null
-          file_path: string
-          id: string
-          sort_order: number
-          title: string
-          updated_at: string
-        }
-        Insert: {
-          cover_emoji?: string | null
-          created_at?: string
-          description?: string | null
-          file_path: string
-          id?: string
-          sort_order?: number
-          title: string
-          updated_at?: string
-        }
-        Update: {
-          cover_emoji?: string | null
-          created_at?: string
-          description?: string | null
-          file_path?: string
-          id?: string
-          sort_order?: number
-          title?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
       profiles: {
         Row: {
           avatar_url: string | null
