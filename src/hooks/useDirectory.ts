@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import type { Category, Tool, PremiumResource, Review } from "@/lib/types";
+import type { Category, Tool, Review } from "@/lib/types";
 
 const toolSelect = "*, tool_categories(category:categories(*))";
 
@@ -146,16 +146,6 @@ export function useReviews(toolId: string | undefined) {
   });
 }
 
-export function usePremiumResources() {
-  return useQuery({
-    queryKey: ["premium-resources"],
-    queryFn: async (): Promise<PremiumResource[]> => {
-      const { data, error } = await supabase.from("premium_resources").select("*").order("sort_order");
-      if (error) throw error;
-      return data as PremiumResource[];
-    },
-  });
-}
 
 export function useSavedToolIds(userId: string | undefined) {
   return useQuery({
