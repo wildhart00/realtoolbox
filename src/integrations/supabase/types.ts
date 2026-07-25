@@ -616,6 +616,77 @@ export type Database = {
         }
         Relationships: []
       }
+      stack_entries: {
+        Row: {
+          created_at: string
+          group_name: string
+          id: string
+          kind: Database["public"]["Enums"]["stack_kind"]
+          sort_order: number
+          tool_id: string
+          updated_at: string
+          why_note: string | null
+        }
+        Insert: {
+          created_at?: string
+          group_name: string
+          id?: string
+          kind: Database["public"]["Enums"]["stack_kind"]
+          sort_order?: number
+          tool_id: string
+          updated_at?: string
+          why_note?: string | null
+        }
+        Update: {
+          created_at?: string
+          group_name?: string
+          id?: string
+          kind?: Database["public"]["Enums"]["stack_kind"]
+          sort_order?: number
+          tool_id?: string
+          updated_at?: string
+          why_note?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "stack_entries_tool_id_fkey"
+            columns: ["tool_id"]
+            isOneToOne: false
+            referencedRelation: "tools"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      stacks: {
+        Row: {
+          created_at: string
+          id: string
+          intro_md: string | null
+          kind: Database["public"]["Enums"]["stack_kind"]
+          subtitle: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          intro_md?: string | null
+          kind: Database["public"]["Enums"]["stack_kind"]
+          subtitle?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          intro_md?: string | null
+          kind?: Database["public"]["Enums"]["stack_kind"]
+          subtitle?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       submissions: {
         Row: {
           admin_notes: string | null
@@ -891,6 +962,7 @@ export type Database = {
         | "paused"
       app_role: "admin" | "member"
       pricing_model: "free" | "freemium" | "paid"
+      stack_kind: "investor" | "agent"
       submission_status: "pending" | "approved" | "rejected"
     }
     CompositeTypes: {
@@ -1028,6 +1100,7 @@ export const Constants = {
       ],
       app_role: ["admin", "member"],
       pricing_model: ["free", "freemium", "paid"],
+      stack_kind: ["investor", "agent"],
       submission_status: ["pending", "approved", "rejected"],
     },
   },
