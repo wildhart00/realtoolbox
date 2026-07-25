@@ -19,7 +19,7 @@ type SkillRow = {
   description: string | null;
   overview: string | null;
   audience: string;
-  file_url: string | null;
+  
   access_level: string;
   price: number;
   toolbox: string | null;
@@ -48,7 +48,7 @@ export default function SkillDetailPage() {
     queryFn: async (): Promise<SkillRow | null> => {
       const { data, error } = await supabase
         .from("skills" as any)
-        .select("id, name, slug, tagline, description, overview, audience, file_url, access_level, price, toolbox")
+        .select("id, name, slug, tagline, description, overview, audience, access_level, price, toolbox")
         .eq("slug", slug!)
         .eq("is_published", true)
         .maybeSingle();

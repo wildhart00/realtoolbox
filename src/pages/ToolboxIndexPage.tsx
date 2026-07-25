@@ -41,7 +41,7 @@ export default function ToolboxIndexPage() {
     (async () => {
       const { data } = await supabase
         .from("skills" as any)
-        .select("id, name, slug, tagline, description, audience, file_url, access_level, price, toolbox")
+        .select("id, name, slug, tagline, description, audience, access_level, price, toolbox")
         .eq("is_published", true)
         .neq("slug", "setup-guide")
         .order("sort_order", { ascending: true });
