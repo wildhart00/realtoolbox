@@ -289,7 +289,7 @@ export default function StackPage({ kind }: { kind: StackKind }) {
         open={waitlistOpen}
         onOpenChange={setWaitlistOpen}
         mode="early-access"
-        source="agent_toolbox_waitlist"
+        source="scaling_toolbox_waitlist"
       />
     </AppLayout>
   );
@@ -334,11 +334,11 @@ function CrossPromo({
           Coming soon
         </div>
         <h3 className="font-display text-[22px] font-bold text-foreground tracking-[-0.02em] mb-1.5">
-          The Agent Toolbox — AI skills for licensed agents
+          The Scaling Toolbox — AI skills for the business layer
         </h3>
         <p className="text-[14px] text-muted-foreground leading-[1.6]">
-          Listing descriptions, lead response, follow-ups, objections, negotiation. Join the
-          waitlist and I'll ping you the day it drops.
+          Lead economics, cost per contract, channel performance, and finding the constraint
+          that's capping the operation. Join the waitlist to hear when it lands.
         </p>
       </div>
       <button

@@ -14,7 +14,7 @@ export function NewsletterCard({ source = "homepage" }: { source?: string } = {}
     setBusy(true);
     // Was writing to a "subscribers" table that does not exist in the schema, so
     // every footer signup failed. The real table is newsletter_subscribers — the
-    // same one the Agent Toolbox waitlist writes to and /admin/subscribers reads.
+    // same one the toolbox waitlist forms write to and /admin/subscribers reads.
     const { error } = await supabase
       .from("newsletter_subscribers")
       .insert({ email: email.trim().toLowerCase(), source });

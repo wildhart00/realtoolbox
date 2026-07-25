@@ -148,7 +148,9 @@ export default function SkillDetailPage() {
     startCheckout(target as "investor" | "complete", `/toolbox/${skill.slug}`);
   }, [authLoading, user, skill, params, setParams, startCheckout]);
 
-  const isAgent = requiredToolbox === "agent_toolbox";
+  // See SkillPreviewCard: the `agent_toolbox` entitlement slug stays put, but the
+  // Agent Toolbox product is cancelled, so the label stays product-neutral.
+  const isUnreleasedToolbox = requiredToolbox === "agent_toolbox";
 
   return (
     <AppLayout>
@@ -259,19 +261,19 @@ export default function SkillDetailPage() {
               <div className="rounded-2xl p-6 lg:p-7 surface-card border border-foreground/10">
                 <div className="flex items-center gap-2 text-[12px] uppercase tracking-[0.14em] text-muted-foreground font-semibold">
                   <Lock className="h-3.5 w-3.5" />
-                  Own the {isAgent ? "Agent" : "Investor"} Toolbox
+                  Own the {isUnreleasedToolbox ? "" : "Investor "}Toolbox
                 </div>
                 <p className="mt-3 text-[15px] text-foreground/85 leading-[1.65]">
                   One payment, lifetime updates. Every skill in this toolbox unlocks the moment you buy.
                 </p>
                 <div className="mt-5 flex flex-wrap items-center gap-3">
-                  {isAgent ? (
+                  {isUnreleasedToolbox ? (
                     <button
                       type="button"
                       disabled
                       className="inline-flex items-center justify-center rounded-[10px] border border-foreground/15 bg-foreground/[0.04] px-6 py-3 text-[14px] font-semibold text-muted-foreground cursor-not-allowed"
                     >
-                      Agent Toolbox — coming soon
+                      Coming soon
                     </button>
                   ) : (
                     <button

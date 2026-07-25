@@ -6,16 +6,22 @@ import { Button } from "@/components/ui/button";
 import { useEntitlements, type ToolboxSlug } from "@/hooks/useEntitlements";
 import { ConnectMcpBlock } from "@/components/mcp/ConnectMcpBlock";
 
+// Keyed by entitlement slug, which is deliberately untouched: `agent_toolbox` is
+// written into the purchases table CHECK constraint and the Stripe webhook. The
+// Agent Toolbox was never sold, so that key is unreachable in practice — it keeps
+// a neutral label rather than being remapped to "Scaling Toolbox", since whether
+// Scaling reuses this slug or gets its own is a purchases/Stripe decision.
 const TOOLBOX_LABELS: Record<ToolboxSlug, string> = {
   investor_toolbox: "Investor Toolbox",
-  agent_toolbox: "Agent Toolbox",
+  agent_toolbox: "Your toolbox",
   complete_toolbox: "Complete Toolbox",
 };
 
 const TOOLBOX_BLURB: Record<ToolboxSlug, string> = {
   investor_toolbox: "Every investor skill is now unlocked on your account.",
-  agent_toolbox: "Every agent skill is now unlocked on your account.",
-  complete_toolbox: "Every RealToolbox skill — investor and agent — is now unlocked.",
+  agent_toolbox: "Your skills are now unlocked on your account.",
+  complete_toolbox:
+    "Every investor skill is unlocked, and the Scaling Toolbox lands in your account free the day it releases.",
 };
 
 const WelcomePage = () => {

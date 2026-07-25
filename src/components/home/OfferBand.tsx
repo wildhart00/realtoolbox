@@ -19,13 +19,13 @@ const TIERS = [
     name: "Complete",
     badge: { label: "Best value", accent: false },
     price: "$149",
-    blurb: "Investor now, plus the Agent Toolbox free at release.",
+    blurb: "Investor now, plus the Scaling Toolbox free at release.",
   },
   {
-    name: "Agent Toolbox",
+    name: "Scaling Toolbox",
     badge: { label: "Coming soon", accent: false },
     price: "—",
-    blurb: "Listing agent workflows. Next up.",
+    blurb: "The business layer, for investors doing volume.",
     dim: true,
   },
 ];

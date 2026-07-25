@@ -13,6 +13,7 @@ import { SkillPreviewCard, type SkillCardData } from "@/components/skills/SkillP
 import { McpDifferentiatorCallout } from "@/components/toolbox/McpDifferentiatorCallout";
 import { GuardrailCards } from "@/components/shared/GuardrailCards";
 import { freeDealScreenPath } from "@/lib/routes";
+import { useSeo } from "@/lib/seo";
 
 type SkillRow = SkillCardData & { id: string; toolbox?: string | null };
 
@@ -76,25 +77,16 @@ export default function ToolboxIndexPage() {
     })();
   }, []);
 
-  useEffect(() => {
-    document.title = "The Toolbox — Conservative AI skills for real estate deals | RealToolbox.ai";
-    const meta =
-      document.querySelector('meta[name="description"]') ??
-      (() => {
-        const m = document.createElement("meta");
-        m.setAttribute("name", "description");
-        document.head.appendChild(m);
-        return m;
-      })();
-    meta.setAttribute(
-      "content",
+  useSeo({
+    title: "The Toolbox — Conservative AI skills for real estate deals | RealToolbox.ai",
+    description:
       "A working set of AI skills that analyze real estate deals conservatively — refusing to invent numbers and refusing a verdict on weak inputs. Start with the free Deal Screen.",
-    );
-  }, []);
+    canonicalPath: "/toolbox",
+  });
 
   const freeCtaTarget = freeDealScreenPath(!!user);
 
-  async function handleAgentWaitlist(e: React.FormEvent) {
+  async function handleScalingWaitlist(e: React.FormEvent) {
     e.preventDefault();
     const parsed = emailSchema.safeParse(waitlistEmail);
     if (!parsed.success) {
@@ -104,18 +96,17 @@ export default function ToolboxIndexPage() {
     setWaitlistSubmitting(true);
     const { error } = await supabase
       .from("newsletter_subscribers")
-      .insert({ email: parsed.data, source: "agent_toolbox_waitlist" } as any);
+      .insert({ email: parsed.data, source: "scaling_toolbox_waitlist" });
     setWaitlistSubmitting(false);
     if (error && (error as { code?: string }).code !== "23505") {
       toast.error("Couldn't add you to the list. Please try again.");
       return;
     }
-    toast.success("You're on the Agent Toolbox waitlist.");
+    toast.success("You're on the Scaling Toolbox waitlist.");
     setWaitlistDone(true);
   }
 
   const investorSkills = skills.filter((s) => s.toolbox === "investor");
-  const agentSkills = skills.filter((s) => s.toolbox === "agent");
   const freeSkills = skills.filter((s) => !s.toolbox || s.toolbox === "free");
 
   return (
@@ -168,6 +159,15 @@ export default function ToolboxIndexPage() {
             </div>
           ))}
         </div>
+        <p className="mt-5 text-[13.5px] text-muted-foreground leading-[1.65]">
+          Working with investor clients rather than buying yourself?{" "}
+          <Link
+            to="/for-agents"
+            className="text-[hsl(229_94%_82%)] font-semibold underline-offset-2 hover:underline"
+          >
+            The same seven skills, positioned for agents →
+          </Link>
+        </p>
       </section>
 
       {/* 3 — Why it can be trusted */}
@@ -200,20 +200,6 @@ export default function ToolboxIndexPage() {
                 </h3>
                 <div className="flex flex-wrap justify-center gap-4 md:gap-5">
                   {investorSkills.map((s) => (
-                    <div key={s.id} className="w-full md:w-[calc((100%-1.25rem*2)/3)]">
-                      <SkillPreviewCard {...s} />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-            {agentSkills.length > 0 && (
-              <div>
-                <h3 className="font-display text-[20px] text-foreground tracking-tight mb-5">
-                  Agent Toolbox
-                </h3>
-                <div className="flex flex-wrap justify-center gap-4 md:gap-5">
-                  {agentSkills.map((s) => (
                     <div key={s.id} className="w-full md:w-[calc((100%-1.25rem*2)/3)]">
                       <SkillPreviewCard {...s} />
                     </div>
@@ -382,13 +368,13 @@ export default function ToolboxIndexPage() {
               </div>
               <p className="mt-1 text-[13px] text-muted-foreground">Founding price · one-time payment</p>
               <p className="mt-3 text-[13px] text-muted-foreground leading-[1.65]">
-                Everything in Investor, plus the Agent Toolbox included free the day it releases.
+                Everything in Investor, plus the Scaling Toolbox free the day it releases.
               </p>
             </div>
             <ul className="flex flex-col gap-2.5">
               {[
                 "Every investor skill",
-                "Agent Toolbox included free at release",
+                "Scaling Toolbox included free at release",
                 "Connects directly to Claude & ChatGPT (MCP)",
                 "Lifetime updates on both",
                 "One payment — own it forever",
@@ -417,19 +403,19 @@ export default function ToolboxIndexPage() {
             </div>
           </div>
 
-          {/* Agent — waitlist */}
+          {/* Scaling — waitlist. No price: none is announced. */}
           <div className="surface-card rounded-2xl p-6 lg:p-7 flex flex-col gap-5 border border-foreground/10">
             <div>
               <span className="inline-flex items-center rounded-full border border-foreground/15 bg-foreground/[0.04] px-2.5 py-[3px] text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
                 Coming soon
               </span>
               <h3 className="mt-3 font-display text-[22px] text-foreground tracking-tight leading-tight">
-                Agent Toolbox
+                Scaling Toolbox
               </h3>
-              <p className="mt-2 text-[13px] text-muted-foreground">For licensed agents.</p>
+              <p className="mt-2 text-[13px] text-muted-foreground">For investors doing volume.</p>
               <p className="mt-3 text-[13px] text-muted-foreground leading-[1.65]">
-                Listing descriptions, seller lead response, follow-up sequences, pricing narratives,
-                objection handling, and more.
+                The business layer above deal analysis — lead economics, cost per contract, channel
+                performance, and finding the constraint that&apos;s capping the operation.
               </p>
             </div>
             {waitlistDone ? (
@@ -438,11 +424,11 @@ export default function ToolboxIndexPage() {
                 You're on the waitlist.
               </div>
             ) : (
-              <form onSubmit={handleAgentWaitlist} className="mt-auto flex flex-col gap-2">
+              <form onSubmit={handleScalingWaitlist} className="mt-auto flex flex-col gap-2">
                 <Input
                   type="email"
                   required
-                  placeholder="you@brokerage.com"
+                  placeholder="you@email.com"
                   value={waitlistEmail}
                   onChange={(e) => setWaitlistEmail(e.target.value)}
                   className="h-10 bg-background/60 border-foreground/15"
@@ -452,7 +438,7 @@ export default function ToolboxIndexPage() {
                   {waitlistSubmitting ? "Adding…" : "Join the waitlist"}
                 </Button>
                 <Link
-                  to="/toolbox/agent"
+                  to="/toolbox/scaling"
                   className="text-[12.5px] text-muted-foreground hover:text-foreground text-center underline-offset-2 hover:underline transition-base"
                 >
                   Learn more →

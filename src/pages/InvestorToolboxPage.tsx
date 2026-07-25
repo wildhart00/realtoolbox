@@ -16,6 +16,7 @@ import { McpDifferentiatorCallout } from "@/components/toolbox/McpDifferentiator
 import { GuardrailCards } from "@/components/shared/GuardrailCards";
 import { INVESTOR_ARC } from "@/lib/copy/investorArc";
 import { freeDealScreenPath } from "@/lib/routes";
+import { useSeo } from "@/lib/seo";
 
 type SkillRow = SkillCardData & { id: string; sort_order?: number };
 
@@ -43,6 +44,14 @@ const FAQS = [
   {
     q: "How do I load a skill?",
     a: "Every skill has a one-click copy button. Paste it into a new chat, or save it into a Claude Project or ChatGPT Custom GPT and reuse it. The setup guide walks through both, plus connecting directly.",
+  },
+  {
+    q: "I'm an agent, not an investor. Is this for me?",
+    a: "If you work with investor clients, yes — this is the same toolbox, used to underwrite the properties your buyers send over so you can hand back a defensible number instead of an opinion. There's no separate agent edition and no separate price; the /for-agents page makes that case in full.",
+  },
+  {
+    q: "What about the Complete Toolbox?",
+    a: "Complete is $149 and adds the Scaling Toolbox — the business layer above deal analysis, for investors already doing volume — free the day it releases. If you're working individual deals, Investor is the one you want.",
   },
 ];
 
@@ -79,21 +88,12 @@ export default function InvestorToolboxPage() {
     })();
   }, []);
 
-  useEffect(() => {
-    document.title = "Investor Toolbox — 7 AI skills for real estate investors | RealToolbox.ai";
-    const meta =
-      document.querySelector('meta[name="description"]') ??
-      (() => {
-        const m = document.createElement("meta");
-        m.setAttribute("name", "description");
-        document.head.appendChild(m);
-        return m;
-      })();
-    meta.setAttribute(
-      "content",
+  useSeo({
+    title: "Investor Toolbox — 7 AI skills for real estate investors | RealToolbox.ai",
+    description:
       "Seven conservative AI skills that walk a deal from a raw address to a defensible offer — buy box, screening, triage, input audit, strategy, walk-away, underwriting.",
-    );
-  }, []);
+    canonicalPath: "/toolbox/investor",
+  });
 
   const freeCtaTarget = freeDealScreenPath(!!user);
 
@@ -300,6 +300,13 @@ export default function InvestorToolboxPage() {
             className="text-[hsl(229_94%_82%)] font-semibold underline-offset-2 hover:underline"
           >
             Read how it works
+          </Link>
+          . Working with investor clients?{" "}
+          <Link
+            to="/for-agents"
+            className="text-[hsl(229_94%_82%)] font-semibold underline-offset-2 hover:underline"
+          >
+            See the agent fit
           </Link>
           .
         </p>

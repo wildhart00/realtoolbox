@@ -28,7 +28,12 @@ export function SkillPreviewCard({
   const { isPaid, locked, requiredToolbox } = useSkillAccess({ access_level, toolbox });
   const { startCheckout, loading } = useCheckout();
 
-  const isAgent = requiredToolbox === "agent_toolbox";
+  // Skills gated behind the second, unreleased toolbox. The entitlement slug is
+  // still `agent_toolbox` (purchases table, Stripe webhook — out of scope), but
+  // the Agent Toolbox is cancelled, so the label stays product-neutral rather
+  // than naming a product that no longer exists or pre-announcing one that has
+  // no confirmed slug yet.
+  const isUnreleasedToolbox = requiredToolbox === "agent_toolbox";
 
   function handleCardClick() {
     navigate(`/toolbox/${slug}`);
@@ -85,14 +90,14 @@ export function SkillPreviewCard({
       <div className="mt-5 flex flex-col items-start gap-2">
         {isPaid && locked ? (
           <>
-            {isAgent ? (
+            {isUnreleasedToolbox ? (
               <button
                 type="button"
                 disabled
                 onClick={stop}
                 className="inline-flex items-center justify-center rounded-[10px] border border-foreground/15 bg-foreground/[0.04] px-4 py-2 text-[13px] font-semibold text-muted-foreground cursor-not-allowed"
               >
-                Agent Toolbox — coming soon
+                Coming soon
               </button>
             ) : (
               <button
