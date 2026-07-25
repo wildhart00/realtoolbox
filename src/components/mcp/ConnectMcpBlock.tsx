@@ -10,7 +10,20 @@ export const MCP_URL = projectRef
 
 type Variant = "full" | "compact";
 
-export function ConnectMcpBlock({ variant = "full" }: { variant?: Variant }) {
+/**
+ * `showWalkthroughLink` exists because this block renders in two very different
+ * contexts. On signed-in surfaces (members, welcome, the setup guide itself) the
+ * deep link into the full gated walkthrough is useful. On the public
+ * /how-it-works page it isn't: the reader is already on the public explanation,
+ * and /setup-guide would bounce them to signup.
+ */
+export function ConnectMcpBlock({
+  variant = "full",
+  showWalkthroughLink = true,
+}: {
+  variant?: Variant;
+  showWalkthroughLink?: boolean;
+}) {
   const [copied, setCopied] = useState(false);
 
   async function copy() {
@@ -73,14 +86,16 @@ export function ConnectMcpBlock({ variant = "full" }: { variant?: Variant }) {
         </div>
       </div>
 
-      <div className="mt-4">
-        <Link
-          to="/setup-guide#connect-your-toolbox-via-mcp"
-          className="text-[13px] font-semibold text-[hsl(229_94%_82%)] underline-offset-2 hover:underline"
-        >
-          See the connect walkthrough →
-        </Link>
-      </div>
+      {showWalkthroughLink && (
+        <div className="mt-4">
+          <Link
+            to="/setup-guide#connect-your-toolbox-via-mcp"
+            className="text-[13px] font-semibold text-[hsl(229_94%_82%)] underline-offset-2 hover:underline"
+          >
+            See the connect walkthrough →
+          </Link>
+        </div>
+      )}
     </div>
   );
 }

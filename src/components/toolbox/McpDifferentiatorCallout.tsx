@@ -20,8 +20,14 @@ export function McpDifferentiatorCallout({ className = "" }: { className?: strin
           Your toolbox connects directly to Claude, ChatGPT, and other AI apps — so your skills load themselves,
           stay current automatically, and are always the real version. Copy-paste still works everywhere as a fallback.
         </p>
+        {/*
+          Points at the public /how-it-works, not /setup-guide. This callout renders
+          on /toolbox and /toolbox/investor, both of which signed-out visitors reach
+          — and /setup-guide redirects to signup, so the old link walked a browsing
+          visitor straight into an auth wall.
+        */}
         <Link
-          to="/setup-guide#connect-your-toolbox-via-mcp"
+          to="/how-it-works#connect-your-toolbox"
           className="mt-2 inline-block text-[12.5px] font-semibold text-[hsl(229_94%_82%)] underline-offset-2 hover:underline"
         >
           How the connection works →

@@ -15,7 +15,7 @@ const RUN_METHODS = [
     kicker: "Works everywhere",
     title: "Copy and paste it",
     body:
-      "Every skill has a copy button. Paste it into a new chat — ChatGPT, Claude, Gemini, whichever you already use — and start working the deal. Nothing to install, no account on our side beyond the one you already made.",
+      "Every skill has a copy button. Paste it into a new chat — ChatGPT, Claude, Gemini, whichever you already use — and start working the deal. Nothing to install beyond the account you already made.",
     detail: [
       "Works on free tiers of every major assistant.",
       "Paste it once per chat, or save it into a Claude Project or a ChatGPT Custom GPT and reuse it.",
@@ -103,8 +103,11 @@ export default function HowItWorksPage() {
         </p>
       </section>
 
-      {/* Two ways to run it */}
-      <section className="mx-auto max-w-[1100px] px-6 lg:px-10 pb-16">
+      {/* Two ways to run it — public landing target for every MCP callout on the site */}
+      <section
+        id="connect-your-toolbox"
+        className="mx-auto max-w-[1100px] px-6 lg:px-10 pb-16 scroll-mt-24"
+      >
         <div className="mb-8 max-w-2xl">
           <p className="text-[11px] uppercase tracking-[0.16em] text-foreground/50 font-semibold mb-2">
             Running a skill
@@ -149,9 +152,18 @@ export default function HowItWorksPage() {
           })}
         </div>
 
+        {/* No walkthrough link: this page is the public walkthrough, and the full
+            guide behind it is gated. */}
         <div className="mt-5">
-          <ConnectMcpBlock variant="compact" />
+          <ConnectMcpBlock variant="compact" showWalkthroughLink={false} />
         </div>
+        <p className="mt-4 text-[13px] text-muted-foreground leading-[1.65] max-w-2xl">
+          Already have an account?{" "}
+          <Link to="/setup-guide" className="text-[hsl(229_94%_82%)] underline-offset-2 hover:underline">
+            The full setup guide
+          </Link>{" "}
+          walks through each client step by step.
+        </p>
       </section>
 
       {/* What makes these different */}
