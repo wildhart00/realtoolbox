@@ -225,6 +225,12 @@ export default function SkillDetailPage() {
               <p className="text-[11px] uppercase tracking-[0.16em] text-foreground/50 font-semibold mb-5">
                 How to set it up for continuous use
               </p>
+              <p className="text-[15px] text-muted-foreground leading-[1.7] mb-4">
+                Fastest way: connect your toolbox once via MCP and your AI loads any skill you own on demand —{" "}
+                <Link to="/setup-guide#connect-your-toolbox-via-mcp" className="text-[hsl(229_94%_82%)] underline-offset-2 hover:underline">
+                  see the setup guide
+                </Link>
+              </p>
               <ol className="space-y-4 text-[15px] text-muted-foreground leading-[1.7] list-decimal pl-5 marker:text-foreground/60 marker:font-semibold">
                 <li>Copy the skill (button below).</li>
                 <li>Open your AI assistant.</li>
