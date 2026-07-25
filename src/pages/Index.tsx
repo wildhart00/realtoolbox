@@ -1,11 +1,13 @@
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Hero } from "@/components/home/Hero";
-import { PricingSection } from "@/components/home/PricingSection";
+import { WhatThisIsSection } from "@/components/home/WhatThisIsSection";
 import { InvestorArcSection } from "@/components/home/InvestorArcSection";
+import { OfferBand } from "@/components/home/OfferBand";
 import { FeaturedTabsSection } from "@/components/home/FeaturedTabsSection";
 import { BrowseSection } from "@/components/home/BrowseSection";
 import { DealScreenStrip } from "@/components/home/DealScreenStrip";
 import { StacksHomeStrip } from "@/components/stacks/StacksHomeStrip";
+import { NewsletterCard } from "@/components/home/NewsletterCard";
 import { Link } from "react-router-dom";
 import { useTools, useCategories, useFeaturedTools, useJustLaunchedTools } from "@/hooks/useDirectory";
 
@@ -20,8 +22,10 @@ const Index = () => {
   return (
     <AppLayout>
       <Hero toolCount={tools.length} />
-      <PricingSection />
+      <WhatThisIsSection />
+      <DealScreenStrip />
       <InvestorArcSection />
+      <OfferBand />
       <FeaturedTabsSection featured={featured} justLaunched={justLaunched} />
       <StacksHomeStrip />
       <BrowseSection tools={homeTools} categories={categories} />
@@ -30,7 +34,7 @@ const Index = () => {
           Browse all {tools.length} tools →
         </Link>
       </div>
-      <DealScreenStrip />
+      <NewsletterCard />
     </AppLayout>
   );
 };
