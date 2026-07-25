@@ -1,58 +1,30 @@
-## Problem
+## Goal
+Ensure the RealToolbox.ai codebase on GitHub reflects the latest changes in Lovable.
 
-The previous security fix revoked the entire table-level `SELECT` on `public.skills` from `anon` and `authenticated` in order to hide `file_url`. Verified via `information_schema.role_table_grants` and `column_privileges`: only `sandbox_exec` has any privilege on `skills`. That killed every read path that goes through the anon/authenticated key, including MCP `get_skill` (returns "permission denied for table skills"). Listing pages still render only because their queries currently succeed against cached data or a different code path — the hole is broader than reported.
+## Background
+Lovable has built-in two-way GitHub sync. When connected, edits in Lovable push to GitHub automatically, and pushes to GitHub sync back to Lovable. If sync is not connected or has stalled, the repo will be behind.
 
-## Fix
+## Steps
 
-### Migration
+1. **Check GitHub connection status**
+   - Inspect project settings / git configuration to confirm whether a GitHub repo is linked.
+   - If no repo is linked, the fix is to connect GitHub in the Lovable editor first.
 
-Restore SELECT on every column of `public.skills` **except `file_url`** for both `anon` and `authenticated`. This is what the original security fix intended — protect only the storage-path column, not the whole table.
+2. **Verify the local working tree is clean and up to date**
+   - Run a read-only git status check to see if there are uncommitted or unpushed changes.
+   - Note: I will not run state-changing git commands in plan mode.
 
-```sql
--- Grant SELECT on all non-sensitive columns to anon and authenticated
-GRANT SELECT (
-  id, name, slug, tagline, description, audience, tier, access_level, price,
-  download_count, is_published, sort_order, overview, toolbox,
-  created_at, updated_at
-) ON public.skills TO anon, authenticated;
+3. **If GitHub is connected but out of sync**
+   - Trigger a sync / push from Lovable to GitHub.
+   - Confirm the commit lands in the linked repository.
 
--- service_role keeps ALL (includes file_url) — already granted, but assert:
-GRANT ALL ON public.skills TO service_role;
-```
+4. **If GitHub is not connected**
+   - Provide the exact steps to connect: Plus (+) menu → GitHub → Connect project → authorize → create/select repo.
+   - Once connected, Lovable will push the current state automatically.
 
-`file_url` is deliberately omitted, so `SELECT file_url FROM skills` as anon/authenticated still fails. INSERT/UPDATE/DELETE remain governed by existing RLS policies + table grants (admin path unaffected; admins are `authenticated` and go through admin UI which relies on RLS + service role where needed — verify in step below).
+## Outcome
+Either confirm the repo is already in sync, or give you the exact next action to connect/trigger sync.
 
-### Server-side code — file_url reads must use service role
-
-`supabase/functions/get-skill-content/index.ts` already uses `admin` (service role) to read `file_url` — no change.
-
-`src/lib/mcp/tools/get-skill.ts` currently selects `file_url` via `anonClient()`. That will now fail (column not granted). Switch that single select to `adminClient()` so it can read `file_url` server-side. Public metadata is fine either way, but consolidating on admin for this one query is simplest and doesn't leak anything — `file_url` is stripped from the outbound payload before response (already the case at line 78/103).
-
-Everything else in `get-skill.ts` stays: entitlement check still uses `userClient(ctx)`, download still uses `adminClient()`.
-
-`src/lib/mcp/tools/search-skills.ts` does not select `file_url` — unchanged.
-
-### Client-side code
-
-The four client selects (`ToolboxIndexPage`, `InvestorToolboxPage`, `SkillDetailPage`, `SkillsHomeSection`, plus `SkillPreviewCard`) were already narrowed in the prior turn to exclude `file_url`. No further changes.
-
-### Verification (all five, executed live)
-
-1. Anon direct storage fetch of a paid skill file → expect 400/403.
-2. Anon `select file_url from skills` via PostgREST → expect permission-denied on column.
-3. Anon select of public columns (`slug,name,tagline,access_level,...`) → expect 200 with rows.
-4. Authenticated entitled user calling MCP `get_skill` for a paid skill → expect `content` populated in structured output.
-5. Authenticated non-purchaser calling MCP `get_skill` for a paid skill → expect `locked: true`, no `content`.
-
-Report each result with status code / response shape.
-
-## Files touched
-
-- New migration (grants only).
-- `src/lib/mcp/tools/get-skill.ts` — swap the initial skill lookup from `anonClient()` to `adminClient()`. The regenerated `supabase/functions/mcp/index.ts` bundle picks this up automatically.
-
-## Out of scope
-
-- No changes to storage policies (the earlier fix locked `skill-files` to service_role — correct, keep).
-- No admin UI changes.
-- No RLS policy changes on `skills`.
+## Notes
+- I will not modify app code or run `git push`/`commit` until build mode is active and the plan is approved.
+- If you already have a GitHub repo connected, the fastest path is usually a manual sync trigger in the Lovable editor rather than command-line git.
