@@ -5,6 +5,7 @@ import { InvestorArcSection } from "@/components/home/InvestorArcSection";
 import { FeaturedTabsSection } from "@/components/home/FeaturedTabsSection";
 import { BrowseSection } from "@/components/home/BrowseSection";
 import { DealScreenStrip } from "@/components/home/DealScreenStrip";
+import { StacksHomeStrip } from "@/components/stacks/StacksHomeStrip";
 import { Link } from "react-router-dom";
 import { useTools, useCategories, useFeaturedTools, useJustLaunchedTools } from "@/hooks/useDirectory";
 
@@ -22,6 +23,7 @@ const Index = () => {
       <PricingSection />
       <InvestorArcSection />
       <FeaturedTabsSection featured={featured} justLaunched={justLaunched} />
+      <StacksHomeStrip />
       <BrowseSection tools={homeTools} categories={categories} />
       <div className="px-6 lg:px-10 -mt-6 mb-4 mx-auto flex justify-end" style={{ maxWidth: 1100 }}>
         <Link to="/browse" className="text-[13px] font-semibold text-[hsl(229_94%_82%)] hover:text-[hsl(229_94%_90%)] transition-base">

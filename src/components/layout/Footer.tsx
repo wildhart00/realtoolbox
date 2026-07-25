@@ -8,6 +8,8 @@ const product = [
 ];
 
 const directory = [
+  { name: "Investor Stack", href: "/stacks/investor" },
+  { name: "Agent Stack", href: "/stacks/agent" },
   { name: "Browse Tools", href: "/browse" },
   { name: "Integrations", href: "/integrations" },
   { name: "Agents", href: "/agents" },

@@ -17,6 +17,7 @@ import {
 
 const navLinks = [
   { name: "Toolbox", href: "/toolbox" },
+  { name: "Stacks", href: "/stacks/investor" },
   { name: "Browse Tools", href: "/browse" },
   { name: "Resources", href: "/resources" },
   { name: "Blog", href: "/blog" },
