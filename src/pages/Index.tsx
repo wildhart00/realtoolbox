@@ -1,6 +1,7 @@
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Hero } from "@/components/home/Hero";
 import { WhatThisIsSection } from "@/components/home/WhatThisIsSection";
+import { HowConnectionWorks } from "@/components/home/HowConnectionWorks";
 import { InvestorArcSection } from "@/components/home/InvestorArcSection";
 import { OfferBand } from "@/components/home/OfferBand";
 import { FeaturedTabsSection } from "@/components/home/FeaturedTabsSection";
@@ -22,6 +23,7 @@ const Index = () => {
   return (
     <AppLayout>
       <Hero toolCount={tools.length} />
+      <HowConnectionWorks />
       <WhatThisIsSection />
       <DealScreenStrip />
       <InvestorArcSection />

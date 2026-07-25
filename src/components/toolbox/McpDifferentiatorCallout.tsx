@@ -17,11 +17,11 @@ export function McpDifferentiatorCallout({ className = "" }: { className?: strin
           MCP built-in
         </p>
         <p className="mt-1 text-[14px] text-foreground/90 leading-[1.6]">
-          The only real estate toolbox that connects directly to Claude, ChatGPT, and other AI apps —
-          your skills load themselves and stay current automatically.
+          Your toolbox connects directly to Claude, ChatGPT, and other AI apps — so your skills load themselves,
+          stay current automatically, and are always the real version. Copy-paste still works everywhere as a fallback.
         </p>
         <Link
-          to="/setup-guide#connect"
+          to="/setup-guide#connect-your-toolbox-via-mcp"
           className="mt-2 inline-block text-[12.5px] font-semibold text-[hsl(229_94%_82%)] underline-offset-2 hover:underline"
         >
           How the connection works →

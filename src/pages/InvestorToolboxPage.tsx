@@ -29,7 +29,7 @@ const ARC_STEPS = [
 const FAQS = [
   {
     q: "What is a skill?",
-    a: "A skill is a carefully written instruction file you paste into ChatGPT, Claude, or Gemini. It turns the AI into a specialist for one specific job — like screening a deal or building a buy box — using operator-grade prompts and guardrails.",
+    a: "A skill is a carefully written instruction file you paste into ChatGPT, Claude, or Gemini. It turns the AI into a specialist for one specific job — like screening a deal or building a buy box — using conservative prompts and guardrails.",
   },
   {
     q: "Which AI do I need?",
@@ -50,7 +50,7 @@ const FAQS = [
 ];
 
 const WHAT_YOU_GET = [
-  "7 operator-grade skills",
+  "7 conservative deal skills",
   "Universal setup guide (ChatGPT, Claude, Gemini)",
   "Lifetime updates as new investor skills drop",
   "One-click copy-to-clipboard delivery",
@@ -87,7 +87,7 @@ export default function InvestorToolboxPage() {
       })();
     meta.setAttribute(
       "content",
-      "Make your first safe deal decision without losing your shirt. Seven operator-grade AI skills — buy box, screening, triage, input audit, strategy, walk-away, underwriting. One payment, yours forever.",
+      "Make your first safe deal decision without losing your shirt. Seven conservative AI skills — buy box, screening, triage, input audit, strategy, walk-away, underwriting. One payment, yours forever.",
     );
   }, []);
 
@@ -111,8 +111,8 @@ export default function InvestorToolboxPage() {
             </span>
           </h1>
           <p className="mt-5 text-[16.5px] lg:text-lg text-muted-foreground leading-[1.65]">
-            Seven operator-grade AI skills that walk you from a raw address to a defensible offer.
-            Conservative math, honest guardrails, no hype. Built and torture-tested by a 12-year operator.
+            Seven conservative AI skills that walk you from a raw address to a defensible offer.
+            Skills refuse to invent comps, taxes, or rents — they flag unverified inputs. Torture-tested across ChatGPT, Claude, Gemini, and Meta until they converge before shipping.
           </p>
           <div className="mt-7 flex flex-col sm:flex-row items-start sm:items-center gap-3">
             <button
@@ -136,6 +136,11 @@ export default function InvestorToolboxPage() {
         </div>
       </section>
 
+      {/* MCP differentiator — promoted above feature list */}
+      <section className="mx-auto max-w-[1100px] px-6 lg:px-10 pb-10">
+        <McpDifferentiatorCallout />
+      </section>
+
       {/* The arc */}
       <section className="mx-auto max-w-[1200px] px-6 lg:px-10 pb-16">
         <div className="max-w-2xl mb-10">
@@ -144,8 +149,8 @@ export default function InvestorToolboxPage() {
             Seven skills. One arc from address to offer.
           </h2>
           <p className="mt-3 text-[14.5px] text-muted-foreground leading-relaxed">
-            Each skill does one job well. Together they cover the full decision path — the way experienced
-            operators actually work a deal.
+            Each skill does one job well. Together they cover the full decision path — the way a real
+            deal actually gets worked.
           </p>
         </div>
 
@@ -189,9 +194,6 @@ export default function InvestorToolboxPage() {
               </li>
             ))}
           </ul>
-          <div className="mt-6">
-            <McpDifferentiatorCallout />
-          </div>
         </div>
       </section>
 
@@ -238,7 +240,7 @@ export default function InvestorToolboxPage() {
         </Accordion>
 
         <p className="mt-12 text-center text-[12.5px] text-muted-foreground/70">
-          Built and torture-tested by a 12-year operator. Conservative by design.
+          Built from real flips, rentals, and closings. Conservative by design.
         </p>
       </section>
     </AppLayout>

@@ -168,12 +168,12 @@ export function StackEntryDialog({
           </div>
 
           <div>
-            <Label>Why this one (first-person)</Label>
+            <Label>Why it's in the stack (editorial note)</Label>
             <Textarea
               value={row.why_note ?? ""}
               onChange={(e) => setRow((r) => ({ ...r, why_note: e.target.value }))}
               rows={5}
-              placeholder="I use it because… / What I like about it… / Where it beats the alternatives…"
+              placeholder="Why this earns its seat in the stack. Where it beats the alternatives."
             />
           </div>
 

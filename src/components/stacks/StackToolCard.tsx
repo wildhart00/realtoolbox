@@ -39,7 +39,7 @@ export function StackToolCard({ tool, whyNote, refTag }: Props) {
       {whyNote && (
         <blockquote className="relative rounded-xl bg-foreground/[0.03] border-l-2 border-[hsl(229_94%_82%)]/70 px-4 py-3">
           <div className="text-[10px] uppercase tracking-[0.12em] font-semibold text-[hsl(229_94%_82%)]/80 mb-1.5">
-            Why this one
+            Why it's in the stack
           </div>
           <p className="text-[13.5px] text-foreground/80 leading-[1.65] whitespace-pre-line">
             {whyNote}

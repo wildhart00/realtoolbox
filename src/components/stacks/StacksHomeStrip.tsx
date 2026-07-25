@@ -5,13 +5,13 @@ const stacks = [
   {
     href: "/stacks/investor",
     kicker: "The Investor Stack",
-    title: "If I were starting today — the tools I'd run",
+    title: "The investor stack — the tools to run today",
     blurb: "Deal finding, analysis, skip tracing, CRM, rehab, back office. Curated, not a directory dump.",
   },
   {
     href: "/stacks/agent",
     kicker: "The Agent Stack",
-    title: "The tools I'd hand a new agent on day one",
+    title: "The agent stack — day-one tools for a new agent",
     blurb: "CRM, listing marketing, transactions, AI content, client comms — the shortlist that actually earns its seat.",
   },
 ];

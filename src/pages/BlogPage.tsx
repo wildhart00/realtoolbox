@@ -151,7 +151,7 @@ function BlogIndex() {
             AI insights for <span className="text-gradient">real estate pros</span>
           </h1>
           <p className="mt-4 max-w-2xl text-lg text-muted-foreground">
-            Deep dives, prompt libraries and workflow guides — written by operators, for operators.
+            Deep dives, prompt libraries and workflow guides — written for real estate operators: investors, agents, and teams putting AI to work.
           </p>
         </div>
       </section>

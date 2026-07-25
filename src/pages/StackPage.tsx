@@ -58,14 +58,14 @@ const META: Record<
   investor: {
     title: "The Best Real Estate Investor Tool Stack (2026) — RealToolbox",
     description:
-      "The exact toolset I'd run as a real estate investor today — deal finding, analysis, skip tracing, CRM, rehab, and back office. Operator-picked, not a directory dump.",
+      "The toolset RealToolbox recommends for a real estate investor today — deal finding, analysis, skip tracing, CRM, rehab, and back office. Curated, not a directory dump.",
     eyebrow: "The Investor Stack",
     refTag: "stack-investor",
   },
   agent: {
     title: "The Best Real Estate Agent Tool Stack (2026) — RealToolbox",
     description:
-      "The tools I'd hand a new real estate agent on day one — CRM, listing marketing, transactions, AI content, and client communication. Curated by an operator.",
+      "The tools RealToolbox recommends for a new real estate agent on day one — CRM, listing marketing, transactions, AI content, and client communication.",
     eyebrow: "The Agent Stack",
     refTag: "stack-agent",
   },
@@ -310,7 +310,7 @@ function CrossPromo({
             Go beyond the tools
           </div>
           <h3 className="font-display text-[22px] font-bold text-foreground tracking-[-0.02em] mb-1.5">
-            The Investor Toolbox — operator skills that run these tools for you
+            The Investor Toolbox — AI skills that run these tools for you
           </h3>
           <p className="text-[14px] text-muted-foreground leading-[1.6]">
             AI skills that turn any assistant into your acquisitions analyst, deal screener, and

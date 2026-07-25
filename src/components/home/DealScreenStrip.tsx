@@ -17,7 +17,7 @@ export function DealScreenStrip() {
                 Run the numbers on any deal — free.
               </h3>
               <p className="mt-3 text-[14.5px] text-muted-foreground leading-[1.6]">
-                Create a free account and load our operator-grade Deal Screen into ChatGPT, Claude, or Gemini. Fast, conservative read on whether a deal actually clears.
+                Create a free account and load our conservative Deal Screen into ChatGPT, Claude, or Gemini. Fast, conservative read on whether a deal actually clears.
               </p>
             </div>
             <div className="flex flex-col items-start md:items-end gap-2 shrink-0">

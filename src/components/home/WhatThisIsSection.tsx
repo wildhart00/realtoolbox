@@ -13,7 +13,7 @@ const BEATS = [
   },
   {
     icon: Sparkles,
-    title: "Get an operator-grade answer",
+    title: "Get a conservative, defensible answer",
     desc: "Conservative math, clear go/no-go. No invented numbers.",
   },
 ];
@@ -29,7 +29,7 @@ export function WhatThisIsSection() {
           An AI skill is a complete set of operating instructions.
         </h2>
         <p className="mt-3 text-[14.5px] text-muted-foreground leading-relaxed">
-          Load one into ChatGPT, Claude, or Gemini and it turns your AI into a real estate specialist that follows one job conservatively — the way an operator would.
+          Load one into ChatGPT, Claude, or Gemini and it turns your AI into a real estate specialist that follows one job conservatively — the way a careful investor would.
         </p>
       </div>
 
