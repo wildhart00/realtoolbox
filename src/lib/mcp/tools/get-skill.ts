@@ -2,14 +2,6 @@ import { createClient } from "@supabase/supabase-js";
 import { defineTool, type ToolContext } from "@lovable.dev/mcp-js";
 import { z } from "zod";
 
-function anonClient() {
-  return createClient(
-    process.env.SUPABASE_URL!,
-    process.env.SUPABASE_ANON_KEY!,
-    { auth: { persistSession: false, autoRefreshToken: false } },
-  );
-}
-
 function adminClient() {
   return createClient(
     process.env.SUPABASE_URL!,
@@ -17,6 +9,7 @@ function adminClient() {
     { auth: { persistSession: false, autoRefreshToken: false } },
   );
 }
+
 
 function userClient(ctx: ToolContext) {
   return createClient(
@@ -50,7 +43,8 @@ export default defineTool({
   },
   annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
   handler: async ({ slug }, ctx) => {
-    const supabase = anonClient();
+    // Use service role: file_url column is not readable by anon/authenticated.
+    const supabase = adminClient();
     const { data: skill, error } = await supabase
       .from("skills")
       .select("slug,name,tagline,description,tier,access_level,price,overview,toolbox,file_url")
