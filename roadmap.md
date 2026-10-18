@@ -28,6 +28,6 @@
 - [x] Record approval artifact hashes, exact source/settings changes and credit checkpoint.
 
 # Approved one live manual Atom test
-- [ ] Fix lost-unpause-response cleanup and verify artifact pins/tests.
-- [ ] Verify live target/dependencies/protections; install only approved RPCs/source and manual handler.
-- [ ] Attempt one capped feed request; independently repause/disable/read back and record evidence.
+- [x] Fix lost-unpause-response cleanup and verify artifact pins/tests (177 passed).
+- [ ] Install approved RPCs/source/handler: blocked by Deno rejecting ClientRequest.options.lookup; live target/dependencies verified, no installation performed.
+- [ ] Attempt one capped request: blocked by unsupported pinned transport; final paused=true/tested=false and zero source/draft/job/public rows independently verified.
