@@ -1,6 +1,7 @@
 -- ============================================================================
 -- PROPOSAL ONLY — NOT APPLIED. Lives outside supabase/migrations on purpose.
--- Revision 2 (after audit of 230f04ec).
+-- Revision 3 (hardening after audit of b1e0ad).
+-- Target backend ID: pcnsuyadfqrmythikwpa (project_id in supabase/config.toml).
 --
 -- Target: the backend named by `project_id` in supabase/config.toml. That single
 -- Lovable Cloud instance serves BOTH preview and the live site, so applying this
@@ -33,8 +34,6 @@ CREATE TABLE public.update_engine_settings (
   template_auto_publish_tested boolean NOT NULL DEFAULT false,
   updated_at timestamptz NOT NULL DEFAULT now()
 );
-GRANT SELECT ON public.update_engine_settings TO authenticated;
-GRANT SELECT ON public.update_engine_settings TO service_role;
 ALTER TABLE public.update_engine_settings ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Admins read engine settings" ON public.update_engine_settings FOR SELECT TO authenticated
   USING (public.has_role(auth.uid(), 'admin'));
@@ -45,9 +44,9 @@ CREATE TABLE public.update_sources (
   id text PRIMARY KEY,
   tool_id uuid REFERENCES public.tools(id) ON DELETE SET NULL,
   vendor text NOT NULL,
-  index_url text NOT NULL CHECK (index_url ~ '^https://'),
+  index_url text NOT NULL CHECK (index_url ~ '^https://[a-z0-9.-]+(/[^?#@]*)?$'),
   allowed_hosts text[] NOT NULL CHECK (cardinality(allowed_hosts) > 0),
-  allowed_path_prefixes text[] NOT NULL,
+  allowed_path_prefixes text[] NOT NULL CHECK (cardinality(allowed_path_prefixes) > 0),
   enabled boolean NOT NULL DEFAULT false,
   cadence_hours int NOT NULL DEFAULT 24 CHECK (cadence_hours BETWEEN 6 AND 168),
   stale_after_hours int NOT NULL DEFAULT 72,
@@ -60,15 +59,12 @@ CREATE TABLE public.update_sources (
   created_at timestamptz NOT NULL DEFAULT now(),
   updated_at timestamptz NOT NULL DEFAULT now()
 );
-GRANT SELECT ON public.update_sources TO authenticated;
-GRANT SELECT ON public.update_sources TO service_role;
 ALTER TABLE public.update_sources ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Admins read sources" ON public.update_sources FOR SELECT TO authenticated
   USING (public.has_role(auth.uid(), 'admin'));
 
 CREATE VIEW public.update_sources_public AS
   SELECT id, vendor, index_url, last_success_at FROM public.update_sources WHERE enabled;
-GRANT SELECT ON public.update_sources_public TO anon, authenticated;
 
 -- 3. Candidates (one row per source + content revision) --------------------
 CREATE TABLE public.update_candidates (
@@ -96,8 +92,6 @@ CREATE TABLE public.update_candidates (
   updated_at timestamptz NOT NULL DEFAULT now(),     -- row bookkeeping ONLY, never shown as "checked"
   UNIQUE (source_id, content_hash)
 );
-GRANT SELECT ON public.update_candidates TO authenticated;
-GRANT SELECT ON public.update_candidates TO service_role;
 ALTER TABLE public.update_candidates ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Admins read candidates" ON public.update_candidates FOR SELECT TO authenticated
   USING (public.has_role(auth.uid(), 'admin'));
@@ -109,7 +103,6 @@ CREATE TABLE public.update_review_events (
   actor_id uuid,                                     -- null = worker
   created_at timestamptz NOT NULL DEFAULT now()
 );
-GRANT SELECT ON public.update_review_events TO authenticated;
 ALTER TABLE public.update_review_events ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Admins read review events" ON public.update_review_events FOR SELECT TO authenticated
   USING (public.has_role(auth.uid(), 'admin'));
@@ -121,7 +114,6 @@ CREATE TABLE public.update_job_runs (
   detail jsonb NOT NULL DEFAULT '{}', budget_used jsonb NOT NULL DEFAULT '{}',
   started_at timestamptz NOT NULL DEFAULT now()
 );
-GRANT SELECT ON public.update_job_runs TO authenticated;
 ALTER TABLE public.update_job_runs ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Admins read job runs" ON public.update_job_runs FOR SELECT TO authenticated
   USING (public.has_role(auth.uid(), 'admin'));
@@ -131,7 +123,7 @@ CREATE TRIGGER update_candidates_updated_at BEFORE UPDATE ON public.update_candi
 
 -- 4. Server-controlled review transition + atomic audit -----------------
 CREATE OR REPLACE FUNCTION public.review_update_candidate(_id text, _to text, _note text)
-RETURNS text LANGUAGE plpgsql SECURITY DEFINER SET search_path = public AS $$
+RETURNS text LANGUAGE plpgsql SECURITY DEFINER SET search_path = '' AS $$
 DECLARE c public.update_candidates; ok boolean;
 BEGIN
   IF NOT public.has_role(auth.uid(), 'admin') THEN RAISE EXCEPTION 'not_admin'; END IF;
@@ -153,13 +145,16 @@ BEGIN
 END $$;
 
 CREATE OR REPLACE FUNCTION public.publish_update_candidate(_id text, _note text)
-RETURNS text LANGUAGE plpgsql SECURITY DEFINER SET search_path = public AS $$
+RETURNS text LANGUAGE plpgsql SECURITY DEFINER SET search_path = '' AS $$
 DECLARE c public.update_candidates; s public.update_engine_settings;
 BEGIN
   IF NOT public.has_role(auth.uid(), 'admin') THEN RAISE EXCEPTION 'not_admin'; END IF;
-  SELECT * INTO s FROM public.update_engine_settings WHERE id;
+  -- Lock order: settings -> source -> candidate. FOR SHARE holds through the
+  -- transaction, so a concurrent pause UPDATE waits until we commit.
+  SELECT * INTO s FROM public.update_engine_settings WHERE id FOR SHARE;
   IF NOT FOUND THEN RAISE EXCEPTION 'settings_missing'; END IF;
   IF s.paused THEN RAISE EXCEPTION 'engine_paused'; END IF;
+  PERFORM 1 FROM public.update_sources src JOIN public.update_candidates c2 ON c2.source_id = src.id WHERE c2.id = _id FOR SHARE OF src;
   SELECT * INTO c FROM public.update_candidates WHERE id = _id FOR UPDATE;
   IF NOT FOUND OR c.state <> 'approved' THEN RAISE EXCEPTION 'not_approved'; END IF;
   UPDATE public.update_candidates SET state = 'published', published_at = now() WHERE id = _id;
@@ -169,7 +164,7 @@ BEGIN
 END $$;
 
 CREATE OR REPLACE FUNCTION public.withdraw_update_candidate(_id text, _note text)
-RETURNS text LANGUAGE plpgsql SECURITY DEFINER SET search_path = public AS $$
+RETURNS text LANGUAGE plpgsql SECURITY DEFINER SET search_path = '' AS $$
 DECLARE c public.update_candidates;
 BEGIN
   IF NOT public.has_role(auth.uid(), 'admin') THEN RAISE EXCEPTION 'not_admin'; END IF;
@@ -184,9 +179,10 @@ END $$;
 
 -- Admin pause/resume (server-checked, audited via updated_at only).
 CREATE OR REPLACE FUNCTION public.set_update_engine_paused(_paused boolean)
-RETURNS boolean LANGUAGE plpgsql SECURITY DEFINER SET search_path = public AS $$
+RETURNS boolean LANGUAGE plpgsql SECURITY DEFINER SET search_path = '' AS $$
 BEGIN
   IF NOT public.has_role(auth.uid(), 'admin') THEN RAISE EXCEPTION 'not_admin'; END IF;
+  -- Row UPDATE waits for any in-flight FOR SHARE holder (publish/record_revision).
   UPDATE public.update_engine_settings SET paused = _paused, updated_at = now() WHERE id;
   IF NOT FOUND THEN RAISE EXCEPTION 'settings_missing'; END IF;
   RETURN _paused;
@@ -210,29 +206,42 @@ CREATE OR REPLACE FUNCTION public.engine_record_revision(
   _source_id text, _canonical_url text, _content_hash text, _revision_of text,
   _title text, _published_date date, _draft_summary text, _risk text, _risk_reasons text[],
   _flags text[], _contradictions text[], _source_checked_at timestamptz)
-RETURNS text LANGUAGE plpgsql SECURITY DEFINER SET search_path = public AS $$
-DECLARE s public.update_engine_settings; src public.update_sources; host text; st text; cid text;
+RETURNS text LANGUAGE plpgsql SECURITY DEFINER SET search_path = '' AS $$
+DECLARE s public.update_engine_settings; src public.update_sources; m text[]; host text; path text;
+  st text; cid text; ins boolean; cur_state text;
 BEGIN
-  SELECT * INTO s FROM public.update_engine_settings WHERE id;
+  -- Lock order: settings (FOR SHARE, blocks pause until commit) -> source -> candidate.
+  SELECT * INTO s FROM public.update_engine_settings WHERE id FOR SHARE;
   IF NOT FOUND THEN RAISE EXCEPTION 'settings_missing'; END IF;
   IF s.paused THEN RAISE EXCEPTION 'engine_paused'; END IF;
-  SELECT * INTO src FROM public.update_sources WHERE id = _source_id;
+  SELECT * INTO src FROM public.update_sources WHERE id = _source_id FOR SHARE;
   IF NOT FOUND OR NOT src.enabled THEN RAISE EXCEPTION 'source_disabled'; END IF;
-  host := lower(substring(_canonical_url from '^https://([^/:?#]+)'));
-  IF host IS NULL OR NOT host = ANY (src.allowed_hosts) THEN RAISE EXCEPTION 'host_not_allowlisted'; END IF;
+  -- Canonical HTTPS authority only: lowercase host, no userinfo (@), no port (:),
+  -- no backslash/whitespace. Anything else is rejected, never "repaired".
+  m := regexp_match(_canonical_url, '^https://([a-z0-9](?:[a-z0-9.-]*[a-z0-9])?)(/[^?#\s\\]*)?$');
+  IF m IS NULL THEN RAISE EXCEPTION 'url_not_canonical'; END IF;
+  host := m[1]; path := coalesce(m[2], '/');
+  IF NOT host = ANY (src.allowed_hosts) THEN RAISE EXCEPTION 'host_not_allowlisted'; END IF;
+  -- Prefixes end in '/', so '/newsroom/' does not match '/newsroomevil/'. Exact prefix compare, no LIKE.
+  IF NOT EXISTS (SELECT 1 FROM unnest(src.allowed_path_prefixes) p WHERE left(path, length(p)) = p)
+    THEN RAISE EXCEPTION 'path_not_allowlisted'; END IF;
   cid := _source_id || ':' || _content_hash;
-  IF EXISTS (SELECT 1 FROM public.update_candidates WHERE id = cid) THEN
-    UPDATE public.update_candidates SET source_checked_at = greatest(source_checked_at, _source_checked_at) WHERE id = cid;
-    RETURN 'duplicate';
-  END IF;
   st := CASE WHEN s.template_auto_publish_tested AND _risk = 'low' AND cardinality(_flags) = 0 THEN 'auto_eligible' ELSE 'queued' END;
+  -- Atomic: a concurrent duplicate cannot race past an EXISTS check. On conflict only
+  -- source_checked_at advances; state/review fields/history are untouched.
   INSERT INTO public.update_candidates (id, source_id, canonical_url, content_hash, revision_of, title, published_date,
     draft_summary, risk, risk_reasons, flags, contradictions, state, source_checked_at)
   VALUES (cid, _source_id, _canonical_url, _content_hash, _revision_of, _title, _published_date,
-    _draft_summary, _risk, _risk_reasons, _flags, _contradictions, st, _source_checked_at);
-  INSERT INTO public.update_review_events (candidate_id, from_state, to_state, note, actor_id)
-    VALUES (cid, NULL, st, 'worker', NULL);
-  RETURN st;
+    _draft_summary, _risk, _risk_reasons, _flags, _contradictions, st, _source_checked_at)
+  ON CONFLICT (source_id, content_hash) DO UPDATE
+    SET source_checked_at = greatest(public.update_candidates.source_checked_at, EXCLUDED.source_checked_at)
+  RETURNING (xmax = 0), state INTO ins, cur_state;
+  IF ins THEN
+    INSERT INTO public.update_review_events (candidate_id, from_state, to_state, note, actor_id)
+      VALUES (cid, NULL, st, 'worker', NULL);
+    RETURN st;
+  END IF;
+  RETURN 'duplicate:' || cur_state;
 END $$;
 REVOKE ALL ON FUNCTION public.engine_record_revision(text,text,text,text,text,date,text,text,text[],text[],text[],timestamptz) FROM PUBLIC, anon, authenticated;
 GRANT EXECUTE ON FUNCTION public.engine_record_revision(text,text,text,text,text,date,text,text,text[],text[],text[],timestamptz) TO service_role;
@@ -254,7 +263,6 @@ CREATE TABLE public.user_watch_topics (
   user_id uuid NOT NULL, topic text NOT NULL CHECK (length(topic) BETWEEN 2 AND 60),
   created_at timestamptz NOT NULL DEFAULT now(), PRIMARY KEY (user_id, topic)
 );
-GRANT SELECT, INSERT, DELETE ON public.user_watch_topics TO authenticated;
 ALTER TABLE public.user_watch_topics ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Own topics read" ON public.user_watch_topics FOR SELECT TO authenticated USING (auth.uid() = user_id);
 CREATE POLICY "Own topics add" ON public.user_watch_topics FOR INSERT TO authenticated WITH CHECK (auth.uid() = user_id);
@@ -266,11 +274,31 @@ CREATE TABLE public.user_preferences (
   last_seen_updates_at timestamptz,
   updated_at timestamptz NOT NULL DEFAULT now()
 );
-GRANT SELECT, INSERT, UPDATE ON public.user_preferences TO authenticated;
 ALTER TABLE public.user_preferences ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Own prefs read" ON public.user_preferences FOR SELECT TO authenticated USING (auth.uid() = user_id);
 CREATE POLICY "Own prefs insert" ON public.user_preferences FOR INSERT TO authenticated WITH CHECK (auth.uid() = user_id);
 CREATE POLICY "Own prefs update" ON public.user_preferences FOR UPDATE TO authenticated USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
+
+
+-- 0b. Strip default ACLs on every NEW engine object before minimal grants.
+-- (Supabase default privileges may grant broadly; GRANT alone does not remove them.)
+REVOKE ALL ON public.update_engine_settings, public.update_sources, public.update_candidates,
+  public.update_review_events, public.update_job_runs, public.user_watch_topics, public.user_preferences,
+  public.update_sources_public, public.updates_public
+  FROM PUBLIC, anon, authenticated, service_role;
+
+-- 0c. Minimal grants (after revoke).
+GRANT SELECT ON public.update_engine_settings TO authenticated;
+GRANT SELECT ON public.update_engine_settings TO service_role;
+GRANT SELECT ON public.update_sources TO authenticated;
+GRANT SELECT ON public.update_sources TO service_role;
+GRANT SELECT ON public.update_sources_public TO anon, authenticated;
+GRANT SELECT ON public.update_candidates TO authenticated;
+GRANT SELECT ON public.update_candidates TO service_role;
+GRANT SELECT ON public.update_review_events TO authenticated;
+GRANT SELECT ON public.update_job_runs TO authenticated;
+GRANT SELECT, INSERT, DELETE ON public.user_watch_topics TO authenticated;
+GRANT SELECT, INSERT, UPDATE ON public.user_preferences TO authenticated;
 
 -- Deliberately excluded: digest consent and analytics tables (need a verified
 -- marketing email provider and analytics design). No anon read of subscribers.
