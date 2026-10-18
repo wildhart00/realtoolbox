@@ -39,4 +39,11 @@ describe("Workspace Atom preparation",()=>{
     await expect(fetchAtom(async()=>({status:200,headers:{"content-type":"text/html"},body:""}))).rejects.toThrow("unsupported_feed_content");
     await expect(fetchAtom(async()=>({status:200,headers:{"content-type":"text/xml"},body:"x".repeat(524289)}))).rejects.toThrow("byte_limit");
   });
+  it("rejects entity declarations, malformed namespaces and rollover times",()=>{
+    expect(()=>parseAtom('<!DOCTYPE feed [<!ENTITY x SYSTEM "file:///secret">]>'+feed(""),now)).toThrow("unsafe_xml");
+    expect(()=>parseAtom('<a:feed xmlns:a="http://www.w3.org/2005/Atom"><b:entry/></a:feed>',now)).toThrow();
+    expect(()=>parseAtom(feed('<b:entry xmlns:b="https://wrong.example"/>'),now)).toThrow("malformed_namespace");
+    for(const date of ["2026-10-16T24:00:00Z","2026-10-16T00:00:00+25:00","2026-10-16T00:00:60Z"])
+      expect(parseAtom(feed(entry("bad",date)),now)).toEqual([]);
+  });
 });

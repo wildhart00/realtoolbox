@@ -1,0 +1,56 @@
+PASS local socket before SQL
+PASS version
+PASS engine_begin_atom_run() ACL anon
+PASS engine_begin_atom_run() ACL authenticated
+PASS engine_begin_atom_run() ACL service_role
+PASS engine_begin_atom_run() ACL sandbox_exec
+PASS engine_record_atom_draft(uuid,text,text,text,timestamptz,timestamptz,timestamptz) ACL anon
+PASS engine_record_atom_draft(uuid,text,text,text,timestamptz,timestamptz,timestamptz) ACL authenticated
+PASS engine_record_atom_draft(uuid,text,text,text,timestamptz,timestamptz,timestamptz) ACL service_role
+PASS engine_record_atom_draft(uuid,text,text,text,timestamptz,timestamptz,timestamptz) ACL sandbox_exec
+PASS engine_finish_atom_run(uuid,text,text,int) ACL anon
+PASS engine_finish_atom_run(uuid,text,text,int) ACL authenticated
+PASS engine_finish_atom_run(uuid,text,text,int) ACL service_role
+PASS engine_finish_atom_run(uuid,text,text,int) ACL sandbox_exec
+PASS private logs anon
+PASS private logs sandbox_exec
+PASS service direct writes
+PASS paused
+PASS missing settings
+PASS missing settings
+PASS missing settings
+PASS disabled
+PASS exact URL
+PASS manual policy
+PASS cadence
+PASS URL negative https://evil.example/x
+PASS URL negative https://workspaceupdates.googleblog.com.evil.example/x
+PASS URL negative https://user@workspaceupdates.googleblog.com/x
+PASS URL negative http://workspaceupdates.googleblog.com/x
+PASS URL negative https://workspaceupdates.googleblog.com:443/x
+PASS URL negative https://workspaceupdates.googleblog.com/%2fetc
+PASS URL negative https://workspaceupdates.googleblog.com/x?q=x
+PASS concurrent 1 insert 7 duplicate
+PASS one audit
+PASS server created count
+PASS no self lineage
+PASS new version
+PASS lineage
+PASS max two
+PASS manual drafts
+PASS public zero
+PASS invalid finish
+PASS one fetch cap
+PASS changed finish
+PASS double finish
+PASS daily budget
+PASS duplicate next run
+PASS nochange finish
+PASS health not freshness
+PASS failure
+PASS last good retained
+PASS pause serialized
+PASS postpause finish
+PASS empty search paths
+PASS rollback
+55 manual Atom SQL checks passed; 0 failures
