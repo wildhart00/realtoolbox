@@ -66,6 +66,13 @@ export function processFetch(src: SourceDef, result: FetchResult, repo: InMemory
   const items = result.items.slice(0, LIMITS.itemsPerFetch);
   const snapshot = snapshotHash(items);
   if (snapshot === h.lastGoodSnapshotHash) {
+    // No change: refresh source health AND each exact known revision's check time.
+    for (const raw of items) {
+      const v = validateItem(raw, src, result.fetchedAt);
+      if (v.ok !== true || v.expired) continue;
+      const known = repo.findRevision(src.id, contentHash(v.title, v.date, v.body));
+      if (known) repo.touchChecked(known.id, result.fetchedAt);
+    }
     repo.setHealth(recordSuccess(h, opts.now, snapshot, false));
     return { kind: "no_change" };
   }

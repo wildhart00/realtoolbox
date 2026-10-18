@@ -111,3 +111,42 @@ describe("defect 6: settings fail closed", () => {
   });
   it("unknown source id is not configured", () => expect(getSource("nope")).toBeUndefined());
 });
+
+describe("hardening: no-change refreshes exact candidate check time", () => {
+  it("unchanged snapshot advances sourceCheckedAt without touching state", () => {
+    const repo = mk();
+    go(repo, [realtorItem(1)]);
+    const [c0] = [...repo.candidates.values()];
+    const later = "2026-10-18T18:00:00.000Z";
+    expect(go(repo, [realtorItem(1)], createBudget(), later, later).kind).toBe("no_change");
+    const [c1] = [...repo.candidates.values()];
+    expect(c1.sourceCheckedAt).toBe(later);
+    expect(c1.state).toBe(c0.state);
+    expect(repo.candidates.size).toBe(1);
+  });
+});
+
+describe("hardening: URL authority", () => {
+  const A = fixtureSource("appfolio-newsroom");
+  it.each([
+    "https://www.appfolio.com:443@evil.example/newsroom/x",
+    "https://user@www.appfolio.com/newsroom/x",
+    "https://www.appfolio.com:8443/newsroom/x",
+    "https://www.appfolio.com.evil.example/newsroom/x",
+    "https://evilwww.appfolio.com/newsroom/x",
+    "http://www.appfolio.com/newsroom/x",
+  ])("rejects %s", async (u) => {
+    const { checkUrl } = await import("./registry");
+    expect(checkUrl(u, A).ok).toBe(false);
+  });
+});
+
+describe("hardening: path prefix boundary", () => {
+  const A = fixtureSource("appfolio-newsroom");
+  it("accepts allowed prefix, rejects lookalike path", async () => {
+    const { checkUrl } = await import("./registry");
+    expect(checkUrl("https://www.appfolio.com/newsroom/x", A).ok).toBe(true);
+    expect(checkUrl("https://www.appfolio.com/newsroomevil/x", A).ok).toBe(false);
+    expect(checkUrl("https://www.appfolio.com/other/newsroom/x", A).ok).toBe(false);
+  });
+});

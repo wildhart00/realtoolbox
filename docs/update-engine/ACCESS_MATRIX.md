@@ -19,3 +19,5 @@ Candid limits:
 - No client can publish directly; publication requires an admin call that fails when settings are missing or paused.
 - The auto-publish policy flag has no client setter.
 - `updated_at` is bookkeeping only; cards show `source_checked_at` and `published_at`.
+
+Target backend ID: pcnsuyadfqrmythikwpa (serves preview and live). Revision 3 adds REVOKE-before-GRANT, empty search_path, settings FOR SHARE locking, atomic duplicate upsert. SQL is unverified until SQL_TEST_SPEC.md runs on an isolated database.
