@@ -15,17 +15,17 @@ export function manualAtomHandler(deps: {
     if((await request.text()).length)return Response.json({error:'body_denied'},{status:400});
     const admin=await deps.verifyAdmin(request.headers.get('authorization')??'');
     if(!admin)return Response.json({error:'admin_required'},{status:403});
-    let opened=false;
+    let restorationRequired=false;
     let response: Response;
     try {
+      restorationRequired=true;
       const open=await admin.rpc('set_update_engine_paused',{_paused:false});
       if(open.error || open.data!==false)throw Error('pause_gate_refused');
-      opened=true;
       const result=await (deps.collect??runManualAtom)({authorized:true,rpc:deps.workerRpc,now:()=>new Date().toISOString()});
       response=Response.json(result);
     } catch { response=Response.json({error:'manual_run_incomplete'},{status:503}); }
     finally {
-      if(opened) {
+      if(restorationRequired) {
         try {
           const close=await admin.rpc('set_update_engine_paused',{_paused:true});
           if(close.error || close.data!==true) response=Response.json({error:'re_pause_required'},{status:503});

@@ -26,3 +26,8 @@
 - [x] Wire feed-only reservation, metadata draft submission, lineage and health finish; no live effects.
 - [x] Validate mocked whole path, Deno runtime and disposable PG16 SQL/ACL/concurrency.
 - [x] Record approval artifact hashes, exact source/settings changes and credit checkpoint.
+
+# Approved one live manual Atom test
+- [ ] Fix lost-unpause-response cleanup and verify artifact pins/tests.
+- [ ] Verify live target/dependencies/protections; install only approved RPCs/source and manual handler.
+- [ ] Attempt one capped feed request; independently repause/disable/read back and record evidence.
