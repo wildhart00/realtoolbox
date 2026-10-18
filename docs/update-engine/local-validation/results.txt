@@ -83,7 +83,7 @@ PASS member_publish_refused
 PASS withdraw_needs_note
 PASS admin_withdraw
 PASS public_zero_after_withdraw
-PASS worker_cannot_set_published
+FAIL worker_cannot_set_published :: got [ERROR:  permission denied for function review_update_candidate] want /not_admin/
 == F. own-user rows
 PASS own_pref_insert
 PASS other_user_pref_insert_denied
@@ -91,10 +91,10 @@ PASS other_user_pref_invisible
 PASS anon_no_prefs
 == C. concurrent pause serialization
 PASS admin_approve_h2
-PASS pause_waits_for_publish (2.009728435s)
+PASS pause_waits_for_publish (2.009456670s)
 PASS worker_after_pause
 PASS admin_unpause2
-PASS pause_waits_for_worker (2.010630834s)
+PASS pause_waits_for_worker (2.010746839s)
 PASS rolled_back_unpause_keeps_paused
 PASS admin_unpause3
 PASS no_deadlock_40_interleaved
@@ -102,4 +102,4 @@ PASS no_deadlock_40_interleaved
 PASS worker_settings_missing
 PASS pause_settings_missing
 PASS settings_restored_after_rollback
-TOTAL pass=93 fail=0
+TOTAL pass=92 fail=1

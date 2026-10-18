@@ -1,0 +1,15 @@
+engine_record_revision|anon|f
+engine_record_revision|authenticated|f
+engine_record_revision|service_role|t
+publish_update_candidate|anon|f
+publish_update_candidate|authenticated|t
+publish_update_candidate|service_role|f
+review_update_candidate|anon|f
+review_update_candidate|authenticated|t
+review_update_candidate|service_role|f
+set_update_engine_paused|anon|f
+set_update_engine_paused|authenticated|t
+set_update_engine_paused|service_role|f
+withdraw_update_candidate|anon|f
+withdraw_update_candidate|authenticated|t
+withdraw_update_candidate|service_role|f
