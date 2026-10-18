@@ -86,7 +86,7 @@ expect member_publish_refused 'not_admin' authenticated $MEMBER "SELECT public.p
 expect withdraw_needs_note 'note_required' authenticated $ADMIN "SELECT public.withdraw_update_candidate('appfolio-newsroom:h1','')"
 expect admin_withdraw '^withdrawn$' authenticated $ADMIN "SELECT public.withdraw_update_candidate('appfolio-newsroom:h1','synthetic')"
 expect public_zero_after_withdraw '^0$' anon "" "SELECT count(*) FROM public.updates_public"
-expect worker_cannot_set_published 'not_admin' service_role "" "SELECT public.review_update_candidate('appfolio-newsroom:h2','published','x')"
+expect worker_cannot_set_published 'permission denied for function' service_role "" "SELECT public.review_update_candidate('appfolio-newsroom:h2','published','x')"
 
 echo "== F. own-user rows"
 expect own_pref_insert 'INSERT 0 1|^$' authenticated $MEMBER "INSERT INTO public.user_preferences (user_id) VALUES ('$MEMBER')"
