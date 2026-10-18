@@ -18,14 +18,16 @@ import {
 // Stacks (/stacks/investor, /stacks/agent) are intentionally absent — unpublished
 // from navigation while the routes stay live. See the note in App.tsx.
 const navLinks = [
-  { name: "Toolbox", href: "/toolbox" },
-  { name: "How it works", href: "/how-it-works" },
+  { name: "Updates", href: "/#updates" },
+  { name: "Find a tool", href: "/#find-a-tool" },
   { name: "Browse Tools", href: "/browse" },
+  { name: "Toolbox", href: "/toolbox" },
   { name: "Resources", href: "/resources" },
   { name: "Blog", href: "/blog" },
 ];
 
 const mobileExtraLinks = [
+  { name: "How it works", href: "/how-it-works" },
   { name: "Integrations", href: "/integrations" },
   { name: "Agents", href: "/agents" },
 ];

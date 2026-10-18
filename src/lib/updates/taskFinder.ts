@@ -1,9 +1,22 @@
 import type { Audience } from "./seed";
 
 /**
- * Conservative, static task → tool mapping over tools already in the directory.
- * Matches are based on each vendor's own description, not hands-on testing.
+ * Conservative, static task → tool mapping over tools already published in the
+ * directory (slugs verified by read-only query on 2026-10-18). Matches are based
+ * on each vendor's own description, not hands-on testing.
  */
+export const TOOL_NAMES: Record<string, string> = {
+  canva: "Canva",
+  "fireflies-ai": "Fireflies.ai",
+  frontdesk: "Frontdesk",
+  gamma: "Gamma",
+  lovable: "Lovable",
+  n8n: "n8n",
+  "perspective-ai": "Perspective AI",
+  resimpli: "ReSimpli",
+  structurely: "Structurely",
+};
+
 export interface FinderTask {
   id: string;
   label: string;
