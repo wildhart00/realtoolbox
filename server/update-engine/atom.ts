@@ -1,7 +1,10 @@
 import { DOMParser, type Element } from "@xmldom/xmldom";
 import { createHash } from "node:crypto";
-import { HTTP_LIMITS, pinnedHttps, type Wire } from "./http";
-import { isValidIsoDate } from "../../src/lib/engine/extract";
+import { HTTP_LIMITS, pinnedHttps, type Wire } from "./transport.ts";
+function isValidIsoDate(d: string): boolean {
+  const t = new Date(d + "T00:00:00Z");
+  return Number.isFinite(t.getTime()) && t.toISOString().slice(0,10) === d;
+}
 
 export const ATOM_SOURCE_PROPOSAL = {
   id: "google-workspace-atom", enabled: false,
@@ -22,6 +25,9 @@ function scalar(e: Element, name: string): string {
 }
 function timestamp(raw: string): number {
   if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,3})?(?:Z|[+-]\d{2}:\d{2})$/.test(raw) || !isValidIsoDate(raw.slice(0,10))) throw new Error("invalid_atom_date");
+  const time = raw.slice(11,19).split(":").map(Number);
+  const zone = raw.match(/([+-])(\d{2}):(\d{2})$/);
+  if ((time[0] ?? 24)>23 || (time[1] ?? 60)>59 || (time[2] ?? 60)>59 || (zone && (Number(zone[2])>23 || Number(zone[3])>59))) throw new Error("invalid_atom_date");
   const value = Date.parse(raw);
   if (!Number.isFinite(value)) throw new Error("invalid_atom_date");
   return value;
@@ -48,6 +54,7 @@ export function parseAtom(xml: string, now: string, knownHashes: ReadonlySet<str
   const nowMs = Date.parse(now); if (!Number.isFinite(nowMs)) throw new Error("invalid_clock");
   const parsed: AtomMetadata[] = [];
   const entries = children(root,"entry");
+  if (Array.from(root.childNodes).some(n => n.nodeType === 1 && n.localName === "entry" && n.namespaceURI !== NS)) throw new Error("malformed_namespace");
   if (entries.length > 100) throw new Error("entry_limit");
   for (const entry of entries) {
     try {
@@ -88,7 +95,7 @@ export function atomDrafts(xml: string, now: string, knownHashes?: ReadonlySet<s
     _source_id:ATOM_SOURCE_PROPOSAL.id, _canonical_url:e.alternateLink, _content_hash:e.contentHash,
     _revision_of:null, _title:e.title, _published_date:e.published.slice(0,10),
     _draft_summary:`Workspace feed metadata dated ${e.published}: "${e.title}". Feed updated: ${e.updated}. Manual review required; not hands-on tested.`,
-    _risk:"high", _risk_reasons:[], _flags:["feed_metadata_only","manual_review_required","hands_on_not_tested",...(e.chronology==="background"?["old_publication_not_new"]:[])],
+    _risk:"high", _risk_reasons:["metadata_requires_manual_review"], _flags:["feed_metadata_only","manual_review_required","hands_on_not_tested",...(e.chronology==="background"?["old_publication_not_new"]:[])],
     _contradictions:[], _source_checked_at:now,
   }}));
 }

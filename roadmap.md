@@ -22,3 +22,7 @@
 # Atom final preparation
 - [x] Prepare exact-URL Workspace Atom transport/parser and two manual-review draft payloads with synthetic tests (165 full-suite checks).
 - [x] Document proposed allowlist and blocked newsroom adapters; no live fetch, SQL or activation. Manual-run wiring waits for separate approval.
+# Complete manual Atom path (preparation only)
+- [ ] Wire feed-only reservation, metadata draft submission, lineage and health finish; no live effects.
+- [ ] Validate mocked whole path, Deno runtime and disposable PG16 SQL/ACL/concurrency.
+- [ ] Record approval artifact hashes, exact source/settings changes and credit checkpoint.
