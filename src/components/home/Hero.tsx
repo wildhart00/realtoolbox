@@ -1,5 +1,4 @@
 import { ArrowRight } from "lucide-react";
-import { Link } from "react-router-dom";
 
 /**
  * Homepage hero — AI developments and tool discovery for residential real estate
@@ -8,28 +7,25 @@ import { Link } from "react-router-dom";
  */
 export function Hero() {
   return (
-    <section className="px-6 lg:px-10 pt-[72px] sm:pt-[88px] pb-10 text-center mx-auto" style={{ maxWidth: 880 }}>
-      <div className="inline-flex items-center gap-2 bg-accent/[0.08] border border-accent/20 rounded-full px-3.5 py-[5px] mb-[22px]">
-        <span className="h-[5px] w-[5px] rounded-full bg-accent" aria-hidden />
-        <span className="text-[11px] tracking-[0.16em] text-accent font-semibold uppercase">
-          For residential investors &amp; agents
-        </span>
-      </div>
+    <section className="px-6 lg:px-10 pt-8 sm:pt-14 pb-4 sm:pb-6 text-left sm:text-center mx-auto" style={{ maxWidth: 1100 }}>
+      <p className="text-[13px] tracking-[0.14em] text-accent font-semibold uppercase mb-3">
+        A briefing for residential investors &amp; agents
+      </p>
 
       <h1
         className="font-display font-bold text-foreground mb-[18px]"
-        style={{ fontSize: "clamp(36px, 6vw, 60px)", lineHeight: 1.08, letterSpacing: "-0.03em" }}
+        style={{ fontSize: "clamp(30px, 5vw, 52px)", lineHeight: 1.1, letterSpacing: "-0.03em" }}
       >
         What changed in real estate AI,{" "}
-        <span className="italic text-accent">and what's worth trying.</span>
+        <span className="italic text-foreground/70">and what's worth trying.</span>
       </h1>
 
-      <p className="text-[16px] text-muted-foreground leading-[1.65] mx-auto" style={{ maxWidth: 640 }}>
-        Dated vendor announcements with why they may matter for your work, what hasn't been verified,
-        and a plain next step. Plus a task-based way to find tools for the job in front of you.
+      <p className="text-[16px] text-muted-foreground leading-[1.6] sm:mx-auto" style={{ maxWidth: 620 }}>
+        Dated vendor announcements, why they may matter, and a plain next step — plus a way to find
+        tools by the task in front of you.
       </p>
 
-      <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
+      <div className="mt-6 flex flex-col sm:flex-row sm:items-center sm:justify-center gap-3">
         <a
           href="#updates"
           className="inline-flex min-h-11 items-center justify-center gap-2 rounded-[10px] bg-foreground hover:bg-foreground/90 px-6 py-3 text-[14px] font-semibold text-background shadow-lg transition-base"
@@ -44,10 +40,6 @@ export function Hero() {
         </a>
       </div>
 
-      <p className="mt-5 text-[13px] text-muted-foreground">
-        Also available: ready-made AI skills in the{" "}
-        <Link to="/toolbox" className="text-accent underline-offset-2 hover:underline">toolbox</Link>.
-      </p>
     </section>
   );
 }
