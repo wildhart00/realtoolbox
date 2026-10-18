@@ -189,10 +189,10 @@ BEGIN
 END $$;
 -- template_auto_publish_tested has NO client setter; changing it needs a reviewed migration.
 
-REVOKE ALL ON FUNCTION public.review_update_candidate(text,text,text) FROM PUBLIC, anon;
-REVOKE ALL ON FUNCTION public.publish_update_candidate(text,text) FROM PUBLIC, anon;
-REVOKE ALL ON FUNCTION public.withdraw_update_candidate(text,text) FROM PUBLIC, anon;
-REVOKE ALL ON FUNCTION public.set_update_engine_paused(boolean) FROM PUBLIC, anon;
+REVOKE ALL ON FUNCTION public.review_update_candidate(text,text,text) FROM PUBLIC, anon, authenticated, service_role;
+REVOKE ALL ON FUNCTION public.publish_update_candidate(text,text) FROM PUBLIC, anon, authenticated, service_role;
+REVOKE ALL ON FUNCTION public.withdraw_update_candidate(text,text) FROM PUBLIC, anon, authenticated, service_role;
+REVOKE ALL ON FUNCTION public.set_update_engine_paused(boolean) FROM PUBLIC, anon, authenticated, service_role;
 GRANT EXECUTE ON FUNCTION public.review_update_candidate(text,text,text) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.publish_update_candidate(text,text) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.withdraw_update_candidate(text,text) TO authenticated;
@@ -243,11 +243,13 @@ BEGIN
   END IF;
   RETURN 'duplicate:' || cur_state;
 END $$;
-REVOKE ALL ON FUNCTION public.engine_record_revision(text,text,text,text,text,date,text,text,text[],text[],text[],timestamptz) FROM PUBLIC, anon, authenticated;
+REVOKE ALL ON FUNCTION public.engine_record_revision(text,text,text,text,text,date,text,text,text[],text[],text[],timestamptz) FROM PUBLIC, anon, authenticated, service_role;
 GRANT EXECUTE ON FUNCTION public.engine_record_revision(text,text,text,text,text,date,text,text,text[],text[],text[],timestamptz) TO service_role;
 -- Snapshot/health updates would get a similar narrow function before activation.
 
 -- 6. Public cards: published only, real source-check time ------------------
+-- Deliberate owner-rights projection: fixed safe columns, published-only filter;
+-- raw tables stay denied to anon. Reviewed decision, not a default.
 CREATE VIEW public.updates_public AS
   SELECT c.id, s.vendor, c.title, c.draft_summary AS summary, c.canonical_url AS source_url,
          c.published_date AS source_published_date,
