@@ -19,7 +19,7 @@ function StepCard({ step }: { step: ArcStep }) {
       }
     >
       {step.free && (
-        <span className="absolute -top-2.5 left-4 inline-flex items-center rounded-full bg-gradient-to-r from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] px-2 py-[2px] text-[9px] font-bold uppercase tracking-[0.14em] text-white shadow-sm">
+        <span className="absolute -top-2.5 left-4 inline-flex items-center rounded-full bg-foreground hover:bg-foreground/90 px-2 py-[2px] text-[9px] font-bold uppercase tracking-[0.14em] text-background shadow-sm">
           Free
         </span>
       )}

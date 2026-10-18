@@ -115,7 +115,7 @@ export function Topbar() {
           <button
             type="button"
             onClick={openCapture}
-            className="inline-flex items-center justify-center rounded-[10px] bg-gradient-to-r from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] px-4 py-2 text-[13px] font-semibold text-white shadow-lg shadow-[hsl(252_84%_50%)]/25 hover:shadow-[hsl(252_84%_50%)]/40 transition-base"
+            className="inline-flex items-center justify-center rounded-[10px] bg-foreground hover:bg-foreground/90 px-4 py-2 text-[13px] font-semibold text-background transition-base"
           >
             Start free
           </button>
@@ -219,7 +219,7 @@ export function Topbar() {
             <button
               type="button"
               onClick={openCapture}
-              className="block w-full mt-3 text-center rounded-[10px] bg-gradient-to-r from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] px-4 py-2 text-sm font-semibold text-white"
+              className="block w-full mt-3 text-center rounded-[10px] bg-foreground hover:bg-foreground/90 px-4 py-2 text-sm font-semibold text-background"
             >
               Start free
             </button>

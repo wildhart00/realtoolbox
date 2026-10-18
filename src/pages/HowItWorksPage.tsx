@@ -67,7 +67,7 @@ export default function HowItWorksPage() {
           </div>
           <h1 className="mt-5 font-display text-4xl lg:text-[56px] font-bold leading-[1.03] tracking-[-0.03em] text-foreground">
             You already have the AI.{" "}
-            <span className="bg-gradient-to-r from-accent to-[hsl(265_84%_75%)] bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-accent to-accent bg-clip-text text-transparent">
               This is what to put in it.
             </span>
           </h1>
@@ -243,7 +243,7 @@ export default function HowItWorksPage() {
                 <span className="block text-[13.5px] font-semibold text-foreground leading-snug">
                   {step.title}
                   {step.free && (
-                    <span className="ml-1.5 inline-flex items-center rounded-full bg-gradient-to-r from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] px-1.5 py-[1px] text-[9px] font-bold uppercase tracking-[0.12em] text-white align-middle">
+                    <span className="ml-1.5 inline-flex items-center rounded-full bg-foreground hover:bg-foreground/90 px-1.5 py-[1px] text-[9px] font-bold uppercase tracking-[0.12em] text-background align-middle">
                       Free
                     </span>
                   )}
@@ -267,7 +267,7 @@ export default function HowItWorksPage() {
           <div className="mt-7 flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
               to={freeCtaTarget}
-              className="inline-flex items-center justify-center gap-2 rounded-[10px] bg-gradient-to-r from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] px-6 py-3 text-[14px] font-semibold text-white shadow-lg shadow-[hsl(252_84%_50%)]/25 hover:shadow-[hsl(252_84%_50%)]/40 transition-base"
+              className="inline-flex items-center justify-center gap-2 rounded-[10px] bg-foreground hover:bg-foreground/90 px-6 py-3 text-[14px] font-semibold text-background transition-base"
             >
               Get the free Deal Screen <ArrowRight className="h-4 w-4" />
             </Link>

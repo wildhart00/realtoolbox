@@ -124,7 +124,7 @@ export function ResourceArticleLayout({
           <div className="mt-6 flex flex-col sm:flex-row items-start sm:items-center gap-4">
             <Link
               to={freeDealScreenPath(!!user)}
-              className="inline-flex items-center justify-center gap-2 rounded-[10px] bg-gradient-to-r from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] px-5 py-2.5 text-[13.5px] font-semibold text-white shadow-lg shadow-[hsl(252_84%_50%)]/20 hover:shadow-[hsl(252_84%_50%)]/35 transition-base"
+              className="inline-flex items-center justify-center gap-2 rounded-[10px] bg-foreground hover:bg-foreground/90 px-5 py-2.5 text-[13.5px] font-semibold text-background shadow-lg shadow-[hsl(252_84%_50%)]/20 hover:shadow-[hsl(252_84%_50%)]/35 transition-base"
             >
               Get the free Deal Screen <ArrowRight className="h-4 w-4" />
             </Link>

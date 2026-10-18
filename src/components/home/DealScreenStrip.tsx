@@ -36,7 +36,7 @@ export function DealScreenStrip() {
             <div className="flex flex-col items-start md:items-end gap-2 shrink-0">
               <Link
                 to={freeDealScreenPath(!!user)}
-                className="inline-flex items-center justify-center gap-2 rounded-[10px] bg-gradient-to-r from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] px-6 py-3.5 text-[14px] font-semibold text-white shadow-lg shadow-[hsl(252_84%_50%)]/25 hover:shadow-[hsl(252_84%_50%)]/40 transition-base"
+                className="inline-flex items-center justify-center gap-2 rounded-[10px] bg-foreground hover:bg-foreground/90 px-6 py-3.5 text-[14px] font-semibold text-background transition-base"
               >
                 Get the free Deal Screen <ArrowRight className="h-4 w-4" />
               </Link>

@@ -280,7 +280,7 @@ export default function SkillDetailPage() {
                       type="button"
                       onClick={() => startCheckout("investor", `/toolbox/${skill.slug}`)}
                       disabled={checkoutLoading}
-                      className="inline-flex items-center justify-center gap-2 rounded-[10px] bg-gradient-to-r from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] px-6 py-3 text-[14px] font-semibold text-white shadow-lg shadow-[hsl(252_84%_50%)]/25 hover:shadow-[hsl(252_84%_50%)]/40 transition-base disabled:opacity-70"
+                      className="inline-flex items-center justify-center gap-2 rounded-[10px] bg-foreground hover:bg-foreground/90 px-6 py-3 text-[14px] font-semibold text-background transition-base disabled:opacity-70"
                     >
                       {checkoutLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
                       Get the Investor Toolbox — $79{" "}
@@ -310,7 +310,7 @@ export default function SkillDetailPage() {
                     type="button"
                     onClick={fetchAndCopySkill}
                     disabled={copying}
-                    className="inline-flex items-center justify-center gap-2 rounded-[10px] bg-gradient-to-r from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] px-6 py-3 text-[14px] font-semibold text-white shadow-lg shadow-[hsl(252_84%_50%)]/25 hover:shadow-[hsl(252_84%_50%)]/40 transition-base disabled:opacity-70"
+                    className="inline-flex items-center justify-center gap-2 rounded-[10px] bg-foreground hover:bg-foreground/90 px-6 py-3 text-[14px] font-semibold text-background transition-base disabled:opacity-70"
                   >
                     {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
                     {copying ? "Copying…" : copied ? "Copied!" : "Copy skill"}
@@ -344,7 +344,7 @@ export default function SkillDetailPage() {
                     type="button"
                     onClick={handleFreeCopyClick}
                     disabled={copying}
-                    className="inline-flex items-center justify-center gap-2 rounded-[10px] bg-gradient-to-r from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] px-6 py-3 text-[14px] font-semibold text-white shadow-lg shadow-[hsl(252_84%_50%)]/25 hover:shadow-[hsl(252_84%_50%)]/40 transition-base disabled:opacity-70"
+                    className="inline-flex items-center justify-center gap-2 rounded-[10px] bg-foreground hover:bg-foreground/90 px-6 py-3 text-[14px] font-semibold text-background transition-base disabled:opacity-70"
                   >
                     {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
                     {copying

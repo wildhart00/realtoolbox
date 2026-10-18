@@ -107,7 +107,7 @@ export function SkillPreviewCard({
                   stop(e);
                   startCheckout("investor", "/");
                 }}
-                className="inline-flex items-center justify-center rounded-[10px] bg-gradient-to-r from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] px-4 py-2 text-[13px] font-semibold text-white shadow-md shadow-[hsl(252_84%_50%)]/20 hover:shadow-[hsl(252_84%_50%)]/35 transition-base disabled:opacity-70"
+                className="inline-flex items-center justify-center rounded-[10px] bg-foreground hover:bg-foreground/90 px-4 py-2 text-[13px] font-semibold text-background shadow-md shadow-[hsl(252_84%_50%)]/20 hover:shadow-[hsl(252_84%_50%)]/35 transition-base disabled:opacity-70"
               >
                 Get the Investor Toolbox — $79
               </button>
@@ -128,7 +128,7 @@ export function SkillPreviewCard({
           <Link
             to={`/toolbox/${slug}`}
             onClick={stop}
-            className="inline-flex items-center justify-center rounded-[10px] bg-gradient-to-r from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] px-4 py-2 text-[13px] font-semibold text-white shadow-md shadow-[hsl(252_84%_50%)]/20 hover:shadow-[hsl(252_84%_50%)]/35 transition-base"
+            className="inline-flex items-center justify-center rounded-[10px] bg-foreground hover:bg-foreground/90 px-4 py-2 text-[13px] font-semibold text-background shadow-md shadow-[hsl(252_84%_50%)]/20 hover:shadow-[hsl(252_84%_50%)]/35 transition-base"
           >
             Open skill
           </Link>
@@ -136,7 +136,7 @@ export function SkillPreviewCard({
           <Link
             to={`/toolbox/${slug}`}
             onClick={stop}
-            className="inline-flex items-center justify-center rounded-[10px] bg-gradient-to-r from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] px-4 py-2 text-[13px] font-semibold text-white shadow-md shadow-[hsl(252_84%_50%)]/20 hover:shadow-[hsl(252_84%_50%)]/35 transition-base"
+            className="inline-flex items-center justify-center rounded-[10px] bg-foreground hover:bg-foreground/90 px-4 py-2 text-[13px] font-semibold text-background shadow-md shadow-[hsl(252_84%_50%)]/20 hover:shadow-[hsl(252_84%_50%)]/35 transition-base"
           >
             Start free
           </Link>

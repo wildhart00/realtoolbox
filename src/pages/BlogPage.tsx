@@ -134,7 +134,7 @@ function BlogIndex() {
           </div>
           <h1 className="mt-5 font-display text-4xl lg:text-[56px] font-bold leading-[1.03] tracking-[-0.03em] text-foreground">
             Which tools are worth it,{" "}
-            <span className="bg-gradient-to-r from-accent to-[hsl(265_84%_75%)] bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-accent to-accent bg-clip-text text-transparent">
               and which aren&apos;t.
             </span>
           </h1>

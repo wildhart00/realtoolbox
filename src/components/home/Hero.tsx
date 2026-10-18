@@ -32,7 +32,7 @@ export function Hero() {
       <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
         <a
           href="#updates"
-          className="inline-flex min-h-11 items-center justify-center gap-2 rounded-[10px] bg-gradient-to-r from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] px-6 py-3 text-[14px] font-semibold text-white shadow-lg transition-base"
+          className="inline-flex min-h-11 items-center justify-center gap-2 rounded-[10px] bg-foreground hover:bg-foreground/90 px-6 py-3 text-[14px] font-semibold text-background shadow-lg transition-base"
         >
           See recent updates <ArrowRight className="h-4 w-4" aria-hidden />
         </a>

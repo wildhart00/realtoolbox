@@ -70,7 +70,7 @@ export function BlogEmailCapture({
           <button
             type="submit"
             disabled={busy}
-            className="rounded-lg bg-gradient-to-r from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] px-5 py-2.5 text-[13px] font-semibold text-white shadow-lg shadow-[hsl(252_84%_50%)]/20 hover:shadow-[hsl(252_84%_50%)]/35 transition-base disabled:opacity-60"
+            className="rounded-lg bg-foreground hover:bg-foreground/90 px-5 py-2.5 text-[13px] font-semibold text-background shadow-lg shadow-[hsl(252_84%_50%)]/20 hover:shadow-[hsl(252_84%_50%)]/35 transition-base disabled:opacity-60"
           >
             {busy ? "…" : "Subscribe"}
           </button>

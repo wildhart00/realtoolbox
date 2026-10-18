@@ -108,19 +108,19 @@ export default function InvestorToolboxPage() {
           </div>
           <h1 className="mt-5 font-display text-4xl lg:text-[56px] font-bold leading-[1.03] tracking-[-0.03em] text-foreground">
             Make your first real deal decision{" "}
-            <span className="bg-gradient-to-r from-accent to-[hsl(265_84%_75%)] bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-accent to-accent bg-clip-text text-transparent">
               without losing your shirt.
             </span>
           </h1>
           <p className="mt-5 text-[16.5px] lg:text-lg text-muted-foreground leading-[1.65]">
             Seven skills that take a property from a raw address to a number you can defend at the
-            table — each one asking the question a seasoned operator would ask next, and none of
-            them willing to invent a figure to get there.
+            table — each one asking the question a seasoned operator would ask next, and written to
+            ask you for a figure rather than supply one.
           </p>
           <div className="mt-7 flex flex-col sm:flex-row items-start sm:items-center gap-4">
             <a
               href="#the-seven"
-              className="inline-flex items-center justify-center gap-2 rounded-[10px] bg-gradient-to-r from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] px-5 py-3 text-[14px] font-semibold text-white shadow-lg shadow-[hsl(252_84%_50%)]/20 hover:shadow-[hsl(252_84%_50%)]/35 transition-base"
+              className="inline-flex items-center justify-center gap-2 rounded-[10px] bg-foreground hover:bg-foreground/90 px-5 py-3 text-[14px] font-semibold text-background shadow-lg shadow-[hsl(252_84%_50%)]/20 hover:shadow-[hsl(252_84%_50%)]/35 transition-base"
             >
               See the seven skills <ArrowRight className="h-4 w-4" />
             </a>
@@ -167,7 +167,7 @@ export default function InvestorToolboxPage() {
                 <span className="block text-[13.5px] font-semibold text-foreground leading-snug">
                   {step.title}
                   {step.free && (
-                    <span className="ml-1.5 inline-flex items-center rounded-full bg-gradient-to-r from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] px-1.5 py-[1px] text-[9px] font-bold uppercase tracking-[0.12em] text-white align-middle">
+                    <span className="ml-1.5 inline-flex items-center rounded-full bg-foreground hover:bg-foreground/90 px-1.5 py-[1px] text-[9px] font-bold uppercase tracking-[0.12em] text-background align-middle">
                       Free
                     </span>
                   )}
@@ -255,7 +255,7 @@ export default function InvestorToolboxPage() {
             type="button"
             onClick={() => startCheckout("investor", "/toolbox/investor")}
             disabled={loading}
-            className="mt-7 inline-flex items-center justify-center gap-2 rounded-[10px] bg-gradient-to-r from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] px-6 py-3 text-[14px] font-semibold text-white shadow-lg shadow-[hsl(252_84%_50%)]/20 hover:shadow-[hsl(252_84%_50%)]/35 transition-base disabled:opacity-70"
+            className="mt-7 inline-flex items-center justify-center gap-2 rounded-[10px] bg-foreground hover:bg-foreground/90 px-6 py-3 text-[14px] font-semibold text-background shadow-lg shadow-[hsl(252_84%_50%)]/20 hover:shadow-[hsl(252_84%_50%)]/35 transition-base disabled:opacity-70"
           >
             {loading ? <><Loader2 className="h-4 w-4 animate-spin" /> Starting…</> : <>Get the Investor Toolbox — $79</>}
           </button>

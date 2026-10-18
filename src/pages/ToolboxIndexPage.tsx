@@ -120,7 +120,7 @@ export default function ToolboxIndexPage() {
           </div>
           <h1 className="mt-5 font-display text-4xl lg:text-[56px] font-bold leading-[1.03] tracking-[-0.03em] text-foreground">
             A working set of skills for{" "}
-            <span className="bg-gradient-to-r from-accent to-[hsl(265_84%_75%)] bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-accent to-accent bg-clip-text text-transparent">
               deciding on a deal.
             </span>
           </h1>
@@ -132,7 +132,7 @@ export default function ToolboxIndexPage() {
           <div className="mt-7 flex flex-col sm:flex-row items-start sm:items-center gap-4">
             <Link
               to={freeCtaTarget}
-              className="inline-flex items-center justify-center gap-2 rounded-[10px] bg-gradient-to-r from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] px-5 py-3 text-[14px] font-semibold text-white shadow-lg shadow-[hsl(252_84%_50%)]/20 hover:shadow-[hsl(252_84%_50%)]/35 transition-base"
+              className="inline-flex items-center justify-center gap-2 rounded-[10px] bg-foreground hover:bg-foreground/90 px-5 py-3 text-[14px] font-semibold text-background shadow-lg shadow-[hsl(252_84%_50%)]/20 hover:shadow-[hsl(252_84%_50%)]/35 transition-base"
             >
               Start free with Deal Screen <ArrowRight className="h-4 w-4" />
             </Link>
@@ -279,7 +279,7 @@ export default function ToolboxIndexPage() {
             </div>
             <Link
               to={freeCtaTarget}
-              className="shrink-0 inline-flex items-center justify-center gap-2 rounded-[10px] bg-gradient-to-r from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] px-6 py-3.5 text-[14px] font-semibold text-white shadow-lg shadow-[hsl(252_84%_50%)]/25 hover:shadow-[hsl(252_84%_50%)]/40 transition-base"
+              className="shrink-0 inline-flex items-center justify-center gap-2 rounded-[10px] bg-foreground hover:bg-foreground/90 px-6 py-3.5 text-[14px] font-semibold text-background transition-base"
             >
               Get the free Deal Screen <ArrowRight className="h-4 w-4" />
             </Link>
@@ -305,7 +305,7 @@ export default function ToolboxIndexPage() {
             <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)]" />
             <div className="relative m-[1px] rounded-[15px] bg-card p-6 lg:p-7 flex flex-col gap-5 flex-1">
               <div>
-                <span className="inline-flex items-center rounded-full bg-gradient-to-r from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] px-2.5 py-[3px] text-[10px] font-bold uppercase tracking-[0.12em] text-white">
+                <span className="inline-flex items-center rounded-full bg-foreground hover:bg-foreground/90 px-2.5 py-[3px] text-[10px] font-bold uppercase tracking-[0.12em] text-background">
                   Available now
                 </span>
                 <h3 className="mt-3 font-display text-[22px] text-foreground tracking-tight leading-tight">
@@ -340,7 +340,7 @@ export default function ToolboxIndexPage() {
                   type="button"
                   onClick={() => startCheckout("investor", "/toolbox")}
                   disabled={loading}
-                  className="inline-flex items-center justify-center gap-2 rounded-[10px] bg-gradient-to-r from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] px-5 py-2.5 text-[13px] font-semibold text-white shadow-lg shadow-[hsl(252_84%_50%)]/20 hover:shadow-[hsl(252_84%_50%)]/35 transition-base disabled:opacity-70"
+                  className="inline-flex items-center justify-center gap-2 rounded-[10px] bg-foreground hover:bg-foreground/90 px-5 py-2.5 text-[13px] font-semibold text-background shadow-lg shadow-[hsl(252_84%_50%)]/20 hover:shadow-[hsl(252_84%_50%)]/35 transition-base disabled:opacity-70"
                 >
                   {loading ? <><Loader2 className="h-4 w-4 animate-spin" /> Starting…</> : <>Get the Investor Toolbox → $79</>}
                 </button>

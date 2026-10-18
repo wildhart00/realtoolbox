@@ -58,7 +58,7 @@ export function OfferBand() {
                 <span
                   className={
                     t.badge.accent
-                      ? "inline-flex items-center rounded-full bg-gradient-to-r from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] px-2 py-[2px] text-[9px] font-bold uppercase tracking-[0.12em] text-white"
+                      ? "inline-flex items-center rounded-full bg-foreground hover:bg-foreground/90 px-2 py-[2px] text-[9px] font-bold uppercase tracking-[0.12em] text-background"
                       : "inline-flex items-center rounded-full border border-foreground/15 bg-foreground/[0.04] px-2 py-[2px] text-[9px] font-bold uppercase tracking-[0.12em] text-muted-foreground"
                   }
                 >
@@ -84,7 +84,7 @@ export function OfferBand() {
         <div className="border-t border-foreground/[0.06] pt-5 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-5">
           <Link
             to="/toolbox/investor"
-            className="inline-flex items-center justify-center gap-2 rounded-[10px] bg-gradient-to-r from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] px-5 py-2.5 text-[13px] font-semibold text-white shadow-lg shadow-[hsl(252_84%_50%)]/20 hover:shadow-[hsl(252_84%_50%)]/35 transition-base"
+            className="inline-flex items-center justify-center gap-2 rounded-[10px] bg-foreground hover:bg-foreground/90 px-5 py-2.5 text-[13px] font-semibold text-background shadow-lg shadow-[hsl(252_84%_50%)]/20 hover:shadow-[hsl(252_84%_50%)]/35 transition-base"
           >
             See what&apos;s inside <ArrowRight className="h-4 w-4" />
           </Link>

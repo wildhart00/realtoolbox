@@ -126,7 +126,7 @@ export default function AgentsPage() {
           </div>
           <h1 className="mt-5 font-display text-5xl lg:text-[64px] font-bold leading-[1.02] tracking-[-0.03em] text-foreground">
             Agentic AI for{" "}
-            <span className="bg-gradient-to-r from-accent to-[hsl(265_84%_75%)] bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-accent to-accent bg-clip-text text-transparent">
               real estate
             </span>
           </h1>
