@@ -111,3 +111,32 @@ describe("defect 6: settings fail closed", () => {
   });
   it("unknown source id is not configured", () => expect(getSource("nope")).toBeUndefined());
 });
+
+describe("hardening: no-change refreshes exact candidate check time", () => {
+  it("unchanged snapshot advances sourceCheckedAt without touching state", () => {
+    const repo = mk();
+    go(repo, [realtorItem(1)]);
+    const [c0] = [...repo.candidates.values()];
+    const later = "2026-10-18T18:00:00.000Z";
+    expect(go(repo, [realtorItem(1)], createBudget(), later, later).kind).toBe("no_change");
+    const [c1] = [...repo.candidates.values()];
+    expect(c1.sourceCheckedAt).toBe(later);
+    expect(c1.state).toBe(c0.state);
+    expect(repo.candidates.size).toBe(1);
+  });
+});
+
+describe("hardening: URL authority", () => {
+  const A = fixtureSource("appfolio-newsroom");
+  it.each([
+    "https://www.appfolio.com:443@evil.example/news",
+    "https://user@www.appfolio.com/news",
+    "https://www.appfolio.com:8443/news",
+    "https://www.appfolio.com.evil.example/news",
+    "https://evilwww.appfolio.com/news",
+    "http://www.appfolio.com/news",
+  ])("rejects %s", async (u) => {
+    const { checkUrl } = await import("./registry");
+    expect(checkUrl(u, A).ok).toBe(false);
+  });
+});
