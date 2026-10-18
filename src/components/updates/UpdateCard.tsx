@@ -71,3 +71,19 @@ export function UpdateCard({ u, background }: { u: UpdateRecord; background?: bo
     </article>
   );
 }
+
+/** Public projection only: no audience, pricing or inferred workflow fields. */
+export function PublicUpdateCard({ u }: { u: import("@/lib/updates/readOnly").PublicUpdate }) {
+  return <article className="rounded-xl border border-foreground/12 bg-card p-5 sm:p-6 flex flex-col gap-3 min-w-0">
+    <p className="text-[14px] font-semibold text-foreground/80">{u.vendor}</p>
+    <h3 className="font-display text-[20px] sm:text-[22px] leading-[1.2] text-foreground break-words">{u.title}</h3>
+    <p className="text-[15px] leading-[1.6] text-foreground/85 whitespace-pre-wrap break-words">{u.summary}</p>
+    <p className="text-sm text-muted-foreground">Evidence: {u.evidence_level.replace(/_/g, " ")}</p>
+    <dl className="grid grid-cols-1 sm:grid-cols-3 gap-3 border-t border-foreground/10 pt-3 text-[14px] text-muted-foreground">
+      <div><dt>Source publication</dt><dd className="text-foreground"><time dateTime={u.source_published_date}>{fmt(u.source_published_date)}</time></dd></div>
+      <div><dt>Source checked</dt><dd className="text-foreground"><time dateTime={u.source_checked_at}>{fmt(u.source_checked_at)}</time></dd></div>
+      <div><dt>Editorial publication</dt><dd className="text-foreground"><time dateTime={u.published_at}>{fmt(u.published_at)}</time></dd></div>
+    </dl>
+    <a href={u.source_url} target="_blank" rel="noopener noreferrer" className="mt-auto inline-flex min-h-11 items-center gap-1.5 text-sm font-medium text-accent hover:underline">Read source <ExternalLink className="h-3.5 w-3.5" aria-hidden /><span className="sr-only">(opens in a new tab)</span></a>
+  </article>;
+}

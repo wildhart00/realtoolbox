@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import { useAuth } from "@/hooks/useAuth";
+import { useAdminAccess } from "@/hooks/useAdminAccess";
 import { supabase } from "@/integrations/supabase/client";
 
 export function DormantEngineStatus() {
-  const { user } = useAuth();
+  const { allowed, userId, sessionToken } = useAdminAccess();
   const [status, setStatus] = useState("Backend status not read — sign-in required");
   useEffect(() => {
-    if (!user) return;
+    if (!allowed) { setStatus("Backend status not read — verified admin access required"); return; }
     let active = true;
     setStatus("Reading backend status…");
     Promise.all([
@@ -19,6 +19,6 @@ export function DormantEngineStatus() {
       setStatus(`Backend readback: ${settings.data.paused ? "paused" : "not paused"} · automatic publication policy ${settings.data.template_auto_publish_tested ? "tested" : "not tested"} · ${sources.count ?? "unknown"} enabled sources`);
     }).catch(() => { if (active) setStatus("Backend status unavailable — read failed"); });
     return () => { active = false; };
-  }, [user]);
-  return <div className="border-y py-3 text-sm space-y-1"><p role="status">{status}</p><p className="text-muted-foreground">Read-only status. No discovery provider, worker or schedule is connected by this preview.</p></div>;
+  }, [allowed, userId, sessionToken]);
+  return <div className="border-y py-3 text-sm space-y-1"><p role="status">{allowed ? status : "Backend status not read — verified admin access required"}</p><p className="text-muted-foreground">Read-only status. No discovery provider, worker or schedule is connected by this preview.</p></div>;
 }

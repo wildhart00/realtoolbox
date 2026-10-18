@@ -7,3 +7,7 @@
 - Keep manual Atom runtime modules independent of browser/source-registry imports and stage handlers outside supabase/functions until activation approval, because function-path changes can deploy automatically.
 - Bind feed draft submission to a narrow reservation wrapper around the installed revision RPC; source locks serialize lineage and job counters without changing the reviewed candidate writer or table ACLs.
 - Never use the Node HTTPS pinned-lookup transport in Deno: Deno 2.6.10 rejects ClientRequest.options.lookup. The dedicated Workspace wire relies on runtime DNS and normal HTTPS certificate/hostname verification, not resolved-IP validation; stage it outside deployed function paths pending independent review.
+
+- Public updates use only the explicit bounded updates_public projection, never bundled samples or enriched seed records; missing or malformed reads stay unavailable.
+- Private preview reads require a fresh server-checked admin decision bound to account/session, discard stale results on identity changes, and expose no mutation controls.
+- Versioned research imports are pure plain-text validation and ephemeral preview only, with no retrieval, persistence or submission path.

@@ -39,3 +39,8 @@
 
 # Frontend visual polish (Pat request)
 - [x] Off-white/ink theme, simpler nav (Latest/Workflows/Toolbox + More), short hero, readable 14px metadata, one shared draft note, softened unsupported claims, concise homepage. No backend changes.
+
+# Read-only preview plumbing
+- [ ] Replace Latest samples with typed bounded public-view reads and distinct states.
+- [ ] Add account-bound read-only private queue and separate research-packet validation preview.
+- [ ] Verify mocked safety/regressions and desktop/mobile without database access; inspect forbidden-path diff.

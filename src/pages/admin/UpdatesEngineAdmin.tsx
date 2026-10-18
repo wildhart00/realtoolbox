@@ -12,6 +12,8 @@ import { createBudget, type JobBudget } from "@/lib/engine/budget";
 import { healthStatus } from "@/lib/engine/health";
 import { fixtureSource, realtorItem, appfolioItem, ok, REALTOR_INDEX, FIXTURE_NOW } from "@/lib/engine/fixtures";
 import type { Candidate, ReviewState, RunOutcome, SourceDef } from "@/lib/engine/types";
+import { ReadOnlyUpdateQueue } from "@/components/admin/ReadOnlyUpdateQueue";
+import { ResearchImportPreview } from "@/components/admin/ResearchImportPreview";
 import { DormantEngineStatus } from "@/components/admin/DormantEngineStatus";
 import { DiscoveriesSimulation } from "@/components/admin/DiscoveriesSimulation";
 
@@ -89,6 +91,8 @@ export default function UpdatesEngineAdmin() {
         </div>
       </div>
 
+      <ReadOnlyUpdateQueue />
+      <ResearchImportPreview />
       <DormantEngineStatus />
       <div className="flex flex-wrap items-center gap-4">
         <div className="flex items-center gap-2">
