@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
 import {
   LayoutDashboard,
@@ -31,8 +30,7 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { AppLayout } from "@/components/layout/AppLayout";
-import { useAuth } from "@/hooks/useAuth";
-import { supabase } from "@/integrations/supabase/client";
+import { useAdminAccess } from "@/hooks/useAdminAccess";
 
 const items = [
   { title: "Dashboard", url: "/admin", icon: LayoutDashboard, end: true },
@@ -85,20 +83,9 @@ function AdminSidebar() {
 }
 
 export default function AdminLayout() {
-  const { user, loading } = useAuth();
-  const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
+  const { checking, allowed, userId } = useAdminAccess();
 
-  useEffect(() => {
-    if (!user) {
-      setIsAdmin(false);
-      return;
-    }
-    supabase
-      .rpc("has_role", { _user_id: user.id, _role: "admin" })
-      .then(({ data }) => setIsAdmin(!!data));
-  }, [user]);
-
-  if (loading || isAdmin === null) {
+  if (checking) {
     return (
       <AppLayout>
         <div className="px-6 py-24 text-center text-sm text-muted-foreground">Loading...</div>
@@ -106,7 +93,7 @@ export default function AdminLayout() {
     );
   }
 
-  if (!user || !isAdmin) {
+  if (!allowed) {
     return (
       <AppLayout>
         <div className="mx-auto max-w-md px-6 py-24 text-center">
@@ -131,7 +118,7 @@ export default function AdminLayout() {
               <span className="text-sm font-medium text-muted-foreground">Admin</span>
             </div>
             <div className="flex-1 p-6 overflow-x-auto">
-              <Outlet />
+              <Outlet key={userId} />
             </div>
           </div>
         </div>
