@@ -8,6 +8,7 @@ import { HowYouRunItSection } from "@/components/home/HowYouRunItSection";
 import { OfferBand } from "@/components/home/OfferBand";
 import { DirectorySection } from "@/components/home/DirectorySection";
 import { useTools, useFeaturedTools } from "@/hooks/useDirectory";
+import { WhatChangedSection } from "@/components/updates/WhatChangedSection";
 
 /**
  * Homepage — one narrative, in this order:
@@ -30,6 +31,7 @@ const Index = () => {
   return (
     <AppLayout>
       <Hero />
+      <WhatChangedSection />
       <GuardrailsSection />
       <DealScreenStrip />
       <InvestorArcSection />
