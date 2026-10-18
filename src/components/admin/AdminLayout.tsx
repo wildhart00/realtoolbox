@@ -16,6 +16,7 @@ import {
   Plug,
   Sparkles,
   Layers,
+  Radar,
 } from "lucide-react";
 import {
   Sidebar,
@@ -40,6 +41,7 @@ const items = [
   { title: "Integrations", url: "/admin/integrations", icon: Plug },
   { title: "Skills", url: "/admin/skills", icon: Sparkles },
   { title: "Stacks", url: "/admin/stacks", icon: Layers },
+  { title: "Updates engine", url: "/admin/updates-engine", icon: Radar },
   { title: "Contact", url: "/admin/contact-messages", icon: MessageSquare },
   { title: "Affiliates", url: "/admin/affiliates", icon: DollarSign },
   { title: "Blog", url: "/admin/blog", icon: FileText },
