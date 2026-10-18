@@ -1,0 +1,16 @@
+{
+  "rows": [
+    {
+      "definition": " SELECT id,\n    vendor,\n    index_url,\n    last_success_at\n   FROM update_sources\n  WHERE enabled;",
+      "owner": "postgres",
+      "relname": "update_sources_public",
+      "reloptions": null
+    },
+    {
+      "definition": " SELECT c.id,\n    s.vendor,\n    c.title,\n    c.draft_summary AS summary,\n    c.canonical_url AS source_url,\n    c.published_date AS source_published_date,\n    c.source_checked_at,\n    c.published_at,\n    c.evidence_level\n   FROM update_candidates c\n     JOIN update_sources s ON s.id = c.source_id\n  WHERE c.state = 'published'::text;",
+      "owner": "postgres",
+      "relname": "updates_public",
+      "reloptions": null
+    }
+  ]
+}

@@ -1,0 +1,292 @@
+{
+  "rows": [
+    {
+      "del": false,
+      "ins": false,
+      "relname": "update_candidates",
+      "rolname": "anon",
+      "sel": false,
+      "upd": false
+    },
+    {
+      "del": false,
+      "ins": false,
+      "relname": "update_candidates",
+      "rolname": "authenticated",
+      "sel": true,
+      "upd": false
+    },
+    {
+      "del": false,
+      "ins": false,
+      "relname": "update_candidates",
+      "rolname": "sandbox_exec",
+      "sel": false,
+      "upd": false
+    },
+    {
+      "del": false,
+      "ins": false,
+      "relname": "update_candidates",
+      "rolname": "service_role",
+      "sel": true,
+      "upd": false
+    },
+    {
+      "del": false,
+      "ins": false,
+      "relname": "update_engine_settings",
+      "rolname": "anon",
+      "sel": false,
+      "upd": false
+    },
+    {
+      "del": false,
+      "ins": false,
+      "relname": "update_engine_settings",
+      "rolname": "authenticated",
+      "sel": true,
+      "upd": false
+    },
+    {
+      "del": false,
+      "ins": false,
+      "relname": "update_engine_settings",
+      "rolname": "sandbox_exec",
+      "sel": false,
+      "upd": false
+    },
+    {
+      "del": false,
+      "ins": false,
+      "relname": "update_engine_settings",
+      "rolname": "service_role",
+      "sel": true,
+      "upd": false
+    },
+    {
+      "del": false,
+      "ins": false,
+      "relname": "update_job_runs",
+      "rolname": "anon",
+      "sel": false,
+      "upd": false
+    },
+    {
+      "del": false,
+      "ins": false,
+      "relname": "update_job_runs",
+      "rolname": "authenticated",
+      "sel": true,
+      "upd": false
+    },
+    {
+      "del": false,
+      "ins": false,
+      "relname": "update_job_runs",
+      "rolname": "sandbox_exec",
+      "sel": false,
+      "upd": false
+    },
+    {
+      "del": false,
+      "ins": false,
+      "relname": "update_job_runs",
+      "rolname": "service_role",
+      "sel": false,
+      "upd": false
+    },
+    {
+      "del": false,
+      "ins": false,
+      "relname": "update_review_events",
+      "rolname": "anon",
+      "sel": false,
+      "upd": false
+    },
+    {
+      "del": false,
+      "ins": false,
+      "relname": "update_review_events",
+      "rolname": "authenticated",
+      "sel": true,
+      "upd": false
+    },
+    {
+      "del": false,
+      "ins": false,
+      "relname": "update_review_events",
+      "rolname": "sandbox_exec",
+      "sel": false,
+      "upd": false
+    },
+    {
+      "del": false,
+      "ins": false,
+      "relname": "update_review_events",
+      "rolname": "service_role",
+      "sel": false,
+      "upd": false
+    },
+    {
+      "del": false,
+      "ins": false,
+      "relname": "update_sources",
+      "rolname": "anon",
+      "sel": false,
+      "upd": false
+    },
+    {
+      "del": false,
+      "ins": false,
+      "relname": "update_sources",
+      "rolname": "authenticated",
+      "sel": true,
+      "upd": false
+    },
+    {
+      "del": false,
+      "ins": false,
+      "relname": "update_sources",
+      "rolname": "sandbox_exec",
+      "sel": false,
+      "upd": false
+    },
+    {
+      "del": false,
+      "ins": false,
+      "relname": "update_sources",
+      "rolname": "service_role",
+      "sel": true,
+      "upd": false
+    },
+    {
+      "del": false,
+      "ins": false,
+      "relname": "update_sources_public",
+      "rolname": "anon",
+      "sel": true,
+      "upd": false
+    },
+    {
+      "del": false,
+      "ins": false,
+      "relname": "update_sources_public",
+      "rolname": "authenticated",
+      "sel": true,
+      "upd": false
+    },
+    {
+      "del": false,
+      "ins": false,
+      "relname": "update_sources_public",
+      "rolname": "sandbox_exec",
+      "sel": false,
+      "upd": false
+    },
+    {
+      "del": false,
+      "ins": false,
+      "relname": "update_sources_public",
+      "rolname": "service_role",
+      "sel": false,
+      "upd": false
+    },
+    {
+      "del": false,
+      "ins": false,
+      "relname": "updates_public",
+      "rolname": "anon",
+      "sel": true,
+      "upd": false
+    },
+    {
+      "del": false,
+      "ins": false,
+      "relname": "updates_public",
+      "rolname": "authenticated",
+      "sel": true,
+      "upd": false
+    },
+    {
+      "del": false,
+      "ins": false,
+      "relname": "updates_public",
+      "rolname": "sandbox_exec",
+      "sel": false,
+      "upd": false
+    },
+    {
+      "del": false,
+      "ins": false,
+      "relname": "updates_public",
+      "rolname": "service_role",
+      "sel": false,
+      "upd": false
+    },
+    {
+      "del": false,
+      "ins": false,
+      "relname": "user_preferences",
+      "rolname": "anon",
+      "sel": false,
+      "upd": false
+    },
+    {
+      "del": false,
+      "ins": true,
+      "relname": "user_preferences",
+      "rolname": "authenticated",
+      "sel": true,
+      "upd": true
+    },
+    {
+      "del": false,
+      "ins": false,
+      "relname": "user_preferences",
+      "rolname": "sandbox_exec",
+      "sel": false,
+      "upd": false
+    },
+    {
+      "del": false,
+      "ins": false,
+      "relname": "user_preferences",
+      "rolname": "service_role",
+      "sel": false,
+      "upd": false
+    },
+    {
+      "del": false,
+      "ins": false,
+      "relname": "user_watch_topics",
+      "rolname": "anon",
+      "sel": false,
+      "upd": false
+    },
+    {
+      "del": true,
+      "ins": true,
+      "relname": "user_watch_topics",
+      "rolname": "authenticated",
+      "sel": true,
+      "upd": false
+    },
+    {
+      "del": false,
+      "ins": false,
+      "relname": "user_watch_topics",
+      "rolname": "sandbox_exec",
+      "sel": false,
+      "upd": false
+    },
+    {
+      "del": false,
+      "ins": false,
+      "relname": "user_watch_topics",
+      "rolname": "service_role",
+      "sel": false,
+      "upd": false
+    }
+  ]
+}

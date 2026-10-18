@@ -1,0 +1,18 @@
+{
+  "rows": [
+    {
+      "candidates": 0,
+      "enabled": 0,
+      "events": 0,
+      "id": true,
+      "jobs": 0,
+      "paused": true,
+      "preferences": 0,
+      "public_sources": 0,
+      "published": 0,
+      "sources": 0,
+      "template_auto_publish_tested": false,
+      "topics": 0
+    }
+  ]
+}
