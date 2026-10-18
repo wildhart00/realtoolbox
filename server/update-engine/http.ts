@@ -28,7 +28,7 @@ export const pinnedHttps: Wire = async (url, signal) => {
   return new Promise((resolve, reject) => {
     const req = request(url, {
       signal, method: "GET", agent: false,
-      headers: { "User-Agent": "RealToolbox-Shadow/0.1", Accept: "text/html", "Accept-Encoding": "identity" },
+      headers: { "User-Agent": "RealToolbox-Shadow/0.1", Accept: "text/html, application/atom+xml, application/xml, text/xml", "Accept-Encoding": "identity" },
       lookup: (_host, _opts, cb) => cb(null, address.address, address.family),
     }, res => {
       const headers: Record<string, string> = {};
