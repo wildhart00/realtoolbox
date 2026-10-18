@@ -29,8 +29,8 @@
 
 # Approved one live manual Atom test
 - [x] Fix lost-unpause-response cleanup and verify artifact pins/tests (177 passed).
-- [ ] Validate complete reviewed fixed-feed Deno package; install only approved RPCs/source/handler after checks.
-- [ ] Attempt exactly one capped request, then repause/disable and independently verify results/protections.
+- [ ] Install only approved RPCs/source/handler: blocked by current sandbox_exec SELECT+INSERT on private engine tables/views, violating required denial. Deno check/bundle passed; startup not performed after stop.
+- [ ] Attempt exactly one capped request, then repause/disable and verify: blocked by access drift; zero live fetches, source/draft/job/public rows, paused=true/tested=false.
 
 # Fixed-feed Deno compatibility (code/tests only)
 - [x] Add dedicated immutable-URL native fetch wire without altering generic pinning.
