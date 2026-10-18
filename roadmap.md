@@ -36,3 +36,6 @@
 - [x] Add dedicated immutable-URL native fetch wire without altering generic pinning.
 - [x] Run offline Deno limits/parser/manual-path/cleanup tests (12/12) and existing regressions (177/177).
 - [x] Record changed threat model and review artifacts; stop for independent review, no live effects.
+
+# Frontend visual polish (Pat request)
+- [x] Off-white/ink theme, simpler nav (Latest/Workflows/Toolbox + More), short hero, readable 14px metadata, one shared draft note, softened unsupported claims, concise homepage. No backend changes.
