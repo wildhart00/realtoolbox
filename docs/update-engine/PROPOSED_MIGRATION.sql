@@ -256,7 +256,6 @@ CREATE VIEW public.updates_public AS
          c.evidence_level
   FROM public.update_candidates c JOIN public.update_sources s ON s.id = c.source_id
   WHERE c.state = 'published';
-GRANT SELECT ON public.updates_public TO anon, authenticated;
 
 -- 7. Own-user topics and preferences (tools reuse saved_tools) ------------
 CREATE TABLE public.user_watch_topics (
@@ -299,6 +298,7 @@ GRANT SELECT ON public.update_review_events TO authenticated;
 GRANT SELECT ON public.update_job_runs TO authenticated;
 GRANT SELECT, INSERT, DELETE ON public.user_watch_topics TO authenticated;
 GRANT SELECT, INSERT, UPDATE ON public.user_preferences TO authenticated;
+GRANT SELECT ON public.updates_public TO anon, authenticated;
 
 -- Deliberately excluded: digest consent and analytics tables (need a verified
 -- marketing email provider and analytics design). No anon read of subscribers.
