@@ -72,6 +72,12 @@ export function WhatChangedSection({ now, hostname }: Props) {
             onValueChange={(v) => setChoice(v as AudienceChoice)}
             orientation="horizontal"
             loop
+            onKeyUp={(e) => {
+              // Ensure arrow-key focus also selects (WAI-ARIA radio pattern).
+              if (!e.key.startsWith("Arrow")) return;
+              const v = (document.activeElement as HTMLElement | null)?.getAttribute("value");
+              if (v === "investor" || v === "agent" || v === "both") setChoice(v);
+            }}
             className="inline-flex rounded-full border border-foreground/15 p-1 bg-background/40"
           >
             {OPTIONS.map((o) => (
