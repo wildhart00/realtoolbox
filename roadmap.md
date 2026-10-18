@@ -29,8 +29,8 @@
 
 # Approved one live manual Atom test
 - [x] Fix lost-unpause-response cleanup and verify artifact pins/tests (177 passed).
-- [ ] Install approved RPCs/source/handler: blocked by Deno rejecting ClientRequest.options.lookup; live target/dependencies verified, no installation performed.
-- [ ] Attempt one capped request: blocked by unsupported pinned transport; final paused=true/tested=false and zero source/draft/job/public rows independently verified.
+- [ ] Validate complete reviewed fixed-feed Deno package; install only approved RPCs/source/handler after checks.
+- [ ] Attempt exactly one capped request, then repause/disable and independently verify results/protections.
 
 # Fixed-feed Deno compatibility (code/tests only)
 - [x] Add dedicated immutable-URL native fetch wire without altering generic pinning.
