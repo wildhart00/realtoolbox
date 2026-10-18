@@ -57,6 +57,7 @@ import OAuthConsentPage from "./pages/OAuthConsentPage.tsx";
 import { ErrorBoundary } from "./components/ErrorBoundary.tsx";
 import StackPage from "./pages/StackPage.tsx";
 import StacksAdmin from "./pages/admin/StacksAdmin.tsx";
+import UpdatesEngineAdmin from "./pages/admin/UpdatesEngineAdmin.tsx";
 
 
 const queryClient = new QueryClient();
@@ -145,6 +146,7 @@ const App = () => (
                 <Route path="integrations" element={<IntegrationsAdmin />} />
                 <Route path="skills" element={<SkillsAdmin />} />
                 <Route path="stacks" element={<StacksAdmin />} />
+                <Route path="updates-engine" element={<UpdatesEngineAdmin />} />
               </Route>
               <Route path="/setup-admin" element={<SetupAdminPage />} />
               <Route path="*" element={<NotFound />} />
