@@ -158,8 +158,8 @@ export function WhatChangedSection({ now, hostname }: Props) {
           </div>
         </div>
 
-        {preview && <div className="mt-12">
-          <h3 className="text-xl text-foreground">Practical applications to evaluate</h3>
+        {preview && <div className="mt-12" role="region" aria-labelledby="use-case-heading">
+          <h3 id="use-case-heading" className="text-xl text-foreground">Practical applications to evaluate</h3>
           <div className="mt-4 grid gap-5 md:grid-cols-2">
             {PREVIEW_USE_CASES.filter(c => choice === "both" || c.audience.includes(choice)).map(c => <UseCaseCard key={c.id} title={c.title} sourceUrl={c.sourceUrl} useCase={c.useCase} />)}
           </div>
