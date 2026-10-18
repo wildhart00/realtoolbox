@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import { render, screen, fireEvent, within } from "@testing-library/react";
+import { render, screen, fireEvent, within, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { WhatChangedSection } from "./WhatChangedSection";
 import { FINDER_TASKS, TOOL_NAMES } from "@/lib/updates/taskFinder";
@@ -18,9 +18,17 @@ const PUBLISHED = ["canva", "fireflies-ai", "frontdesk", "gamma", "lovable", "n8
 describe("WhatChangedSection", () => {
   beforeEach(() => localStorage.clear());
 
-  it("preview host shows 6 draft cards, 2 recent", () => {
-    renderAt("id-preview--abc.lovable.app");
-    expect(screen.getAllByRole("article")).toHaveLength(6);
+  it("on Oct 18 2026 the exact preview host shows 2 recent and 4 background cards", () => {
+    renderAt("id-preview--18ef1731-b3fc-4af0-b00d-4c953677cd01.lovable.app");
+    const articles = screen.getAllByRole("article");
+    const finder = screen.getByRole("heading", { name: "Find a tool by task" });
+    const bgHeading = screen.getByText(/Background — earlier announcements/);
+    const before = articles.filter((a) => a.compareDocumentPosition(finder) & Node.DOCUMENT_POSITION_FOLLOWING);
+    const after = articles.filter((a) => bgHeading.compareDocumentPosition(a) & Node.DOCUMENT_POSITION_FOLLOWING);
+    expect(before).toHaveLength(2);
+    expect(after).toHaveLength(4);
+    expect(within(before[0]).getByRole("heading").textContent).toMatch(/Realtor.com adds RealAssist/);
+    expect(within(before[1]).getByRole("heading").textContent).toMatch(/AppFolio expands Realm-X/);
     expect(screen.getByText(/not approved for publication/i)).toBeInTheDocument();
   });
 
@@ -30,16 +38,23 @@ describe("WhatChangedSection", () => {
     expect(screen.getByTestId("no-approved")).toBeInTheDocument();
   });
 
-  it("audience selector is an accessible radio group with arrow-key navigation", () => {
+  it("ArrowLeft keyboard event moves focus and selection and filters cards", async () => {
     renderAt("localhost");
     const group = screen.getByRole("radiogroup");
-    const radios = within(group).getAllByRole("radio");
-    expect(radios.map((r) => r.textContent)).toEqual(["Investor", "Agent", "Both"]);
-    expect(screen.getByRole("radio", { name: "Both" })).toHaveAttribute("aria-checked", "true");
-    fireEvent.click(screen.getByRole("radio", { name: "Agent" }));
-    expect(screen.getByRole("radio", { name: "Agent" })).toHaveAttribute("aria-checked", "true");
-    // Agent view hides investor-only AppFolio entries.
+    expect(within(group).getAllByRole("radio").map((r) => r.textContent)).toEqual(["Investor", "Agent", "Both"]);
+    const both = screen.getByRole("radio", { name: "Both" });
+    expect(both).toHaveAttribute("aria-checked", "true");
+    both.focus();
+    expect(document.activeElement).toBe(both);
+    fireEvent.keyDown(both, { key: "ArrowLeft" });
+    const agent = screen.getByRole("radio", { name: "Agent" });
+    await waitFor(() => expect(document.activeElement).toBe(agent));
+    await waitFor(() => expect(agent).toHaveAttribute("aria-checked", "true"));
+    expect(both).toHaveAttribute("aria-checked", "false");
+    // Agent filter: investor-only AppFolio entries gone, 3 agent-relevant background + 1 recent remain.
     expect(screen.queryByText(/AppFolio expands Realm-X/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/AppFolio announces AI invoice/)).not.toBeInTheDocument();
+    expect(screen.getAllByRole("article")).toHaveLength(4);
   });
 
   it("task finder sits above background cards", () => {
