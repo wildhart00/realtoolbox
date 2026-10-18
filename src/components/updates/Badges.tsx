@@ -16,7 +16,7 @@ export function EvidenceBadge({ level }: { level: EvidenceLevel }) {
   return (
     <span
       title={e.title}
-      className="inline-flex items-center rounded-md border border-foreground/15 bg-foreground/[0.04] px-2 py-[3px] text-[10.5px] font-semibold uppercase tracking-[0.1em] text-foreground/75"
+      className="inline-flex items-center rounded-md border border-foreground/15 bg-foreground/[0.04] px-2.5 py-1 text-[13px] font-medium text-foreground/85"
     >
       {e.label}
     </span>
@@ -28,10 +28,10 @@ export function StaleBadge({ checkedAt, now = new Date() }: { checkedAt: string;
   return (
     <span
       className={cn(
-        "inline-flex items-center rounded-md border px-2 py-[3px] text-[10.5px] font-medium",
+        "inline-flex items-center rounded-md border px-2.5 py-1 text-[13px] font-medium",
         stale
           ? "border-destructive/40 bg-destructive/10 text-destructive"
-          : "border-foreground/10 text-muted-foreground",
+          : "border-foreground/15 text-foreground/75",
       )}
     >
       {stale ? "Source check is over 90 days old" : "Source recently checked"}
@@ -41,7 +41,7 @@ export function StaleBadge({ checkedAt, now = new Date() }: { checkedAt: string;
 
 export function DraftBadge() {
   return (
-    <span className="inline-flex items-center rounded-md border border-accent/30 bg-accent/10 px-2 py-[3px] text-[10.5px] font-semibold uppercase tracking-[0.1em] text-accent">
+    <span className="inline-flex items-center rounded-md border border-accent/30 bg-accent/10 px-2.5 py-1 text-[13px] font-medium text-accent">
       Draft · preview only
     </span>
   );
