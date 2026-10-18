@@ -12,7 +12,7 @@ describe("private queue authorization and isolation", () => {
     let resolve:(v:unknown)=>void=()=>{};m.rpc.mockImplementation(()=>new Promise(r=>{resolve=r;}));render(<ReadOnlyUpdateQueue/>);
     expect(m.read).not.toHaveBeenCalled();expect(screen.getByRole("status")).toHaveTextContent("Checking admin");
     await act(async()=>resolve({data:true,error:null}));
-    expect(await screen.findByText("Private title")).toBeInTheDocument();expect(m.rpc).toHaveBeenCalledWith("has_role",{_user_id:"admin-a",_role:"admin"});
+    expect(await screen.findByRole("heading", { name: "Private title" })).toBeInTheDocument();expect(m.rpc).toHaveBeenCalledWith("has_role",{_user_id:"admin-a",_role:"admin"});
   });
   it.each([{data:false,error:null},{data:true,error:{message:"denied"}}])("denies failed/nonadmin checks without SELECT",async result=>{
     m.rpc.mockResolvedValue(result);render(<ReadOnlyUpdateQueue/>);expect(await screen.findByRole("alert")).toHaveTextContent("verified admin");expect(m.read).not.toHaveBeenCalled();
@@ -20,18 +20,18 @@ describe("private queue authorization and isolation", () => {
   it("distinguishes empty and error states",async()=>{m.read.mockRejectedValue(new Error("denied"));render(<ReadOnlyUpdateQueue/>);expect(await screen.findByRole("alert")).toHaveTextContent("No empty-queue conclusion");expect(screen.queryByText("No private candidates.")).not.toBeInTheDocument();});
   it("renders empty without claiming unavailable",async()=>{m.read.mockResolvedValue({candidates:[],events:[]});render(<ReadOnlyUpdateQueue/>);expect(await screen.findByText("No private candidates.")).toBeInTheDocument();expect(screen.queryByRole("alert")).not.toBeInTheDocument();});
   it("removes private data immediately on account switch and logout",async()=>{
-    const view=render(<ReadOnlyUpdateQueue/>);await screen.findByText("Private title");
+    const view=render(<ReadOnlyUpdateQueue/>);await screen.findByRole("heading", { name: "Private title" });
     m.rpc.mockImplementation(()=>new Promise(()=>{}));m.auth.user={id:"member-b"};view.rerender(<ReadOnlyUpdateQueue/>);
-    expect(screen.queryByText("Private title")).not.toBeInTheDocument();expect(m.read).toHaveBeenCalledTimes(1);
+    expect(screen.queryByRole("heading", { name: "Private title" })).not.toBeInTheDocument();expect(m.read).toHaveBeenCalledTimes(1);
     m.auth.user=null;view.rerender(<ReadOnlyUpdateQueue/>);expect(screen.getByRole("alert")).toHaveTextContent("verified admin");expect(screen.queryByText("Private summary")).not.toBeInTheDocument();
   });
   it("ignores late private read after logout and aborts it",async()=>{
     let resolve:(v:unknown)=>void=()=>{};m.read.mockImplementation(()=>new Promise(r=>{resolve=r;}));const view=render(<ReadOnlyUpdateQueue/>);await waitFor(()=>expect(m.read).toHaveBeenCalledTimes(1));const signal=m.read.mock.calls[0][0] as AbortSignal;
     m.auth.user=null;view.rerender(<ReadOnlyUpdateQueue/>);expect(signal.aborted).toBe(true);
-    await act(async()=>resolve({candidates:[candidate],events:[]}));expect(screen.queryByText("Private title")).not.toBeInTheDocument();
+    await act(async()=>resolve({candidates:[candidate],events:[]}));expect(screen.queryByRole("heading", { name: "Private title" })).not.toBeInTheDocument();
   });
   it("all live controls are disabled/disconnected with zero mutating RPCs",async()=>{
-    render(<ReadOnlyUpdateQueue/>);await screen.findByText("Private title");for(const name of ["Review","Approve","Publish","Withdraw","Pause"])expect(screen.getByRole("button",{name,exact:true})).toBeDisabled();
+    render(<ReadOnlyUpdateQueue/>);await screen.findByRole("heading", { name: "Private title" });for(const name of ["Review","Approve","Publish","Withdraw","Pause"])expect(screen.getByRole("button",{name})).toBeDisabled();
     expect(m.rpc.mock.calls.map(c=>c[0])).toEqual(["has_role"]);
   });
 });

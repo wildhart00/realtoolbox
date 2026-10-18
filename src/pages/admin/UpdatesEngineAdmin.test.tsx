@@ -16,22 +16,12 @@ describe("UpdatesEngineAdmin (simulation)", () => {
     expect(screen.getByRole("note")).toHaveTextContent(/Nothing here fetches sources/);
   });
 
-  it("refuses approving an injection-flagged draft without a note", async () => {
+  it("keeps simulated review controls disabled and disconnected", async () => {
     render(<UpdatesEngineAdmin />);
     fireEvent.mouseDown(screen.getByRole("tab", { name: /Review queue/ }));
-    const card = (await screen.findAllByRole("article")).find((a) => /injection suspected/i.test(a.textContent ?? ""))!;
-    fireEvent.click(within(card).getByRole("button", { name: /Approve/ }));
-    expect(screen.getByRole("alert")).toHaveTextContent("note_required_for_flagged");
-  });
-
-  it("refuses publishing in preview", async () => {
-    render(<UpdatesEngineAdmin />);
-    fireEvent.mouseDown(screen.getByRole("tab", { name: /Review queue/ }));
-    const card = (await screen.findAllByRole("article")).find((a) => !/injection/i.test(a.textContent ?? ""))!;
-    fireEvent.click(within(card).getByRole("button", { name: /Approve/ }));
-    fireEvent.mouseDown(screen.getByRole("tab", { name: /Decided/ }));
-    fireEvent.click(await screen.findByRole("button", { name: "Try publish" }));
-    expect(screen.getByRole("alert")).toHaveTextContent("publish_disabled_in_preview");
+    const cards = await screen.findAllByRole("article");
+    for (const card of cards) for (const button of within(card).getAllByRole("button")) expect(button).toBeDisabled();
+    expect(screen.getByRole("switch")).toBeDisabled();
   });
 
   it("shows empty state", async () => {

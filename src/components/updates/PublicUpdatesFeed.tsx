@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { readPublicUpdates, type PublicUpdate } from "@/lib/updates/readOnly";
 import { PublicUpdateCard } from "./UpdateCard";
 
-type FeedState = { status: "loading" | "unavailable" } | { status: "ready"; rows: PublicUpdate[] };
+type FeedState = { status: "loading" } | { status: "unavailable" } | { status: "ready"; rows: PublicUpdate[] };
 export function PublicUpdatesFeed() {
   const [state, setState] = useState<FeedState>({ status: "loading" });
   useEffect(() => {

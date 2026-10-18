@@ -31,7 +31,7 @@ export const researchPacketV1 = z.object({
   testStatus: z.enum(["not_tested", "vendor_demo_only", "hands_on_recorded"]),
   unresolvedClaims: z.array(text(2000)).max(30),
 }).strict().superRefine((p, ctx) => {
-  const urls = p.citations.map(c => new URL(c.url).href);
+  const urls = p.citations.filter(c => safeHttps(c.url)).map(c => new URL(c.url).href);
   if (new Set(urls).size !== urls.length) ctx.addIssue({ code: "custom", message: "Duplicate citation URL" });
   if ((p.testStatus === "hands_on_recorded" || p.evidenceStatus === "hands_on") &&
       (p.testStatus !== "hands_on_recorded" || !p.dates.testedAt || !p.citations.some(c => c.type === "hands_on_test"))) {

@@ -5,13 +5,13 @@ import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { AlertTriangle, FlaskConical } from "lucide-react";
+import { FlaskConical } from "lucide-react";
 import { InMemoryRepo } from "@/lib/engine/repo";
 import { processFetch } from "@/lib/engine/pipeline";
 import { createBudget, type JobBudget } from "@/lib/engine/budget";
 import { healthStatus } from "@/lib/engine/health";
 import { fixtureSource, realtorItem, appfolioItem, ok, REALTOR_INDEX, FIXTURE_NOW } from "@/lib/engine/fixtures";
-import type { Candidate, ReviewState, RunOutcome, SourceDef } from "@/lib/engine/types";
+import type { RunOutcome, SourceDef } from "@/lib/engine/types";
 import { ReadOnlyUpdateQueue } from "@/components/admin/ReadOnlyUpdateQueue";
 import { ResearchImportPreview } from "@/components/admin/ResearchImportPreview";
 import { DormantEngineStatus } from "@/components/admin/DormantEngineStatus";
@@ -57,22 +57,9 @@ const STATUS_VARIANT: Record<string, "default" | "secondary" | "destructive" | "
 
 export default function UpdatesEngineAdmin() {
   const [scenario, setScenario] = useState<Scenario>("mixed");
-  const [paused, setPaused] = useState(false);
+  const paused = false;
   const [seed, setSeed] = useState(0);
   const sim = useMemo(() => simulate(scenario, paused), [scenario, paused, seed]);
-  const [, force] = useState(0);
-  const [notes, setNotes] = useState<Record<string, string>>({});
-  const [error, setError] = useState<string | null>(null);
-
-  const act = (c: Candidate, to: ReviewState) => {
-    setError(null);
-    try {
-      sim.repo.update(c.id, to, new Date().toISOString(), notes[c.id]);
-      force((n) => n + 1);
-    } catch (e) {
-      setError(`${c.title}: ${(e as Error).message}`);
-    }
-  };
 
   const all = [...sim.repo.candidates.values()];
   const queue = all.filter((c) => c.state === "queued" || c.state === "needs_correction" || c.state === "auto_eligible");
@@ -82,21 +69,23 @@ export default function UpdatesEngineAdmin() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-semibold">Updates engine</h1>
-        <div role="note" className="mt-3 flex gap-2 rounded-lg border border-accent/30 bg-accent/10 p-3 text-sm">
-          <FlaskConical className="h-4 w-4 mt-0.5 shrink-0" aria-hidden />
-          <p>
-            <strong>Simulation with synthetic fixtures.</strong> Nothing here fetches sources, calls AI, sends email, saves to the
-            database or publishes. Sources are disabled in the real registry and no schedule exists.
-          </p>
-        </div>
+
       </div>
 
       <ReadOnlyUpdateQueue />
       <ResearchImportPreview />
       <DormantEngineStatus />
+      <h2 className="text-xl font-semibold">Separate synthetic simulations</h2>
+        <div role="note" className="mt-3 flex gap-2 rounded-lg border border-accent/30 bg-accent/10 p-3 text-sm">
+          <FlaskConical className="h-4 w-4 mt-0.5 shrink-0" aria-hidden />
+          <p>
+            <strong>Simulation with synthetic fixtures.</strong> Nothing here fetches sources, calls AI, sends email, saves to the
+            database or publishes. Synthetic source health below is not a live readback.
+          </p>
+        </div>
       <div className="flex flex-wrap items-center gap-4">
         <div className="flex items-center gap-2">
-          <Switch id="pause" checked={paused} onCheckedChange={setPaused} />
+          <Switch id="pause" checked={paused} disabled />
           <Label htmlFor="pause">Pause all collection (simulated)</Label>
         </div>
         <div className="flex gap-2" role="group" aria-label="Fixture scenario">
@@ -108,12 +97,6 @@ export default function UpdatesEngineAdmin() {
           <Button size="sm" variant="ghost" onClick={() => setSeed((n) => n + 1)}>Reset simulation</Button>
         </div>
       </div>
-
-      {error && (
-        <div role="alert" className="flex gap-2 rounded-lg border border-destructive/40 bg-destructive/10 p-3 text-sm text-destructive">
-          <AlertTriangle className="h-4 w-4 mt-0.5" aria-hidden /> Action refused: {error}
-        </div>
-      )}
 
       <Tabs defaultValue="health">
         <TabsList className="h-auto flex flex-wrap justify-start">
@@ -174,12 +157,12 @@ export default function UpdatesEngineAdmin() {
                 </ul>
               )}
               <Label htmlFor={`note-${c.id}`} className="text-xs">Reviewer note (required to reject, request correction, or approve flagged items)</Label>
-              <Textarea id={`note-${c.id}`} rows={2} value={notes[c.id] ?? ""} onChange={(e) => setNotes((n) => ({ ...n, [c.id]: e.target.value }))} />
+              <Textarea id={`note-${c.id}`} rows={2} disabled value="" />
               <div className="flex flex-wrap gap-2">
-                {c.state !== "needs_correction" && <Button size="sm" onClick={() => act(c, "approved")}>Approve (simulated)</Button>}
-                {c.state !== "needs_correction" && <Button size="sm" variant="outline" onClick={() => act(c, "needs_correction")}>Request correction</Button>}
-                {c.state === "needs_correction" && <Button size="sm" variant="outline" onClick={() => act(c, "queued")}>Mark corrected</Button>}
-                <Button size="sm" variant="destructive" onClick={() => act(c, "rejected")}>Reject</Button>
+                {c.state !== "needs_correction" && <Button size="sm" disabled>Approve (simulated)</Button>}
+                {c.state !== "needs_correction" && <Button size="sm" variant="outline" disabled>Request correction</Button>}
+                {c.state === "needs_correction" && <Button size="sm" variant="outline" disabled>Mark corrected</Button>}
+                <Button size="sm" variant="destructive" disabled>Reject</Button>
               </div>
             </article>
           ))}
@@ -193,11 +176,11 @@ export default function UpdatesEngineAdmin() {
               <span>{c.title}</span>
               <span className="flex items-center gap-2">
                 <Badge variant="secondary">{c.state}</Badge>
-                {c.state === "approved" && <Button size="sm" variant="outline" onClick={() => act(c, "published")}>Try publish</Button>}
+                {c.state === "approved" && <Button size="sm" variant="outline" disabled>Try publish</Button>}
               </span>
             </div>
           ))}
-          <p className="text-xs text-muted-foreground">Publishing is disabled in this simulation and will be refused.</p>
+          <p className="text-xs text-muted-foreground">Review and publication controls are disconnected in this preview.</p>
         </TabsContent>
 
         <TabsContent value="costs" className="mt-4">
