@@ -1,0 +1,6 @@
+⚠️  [0m[36mdeno bundle[0m is experimental and subject to changes
+[0m[32mDownload[0m https://registry.npmjs.org/@esbuild%2flinux-x64
+[0m[32mDownload[0m https://registry.npmjs.org/@esbuild/linux-x64/-/linux-x64-0.25.5.tgz
+[0m[32mBundled[0m 56 modules in 51ms
+  [0m[36m../tmp/manual-atom-package/bundle.js[0m [0m[38;5;245m945.64KB[0m
+
