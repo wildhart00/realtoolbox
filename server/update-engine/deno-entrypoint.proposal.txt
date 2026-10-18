@@ -11,7 +11,7 @@ const service=Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
 if(!url||!anon||!service)throw Error('managed_auth_unavailable');
 const worker=createClient(url,service,{auth:{persistSession:false,autoRefreshToken:false}});
 const handle=manualAtomHandler({
- workerRpc:(name,args)=>worker.rpc(name,args),
+ workerRpc:async(name,args)=>await worker.rpc(name,args),
  verifyAdmin:async(authorization)=>{
   if(!/^Bearer [^\s]+$/.test(authorization))return null;
   const client=createClient(url,anon,{global:{headers:{Authorization:authorization}},auth:{persistSession:false,autoRefreshToken:false}});
@@ -19,7 +19,7 @@ const handle=manualAtomHandler({
   if(error||!data.user)return null;
   const role=await client.rpc('has_role',{_user_id:data.user.id,_role:'admin'});
   if(role.error||role.data!==true)return null;
-  return {userId:data.user.id,rpc:(name,args)=>client.rpc(name,args)};
+  return {userId:data.user.id,rpc:async(name,args)=>await client.rpc(name,args)};
  }
 });
 Deno.serve(async(req)=>{
