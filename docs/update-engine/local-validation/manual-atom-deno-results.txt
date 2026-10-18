@@ -1,0 +1,1 @@
+Deno 2.6.10: imported node:https/node:dns, XML parser and complete mocked path PASS; no network permission
