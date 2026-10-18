@@ -129,12 +129,12 @@ describe("hardening: no-change refreshes exact candidate check time", () => {
 describe("hardening: URL authority", () => {
   const A = fixtureSource("appfolio-newsroom");
   it.each([
-    "https://www.appfolio.com:443@evil.example/news",
-    "https://user@www.appfolio.com/news",
-    "https://www.appfolio.com:8443/news",
-    "https://www.appfolio.com.evil.example/news",
-    "https://evilwww.appfolio.com/news",
-    "http://www.appfolio.com/news",
+    "https://www.appfolio.com:443@evil.example/newsroom/x",
+    "https://user@www.appfolio.com/newsroom/x",
+    "https://www.appfolio.com:8443/newsroom/x",
+    "https://www.appfolio.com.evil.example/newsroom/x",
+    "https://evilwww.appfolio.com/newsroom/x",
+    "http://www.appfolio.com/newsroom/x",
   ])("rejects %s", async (u) => {
     const { checkUrl } = await import("./registry");
     expect(checkUrl(u, A).ok).toBe(false);
