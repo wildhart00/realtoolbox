@@ -113,7 +113,7 @@ export function WhatChangedSection(_props: Props) {
                   aria-pressed={active}
                   onClick={() => setTaskId(active ? null : t.id)}
                   className={cn(
-                    "min-h-11 rounded-full border px-4 text-[14px] transition-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                    "h-auto min-h-11 max-w-full whitespace-normal rounded-full border px-4 text-[14px] transition-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
                     active ? "border-accent bg-accent/15 text-foreground" : "border-foreground/15 text-foreground/75 hover:text-foreground",
                   )}
                 >
