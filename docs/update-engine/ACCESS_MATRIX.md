@@ -22,16 +22,17 @@ Candid limits:
 
 Target backend ID: pcnsuyadfqrmythikwpa (serves preview and live). Revision 3 adds REVOKE-before-GRANT, empty search_path, settings FOR SHARE locking, atomic duplicate upsert. SQL is unverified until SQL_TEST_SPEC.md runs on an isolated database.
 
-## Final matrix for owner approval (Revision 3.1, sha256 f5eeeca0aa57f51dedb5e8ccd3b9326cd2545827269dff64a978434c1f1204f2, target pcnsuyadfqrmythikwpa)
-| Object | PUBLIC | anon | authenticated | service_role |
-|---|---|---|---|---|
-| update_engine_settings / sources / candidates | none | none | SELECT, RLS admin-only | SELECT (bypasses RLS) |
-| update_review_events / update_job_runs | none | none | SELECT, RLS admin-only | none |
-| Direct INSERT/UPDATE/DELETE on any engine table | none | none | none | none |
-| updates_public (owner-rights view: safe columns, published only) | none | SELECT | SELECT | none |
-| update_sources_public (owner-rights view: id, vendor, index_url, last_success_at, enabled only) | none | SELECT | SELECT | none |
-| user_watch_topics | none | none | SELECT/INSERT/DELETE own rows | none |
-| user_preferences | none | none | SELECT/INSERT/UPDATE own rows | none |
-| review/publish/withdraw/set_paused RPCs | none | none | EXECUTE + internal has_role admin check | none |
-| engine_record_revision (worker) | none | none | none | EXECUTE |
+## Sandbox correction approved; locally validated, NOT APPLIED (sha256 85c24826e736773a95c2bcf31645dd45e573cfc48d0fcbb235287eadd47b8ae7)
+| Object | PUBLIC | anon | authenticated | service_role | sandbox_exec |
+|---|---|---|---|---|---|
+| update_engine_settings / sources / candidates | none | none | SELECT, RLS admin-only | SELECT (bypasses RLS) | none |
+| update_review_events / update_job_runs | none | none | SELECT, RLS admin-only | none | none |
+| Direct INSERT/UPDATE/DELETE on any engine table | none | none | none | none | none |
+| updates_public (owner-rights view: safe columns, published only) | none | SELECT | SELECT | none | none |
+| update_sources_public (owner-rights view: id, vendor, index_url, last_success_at, enabled rows only) | none | SELECT | SELECT | none | none |
+| user_watch_topics | none | none | SELECT/INSERT/DELETE own rows | none | none |
+| user_preferences | none | none | SELECT/INSERT/UPDATE own rows | none | none |
+| review/publish/withdraw/set_paused RPCs | none | none | EXECUTE + internal has_role admin check | none | none |
+| engine_record_revision (worker) | none | none | none | EXECUTE | none |
 Owner-rights public views are a reviewed deliberate projection; raw tables stay denied to anon. No private helper RPCs exist in this proposal.
+No new sequences exist (UUID defaults use gen_random_uuid()). Local PG16.13: 115/115 checks passed, including all original 93 plus 22 sandbox checks. Installation is blocked by the supported migration tool's prohibition on the proposal's settings seed INSERT; no SQL rewrite or live write occurred.
