@@ -18,11 +18,11 @@ export type Guardrail = {
 export const GUARDRAILS: Guardrail[] = [
   {
     key: "no-invented-numbers",
-    title: "It never invents a number",
+    title: "Designed to ask, not guess",
     short:
-      "Comps, taxes, rents, and public records are inputs you supply — not things the AI makes up to fill a gap.",
+      "Comps, taxes, rents and public records are treated as inputs you supply. AI can still make mistakes — check every figure.",
     long:
-      "General-purpose AI will happily produce a comp, a tax figure, or a market rent that sounds right and isn't. These skills are written to treat those as inputs, not outputs. If a number isn't in front of it, the skill asks for it or leaves the field open. It does not guess and it does not round a guess into a fact.",
+      "General-purpose AI will happily produce a comp, a tax figure, or a market rent that sounds right and isn't. These skills are written to treat those as inputs, not outputs: when a number is missing, the instructions tell the model to ask for it or leave the field open. That reduces guessing; it cannot guarantee it, so verify figures before you rely on them.",
   },
   {
     key: "flags-unverified",
@@ -42,10 +42,10 @@ export const GUARDRAILS: Guardrail[] = [
   },
   {
     key: "cross-model-tested",
-    title: "Torture-tested across four models",
+    title: "Works with the AI you already use",
     short:
-      "Run against ChatGPT, Claude, Gemini, and Meta until the answers converge — then shipped.",
+      "Written as plain instructions for ChatGPT, Claude, Gemini and similar assistants. Results can vary by model.",
     long:
-      "Each skill is run against ChatGPT, Claude, Gemini, and Meta on the same deals. Where the models disagree, the instructions are tightened until they converge. Models that answer the same question four different ways are models that aren't being told enough — convergence is the test that the skill is doing the work rather than the model's mood.",
+      "The skills are plain-language instructions, not a separate app, so you can load them into the assistant you already use. Different models can still answer the same question differently — treat output as a first pass and check it against your own numbers and sources.",
   },
 ];
