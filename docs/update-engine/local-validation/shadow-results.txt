@@ -1,0 +1,32 @@
+PASS verified local socket
+PASS PG16.13
+PASS begin ACL anon
+PASS begin ACL authenticated
+PASS begin ACL sandbox_exec
+PASS begin ACL service_role
+PASS finish ACL anon
+PASS finish ACL authenticated
+PASS finish ACL sandbox_exec
+PASS finish ACL service_role
+PASS empty search path
+PASS paused denial
+PASS missing settings denial
+PASS disabled source denial
+PASS reservation consumes quota
+PASS cadence denial
+PASS invalid success fails atomically
+PASS reservation unchanged after refusal
+PASS failure completes
+PASS failure preserves snapshot
+PASS double finish denied
+PASS no change completes
+PASS health not freshness
+PASS partial completes
+PASS partial preserves snapshot
+PASS two daily reservations cap
+PASS raw logs denied
+PASS sandbox raw logs denied
+PASS pause serialized
+PASS post pause blocked
+PASS proposal rollback
+31 shadow SQL checks passed; 0 failures

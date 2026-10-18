@@ -1,0 +1,127 @@
+== target check
+PASS target_is_local_socket
+== setup (superuser, synthetic)
+INSERT 0 2
+== A. ACL matrix
+PASS anon_no_select_update_engine_settings
+PASS auth_no_insert_update_engine_settings
+PASS auth_no_update_update_engine_settings
+PASS auth_no_delete_update_engine_settings
+PASS svc_no_delete_update_engine_settings
+PASS anon_no_select_update_sources
+PASS auth_no_insert_update_sources
+PASS auth_no_update_update_sources
+PASS auth_no_delete_update_sources
+PASS svc_no_delete_update_sources
+PASS anon_no_select_update_candidates
+PASS auth_no_insert_update_candidates
+PASS auth_no_update_update_candidates
+PASS auth_no_delete_update_candidates
+PASS svc_no_delete_update_candidates
+PASS anon_no_select_update_review_events
+PASS auth_no_insert_update_review_events
+PASS auth_no_update_update_review_events
+PASS auth_no_delete_update_review_events
+PASS svc_no_delete_update_review_events
+PASS anon_no_select_update_job_runs
+PASS auth_no_insert_update_job_runs
+PASS auth_no_update_update_job_runs
+PASS auth_no_delete_update_job_runs
+PASS svc_no_delete_update_job_runs
+PASS svc_no_update_candidates
+PASS svc_no_update_settings
+PASS public_no_privs
+PASS anon_only_public_views
+PASS anon_grants_select_only
+PASS member_reads_zero_candidates
+PASS member_reads_zero_settings
+PASS admin_reads_settings
+PASS definer_search_path_empty
+PASS anon_no_exec_worker
+PASS auth_no_exec_worker
+PASS anon_no_exec_pause
+PASS member_pause_not_admin
+PASS sandbox_bypassrls
+PASS sandbox_default_table_acl
+PASS sandbox_no_select_update_engine_settings
+PASS sandbox_no_any_acl_update_engine_settings
+PASS sandbox_no_select_update_sources
+PASS sandbox_no_any_acl_update_sources
+PASS sandbox_no_select_update_candidates
+PASS sandbox_no_any_acl_update_candidates
+PASS sandbox_no_select_update_review_events
+PASS sandbox_no_any_acl_update_review_events
+PASS sandbox_no_select_update_job_runs
+PASS sandbox_no_any_acl_update_job_runs
+PASS sandbox_no_select_user_watch_topics
+PASS sandbox_no_any_acl_user_watch_topics
+PASS sandbox_no_select_user_preferences
+PASS sandbox_no_any_acl_user_preferences
+PASS sandbox_no_select_update_sources_public
+PASS sandbox_no_any_acl_update_sources_public
+PASS sandbox_no_select_updates_public
+PASS sandbox_no_any_acl_updates_public
+PASS sandbox_no_engine_sequences
+PASS sandbox_no_rpc_exec
+== C0. paused seed / missing config fail closed
+PASS worker_blocked_when_seed_paused
+PASS seed_tested_policy_false
+PASS admin_unpause
+== B. URL boundary
+PASS reject_canonical[https://www.appfolio.com:443@evil.example/newsroom/x]
+PASS reject_canonical[https://user@www.appfolio.com/newsroom/x]
+PASS reject_canonical[https://www.appfolio.com:8443/newsroom/x]
+PASS reject_canonical[https://www.appfolio.com:443/newsroom/x]
+PASS reject_canonical[https://WWW.appfolio.com/newsroom/x]
+PASS reject_canonical[http://www.appfolio.com/newsroom/x]
+PASS reject_canonical[https://www.appfolio.com/newsroom/x?a=1]
+PASS reject_canonical[https://www.appfolio.com/newsroom/x#f]
+PASS reject_canonical[https://www.appfolio.com/newsroom/a\b]
+PASS reject_canonical[https://www.appfolio.com/newsroom/a b]
+PASS reject_host[https://www.appfolio.com.evil.example/newsroom/x]
+PASS reject_host[https://evilwww.appfolio.com/newsroom/x]
+PASS reject_path[https://www.appfolio.com/newsroomevil/x]
+PASS reject_path[https://www.appfolio.com/other/newsroom/x]
+PASS reject_path[https://www.appfolio.com]
+PASS disabled_source
+PASS no_rows_from_rejections
+== D. duplicates
+PASS accept_insert
+PASS admin_approve
+PASS dup_returns_state
+PASS dup_older_no_regress
+PASS dup_checked_advanced_state_kept
+PASS dup_one_initial_audit
+PASS concurrent_dup_one_row
+PASS concurrent_dup_one_audit
+PASS concurrent_dup_returns 1 insert/7 dup
+== E. public projection
+PASS public_none_before_publish
+PASS admin_publish
+PASS public_one_after_publish
+PASS public_view_no_raw_fields
+PASS publish_unapproved_refused
+PASS member_publish_refused
+PASS withdraw_needs_note
+PASS admin_withdraw
+PASS public_zero_after_withdraw
+PASS worker_cannot_set_published
+== F. own-user rows
+PASS own_pref_insert
+PASS other_user_pref_insert_denied
+PASS other_user_pref_invisible
+PASS anon_no_prefs
+== C. concurrent pause serialization
+PASS admin_approve_h2
+PASS pause_waits_for_publish (2.009344499s)
+PASS worker_after_pause
+PASS admin_unpause2
+PASS pause_waits_for_worker (2.010288407s)
+PASS rolled_back_unpause_keeps_paused
+PASS admin_unpause3
+PASS no_deadlock_40_interleaved
+== G. missing settings (superuser deletes singleton in a rolled-back txn)
+PASS worker_settings_missing
+PASS pause_settings_missing
+PASS settings_restored_after_rollback
+TOTAL pass=115 fail=0
