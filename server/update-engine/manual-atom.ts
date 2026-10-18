@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
 import { parseAtom, fetchAtom } from "./atom.ts";
 import type { Wire } from "./transport.ts";
+import { fixedGoogleWorkspaceAtomWire } from './fixed-google-workspace-atom-wire.ts';
 export type ManualRpc = (name: string, args: Record<string, unknown>) => Promise<{data: unknown; error: unknown}>;
 const digest = (v: string) => createHash("sha256").update(v).digest("hex");
 async function call(rpc: ManualRpc, name: string, args: Record<string, unknown>) {
@@ -18,7 +19,7 @@ export async function runManualAtom(deps: {authorized: boolean; rpc: ManualRpc; 
   let created=0, submitted=0, snapshot: string|null=null;
   let outcome: "failed"|"partial"|"changed"|"no_change"="failed";
   try {
-    const xml = await fetchAtom(deps.wire);
+    const xml = await fetchAtom(deps.wire ?? fixedGoogleWorkspaceAtomWire);
     const now = deps.now();
     const entries = parseAtom(xml,now);
     if (!entries.length) throw new Error("no_valid_atom_metadata");

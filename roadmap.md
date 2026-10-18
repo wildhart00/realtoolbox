@@ -31,3 +31,8 @@
 - [x] Fix lost-unpause-response cleanup and verify artifact pins/tests (177 passed).
 - [ ] Install approved RPCs/source/handler: blocked by Deno rejecting ClientRequest.options.lookup; live target/dependencies verified, no installation performed.
 - [ ] Attempt one capped request: blocked by unsupported pinned transport; final paused=true/tested=false and zero source/draft/job/public rows independently verified.
+
+# Fixed-feed Deno compatibility (code/tests only)
+- [ ] Add dedicated immutable-URL native fetch wire without altering generic pinning.
+- [ ] Run offline Deno limits/parser/manual-path/cleanup tests and existing regressions.
+- [ ] Record changed threat model, review hashes and credit checkpoint; no live effects.
