@@ -145,7 +145,7 @@ export function ToolCard({ tool, isSaved: _isSaved }: { tool: Tool; isSaved?: bo
               {tool.name}
             </div>
             {category && (
-              <div className="text-[11px] text-foreground/40 mt-0.5 truncate">{category.name}</div>
+              <div className="text-[13px] text-foreground/70 mt-0.5 truncate">{category.name}</div>
             )}
           </div>
           <PricingBadge pricing={tool.pricing} />
@@ -159,13 +159,13 @@ export function ToolCard({ tool, isSaved: _isSaved }: { tool: Tool; isSaved?: bo
           {tool.tags?.slice(0, 3).map((t) => (
             <span
               key={t}
-              className="text-[10px] px-[7px] py-[2px] rounded bg-foreground/[0.05] text-foreground/40 font-medium"
+              className="text-[12.5px] px-2 py-[3px] rounded bg-foreground/[0.06] text-foreground/75 font-medium"
             >
               {t}
             </span>
           ))}
           {!tool.re_only && (
-            <span className="text-[10px] px-[7px] py-[2px] rounded bg-accent/10 text-accent font-medium border border-accent/20">
+            <span className="text-[12.5px] px-2 py-[3px] rounded bg-accent/10 text-accent font-medium border border-accent/20">
               General use
             </span>
           )}

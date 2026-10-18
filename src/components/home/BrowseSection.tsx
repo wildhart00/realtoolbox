@@ -62,13 +62,13 @@ export function BrowseSection({
 
         <div className="flex-1 min-w-0">
           <div className="flex items-center justify-between mb-[18px]">
-            <span className="text-[12px] text-foreground/70">
+            <span className="text-[14px] text-foreground/75">
               {filtered.length} tool{filtered.length !== 1 ? "s" : ""}
             </span>
             <select
               value={sort}
               onChange={(e) => setSort(e.target.value as SortKey)}
-              className="bg-foreground/[0.05] border border-foreground/[0.09] rounded-lg px-3 py-1.5 text-[12px] text-muted-foreground outline-none cursor-pointer"
+              className="bg-foreground/[0.05] border border-foreground/[0.09] rounded-lg px-3 py-2 min-h-11 text-[14px] text-foreground/80 outline-none cursor-pointer"
             >
               <option value="relevant">Most relevant</option>
               <option value="newest">Newest first</option>

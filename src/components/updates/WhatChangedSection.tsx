@@ -93,13 +93,17 @@ export function WhatChangedSection({ now, hostname }: Props) {
         </div>
 
         <div className="mt-4 rounded-lg border border-foreground/12 bg-muted/60 px-4 py-3 text-[14px] leading-[1.55] text-foreground/80">
-          {preview && (
-            <p className="font-semibold text-accent">Preview · draft content, not approved for publication.</p>
-          )}
-          <p>
-            Each item is based on the vendor's own announcement unless marked otherwise; we have not tested these tools.
-            {" "}{SEED_META.coverage_note} "Announced" is the vendor's date; "Source checked" is when we last re-read it — neither guarantees availability in your account.
+          <p className="font-semibold text-foreground">
+            {preview
+              ? <><span className="text-accent">Preview sample, not approved for publication.</span> Automatic updates aren't active; these tools are untested.</>
+              : "Vendor-announced items, untested by us. Automatic updates aren't active."}
           </p>
+          <details className="mt-1">
+            <summary className="min-h-11 flex items-center cursor-pointer text-accent font-medium">About sources and dates</summary>
+            <p className="pb-1">
+              Each item is based on the vendor's own announcement unless marked otherwise. {SEED_META.coverage_note} "Announced" is the vendor's date; "Source checked" is when we last re-read it — neither guarantees availability in your account.
+            </p>
+          </details>
         </div>
 
         {nothingApproved ? (

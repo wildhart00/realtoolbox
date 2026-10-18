@@ -17,7 +17,7 @@ export function PricingBadge({ pricing, className }: { pricing: PricingModel; cl
   return (
     <span
       className={cn(
-        "inline-flex items-center text-[10px] font-semibold uppercase tracking-[0.04em] px-2 py-[3px] rounded-md border",
+        "inline-flex items-center text-[12px] font-semibold uppercase tracking-[0.04em] px-2 py-[3px] rounded-md border",
         styles[pricing],
         className,
       )}

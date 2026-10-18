@@ -25,5 +25,5 @@ export const INVESTOR_ARC: ArcStep[] = [
   { num: 4, title: "Assumption Audit", desc: "Pressure-test your inputs before you trust them." },
   { num: 5, title: "Path Picker", desc: "Flip, BRRRR, or hold — pick the right exit for this property." },
   { num: 6, title: "Walk-Away Checklist", desc: "Catch the deal-killers before they cost you money." },
-  { num: 7, title: "Deal Analyzer", desc: "Underwrite it for real and land on a safe offer." },
+  { num: 7, title: "Deal Analyzer", desc: "Underwrite it in detail and estimate an offer range to verify." },
 ];

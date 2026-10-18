@@ -24,7 +24,7 @@ const THE_ARGUMENT = [
   },
   {
     label: "What you can offer instead",
-    body: "A written underwrite on the property they sent you: a safe maximum offer, the assumptions it rests on, what would kill the deal, and a straight verdict — including a refusal when the inputs are too thin to support one.",
+    body: "A written first-pass underwrite on the property they sent you: offer scenarios built from the numbers you supply or can verify, the assumptions they rest on, what could kill the deal, and a clear note when the inputs are too thin to support a view. Verify independently before anyone acts on it.",
     dim: false,
   },
 ];
@@ -85,8 +85,9 @@ export default function ForAgentsPage() {
           </h1>
           <p className="mt-5 text-[16.5px] lg:text-lg text-muted-foreground leading-[1.65]">
             The same seven skills investors use on their own deals, run by you on the properties your
-            buyers forward over. A safe maximum offer, the assumptions behind it, and what would kill
-            the deal — in the time it takes to read the listing.
+            buyers forward over. Organize the listing and source data you can verify, estimate offer
+            scenarios, and see the assumptions and deal-killers behind them. It can't guarantee a safe
+            offer or current comps, taxes or rents — check those independently.
           </p>
           <div className="mt-7 flex flex-col sm:flex-row items-start sm:items-center gap-4">
             <a
