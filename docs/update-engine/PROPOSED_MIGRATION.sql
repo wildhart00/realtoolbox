@@ -286,7 +286,7 @@ CREATE POLICY "Own prefs update" ON public.user_preferences FOR UPDATE TO authen
 REVOKE ALL ON public.update_engine_settings, public.update_sources, public.update_candidates,
   public.update_review_events, public.update_job_runs, public.user_watch_topics, public.user_preferences,
   public.update_sources_public, public.updates_public
-  FROM PUBLIC, anon, authenticated, service_role;
+  FROM PUBLIC, anon, authenticated, service_role, sandbox_exec;
 
 -- 0c. Minimal grants (after revoke).
 GRANT SELECT ON public.update_engine_settings TO authenticated;
