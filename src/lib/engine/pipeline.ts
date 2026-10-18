@@ -18,7 +18,8 @@ export interface RunOptions {
 }
 
 /** Snapshot covers URL, title, date AND canonical body, so body-only corrections are detected. */
-export function snapshotHash(items: FetchResult extends never ? never : { url?: unknown; title?: unknown; publishedDate?: unknown; body?: unknown }[]): string {
+type LooseItem = { url?: unknown; title?: unknown; publishedDate?: unknown; body?: unknown } | null | undefined;
+export function snapshotHash(items: LooseItem[]): string {
   return hashText(
     items
       .map((i) => {

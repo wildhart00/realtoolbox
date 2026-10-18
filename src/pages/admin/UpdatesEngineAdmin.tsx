@@ -20,17 +20,18 @@ type Scenario = "mixed" | "empty" | "all_failing";
 /** Builds a fresh synthetic simulation. In-memory only; nothing is saved or published. */
 function simulate(scenario: Scenario, paused: boolean) {
   const repo = new InMemoryRepo();
-  repo.paused = paused;
+  // In-memory simulation only; real seed settings stay paused.
+  repo.settings = { paused, templateAutoPublishTested: false };
   const budget = createBudget({ fetch: 4 });
   const outcomes: Record<string, RunOutcome> = {};
   if (scenario === "empty") return { repo, budget, outcomes };
   const [r, a] = SOURCES;
   if (scenario === "all_failing") {
     for (let i = 0; i < 3; i++) {
-      repo.paused = false;
+      repo.settings = { paused: false, templateAutoPublishTested: false };
       processFetch(r, { status: "timeout", fetchedAt: FIXTURE_NOW }, repo, { now: FIXTURE_NOW, budget: createBudget() });
     }
-    repo.paused = paused;
+    repo.settings = { paused, templateAutoPublishTested: false };
     outcomes[r.id] = processFetch(r, { status: "redirect", finalUrl: "https://evil.example.com/", fetchedAt: FIXTURE_NOW }, repo, { now: FIXTURE_NOW, budget });
     outcomes[a.id] = processFetch(a, { status: "http_error", httpStatus: 503, fetchedAt: FIXTURE_NOW }, repo, { now: FIXTURE_NOW, budget });
     return { repo, budget, outcomes };
@@ -133,7 +134,7 @@ export default function UpdatesEngineAdmin() {
                       <td className="p-2">{h.lastSuccessAt ?? "—"}</td>
                       <td className="p-2">{h.lastChangeAt ?? "—"}</td>
                       <td className="p-2">{h.consecutiveFailures}{h.lastError ? ` (${h.lastError})` : ""}</td>
-                      <td className="p-2">{o ? (o.kind === "failed" ? `failed: ${o.reason}` : o.kind === "skipped" ? `skipped: ${o.reason}` : o.kind) : "not run"}</td>
+                      <td className="p-2">{o ? (o.kind === "failed" ? `failed: ${o.reason}` : o.kind === "skipped" ? `skipped: ${o.reason}` : o.kind === "partial" ? `partial: ${o.deferred} deferred` : o.kind) : "not run"}</td>
                     </tr>
                   );
                 })}
