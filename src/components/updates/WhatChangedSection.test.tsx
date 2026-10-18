@@ -54,7 +54,9 @@ describe("WhatChangedSection", () => {
     // Agent filter: investor-only AppFolio entries gone, 3 agent-relevant background + 1 recent remain.
     expect(screen.queryByText(/AppFolio expands Realm-X/)).not.toBeInTheDocument();
     expect(screen.queryByText(/AppFolio announces AI invoice/)).not.toBeInTheDocument();
-    expect(screen.getAllByRole("article")).toHaveLength(4);
+    const applications = screen.getByRole("region", { name: "Practical applications to evaluate" });
+    expect(within(applications).getByRole("heading", { name: "Realtor.com+ / RealAssist AI" })).toBeInTheDocument();
+    expect(within(applications).queryByRole("heading", { name: "AppFolio Realm-X" })).not.toBeInTheDocument();
   });
 
   it("task finder sits above background cards", () => {

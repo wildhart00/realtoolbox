@@ -12,6 +12,8 @@ import { createBudget, type JobBudget } from "@/lib/engine/budget";
 import { healthStatus } from "@/lib/engine/health";
 import { fixtureSource, realtorItem, appfolioItem, ok, REALTOR_INDEX, FIXTURE_NOW } from "@/lib/engine/fixtures";
 import type { Candidate, ReviewState, RunOutcome, SourceDef } from "@/lib/engine/types";
+import { DormantEngineStatus } from "@/components/admin/DormantEngineStatus";
+import { DiscoveriesSimulation } from "@/components/admin/DiscoveriesSimulation";
 
 const SOURCES: SourceDef[] = [fixtureSource("realtor-mediaroom"), fixtureSource("appfolio-newsroom")];
 
@@ -87,6 +89,7 @@ export default function UpdatesEngineAdmin() {
         </div>
       </div>
 
+      <DormantEngineStatus />
       <div className="flex flex-wrap items-center gap-4">
         <div className="flex items-center gap-2">
           <Switch id="pause" checked={paused} onCheckedChange={setPaused} />
@@ -109,12 +112,15 @@ export default function UpdatesEngineAdmin() {
       )}
 
       <Tabs defaultValue="health">
-        <TabsList>
+        <TabsList className="h-auto flex flex-wrap justify-start">
+          <TabsTrigger value="discoveries">Discoveries</TabsTrigger>
           <TabsTrigger value="health">Source health</TabsTrigger>
           <TabsTrigger value="queue">Review queue ({queue.length})</TabsTrigger>
           <TabsTrigger value="decided">Decided ({decided.length})</TabsTrigger>
           <TabsTrigger value="costs">Budget &amp; costs</TabsTrigger>
         </TabsList>
+
+        <TabsContent value="discoveries" className="mt-4"><DiscoveriesSimulation /></TabsContent>
 
         <TabsContent value="health" className="mt-4">
           <div className="overflow-x-auto rounded-lg border">

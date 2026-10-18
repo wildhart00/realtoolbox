@@ -7,6 +7,8 @@ import { tasksFor, TOOL_NAMES } from "@/lib/updates/taskFinder";
 import { visibleUpdates, isPreviewHost } from "@/lib/updates/releaseGuard";
 import { UpdateCard } from "./UpdateCard";
 import { cn } from "@/lib/utils";
+import { UseCaseCard } from "./UseCaseCard";
+import { PREVIEW_USE_CASES } from "@/lib/engine/useCases";
 
 const KEY = "rt_audience";
 const OPTIONS: { value: AudienceChoice; label: string }[] = [
@@ -156,6 +158,12 @@ export function WhatChangedSection({ now, hostname }: Props) {
           </div>
         </div>
 
+        {preview && <div className="mt-12" role="region" aria-labelledby="use-case-heading">
+          <h3 id="use-case-heading" className="text-xl text-foreground">Practical applications to evaluate</h3>
+          <div className="mt-4 grid gap-5 md:grid-cols-2">
+            {PREVIEW_USE_CASES.filter(c => choice === "both" || c.audience.includes(choice)).map(c => <UseCaseCard key={c.id} title={c.title} sourceUrl={c.sourceUrl} useCase={c.useCase} />)}
+          </div>
+        </div>}
         {background.length > 0 && (
           <>
             <h3 className="mt-14 text-[13px] font-semibold uppercase tracking-[0.12em] text-foreground/70">
