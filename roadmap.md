@@ -20,5 +20,5 @@
 - [x] Record allowlist, terms/robots prerequisites, limits, hashes, tests and activation scope; stop before live changes.
 
 # Atom final preparation
-- [ ] Prepare exact-URL Workspace Atom transport/parser and two manual-review draft payloads with synthetic tests.
-- [ ] Document proposed allowlist and blocked newsroom adapters; no live fetch, SQL or activation.
+- [x] Prepare exact-URL Workspace Atom transport/parser and two manual-review draft payloads with synthetic tests (165 full-suite checks).
+- [x] Document proposed allowlist and blocked newsroom adapters; no live fetch, SQL or activation. Manual-run wiring waits for separate approval.

@@ -33,7 +33,7 @@ describe("Workspace Atom preparation",()=>{
     expect(drafts[0]?.rpcArguments._flags).toContain("hands_on_not_tested");
   });
   it("fetches exact feed only and XML whitelist does not follow redirects",async()=>{
-    const wire=vi.fn(async()=>({status:200,headers:{"content-type":"text/xml; charset=UTF-8"},body:feed("")}));
+    const wire=vi.fn(async(_url:URL,_signal:AbortSignal)=>({status:200,headers:{"content-type":"text/xml; charset=UTF-8"},body:feed("")}));
     await fetchAtom(wire);expect(wire.mock.calls[0]?.[0]?.href).toBe(ATOM_SOURCE_PROPOSAL.feedUrl);
     await expect(fetchAtom(async()=>({status:302,headers:{location:"http://evil.example"},body:""}))).rejects.toThrow();
     await expect(fetchAtom(async()=>({status:200,headers:{"content-type":"text/html"},body:""}))).rejects.toThrow("unsupported_feed_content");
