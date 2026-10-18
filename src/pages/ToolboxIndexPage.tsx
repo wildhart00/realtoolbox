@@ -26,7 +26,7 @@ const WHAT_IT_SOLVES = [
   },
   {
     title: "A general AI will make things up",
-    body: "Ask ChatGPT to underwrite a property cold and it will produce comps, taxes, and rents that look right. These skills treat those as inputs you supply, not answers they generate.",
+    body: "Ask a general AI to underwrite a property cold and it may produce comps, taxes, and rents that look right but aren't current or real. These skills are written to organize figures you supply or can verify and estimate scenarios from them — you still need to check every number independently.",
   },
   {
     title: "Spreadsheets don't argue back",
