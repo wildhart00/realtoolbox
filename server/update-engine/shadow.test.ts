@@ -1,4 +1,3 @@
-// @vitest-environment node
 import { describe, it, expect, vi } from "vitest";
 import { fetchOfficial, officialLinks, publicAddress, type Wire } from "./http";
 import { collectShadow, parseMetadata, type Rpc } from "./shadow";
