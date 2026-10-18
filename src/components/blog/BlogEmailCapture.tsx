@@ -43,7 +43,7 @@ export function BlogEmailCapture({
   return (
     <aside className="my-10 rounded-2xl border border-foreground/10 bg-gradient-to-br from-[hsl(239_84%_60%)]/8 via-foreground/[0.02] to-[hsl(265_84%_60%)]/8 px-6 py-6">
       <div className="flex items-center gap-2.5">
-        <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-[hsl(239_84%_60%)]/15 text-[hsl(229_94%_82%)]">
+        <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-[hsl(239_84%_60%)]/15 text-accent">
           <Mail className="h-4 w-4" />
         </span>
         <h3 className="font-display text-[18px] text-foreground tracking-tight leading-tight">

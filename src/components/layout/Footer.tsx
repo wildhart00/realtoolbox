@@ -31,7 +31,7 @@ const company = [
 ];
 
 const linkClass =
-  "text-[13px] text-foreground/55 hover:text-[hsl(229_94%_82%)] transition-base";
+  "text-[13px] text-foreground/55 hover:text-accent transition-base";
 
 const headerClass =
   "text-[11px] font-semibold tracking-[0.14em] uppercase text-foreground/40 mb-4";
@@ -55,7 +55,7 @@ export function Footer() {
                 </svg>
               </div>
               <span className="font-display text-[17px] font-bold text-foreground tracking-[-0.02em]">
-                RealToolbox<span className="text-[hsl(229_94%_82%)]">.ai</span>
+                RealToolbox<span className="text-accent">.ai</span>
               </span>
             </Link>
             <p className="mt-4 text-[13px] text-foreground/50 leading-[1.65] max-w-[280px]">
@@ -98,11 +98,11 @@ export function Footer() {
             © 2026 RealToolbox.ai. All rights reserved.
           </p>
           <nav className="flex items-center gap-2 text-[12px] text-foreground/35">
-            <Link to="/privacy" className="hover:text-[hsl(229_94%_82%)] transition-base">Privacy Policy</Link>
+            <Link to="/privacy" className="hover:text-accent transition-base">Privacy Policy</Link>
             <span className="text-foreground/20">·</span>
-            <Link to="/terms" className="hover:text-[hsl(229_94%_82%)] transition-base">Terms of Service</Link>
+            <Link to="/terms" className="hover:text-accent transition-base">Terms of Service</Link>
             <span className="text-foreground/20">·</span>
-            <Link to="/contact" className="hover:text-[hsl(229_94%_82%)] transition-base">Contact</Link>
+            <Link to="/contact" className="hover:text-accent transition-base">Contact</Link>
           </nav>
         </div>
       </div>

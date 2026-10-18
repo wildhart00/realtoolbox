@@ -25,8 +25,8 @@ export function ToolboxCrossPromo({
         (compact ? "px-6 py-6 my-8" : "px-6 py-8 lg:px-9 lg:py-9 my-10")
       }
     >
-      <div className="absolute inset-x-0 -top-px h-px bg-gradient-to-r from-transparent via-[hsl(229_94%_82%)]/60 to-transparent" />
-      <p className="text-[11px] uppercase tracking-[0.14em] text-[hsl(229_94%_82%)] font-semibold">
+      <div className="absolute inset-x-0 -top-px h-px bg-gradient-to-r from-transparent via-accent/60 to-transparent" />
+      <p className="text-[11px] uppercase tracking-[0.14em] text-accent font-semibold">
         From RealToolbox
       </p>
       <h3

@@ -47,7 +47,7 @@ export function ConnectMcpBlock({
         (compact ? "p-5" : "p-6 lg:p-7")
       }
     >
-      <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.16em] text-[hsl(229_94%_82%)] font-semibold">
+      <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.16em] text-accent font-semibold">
         <Plug className="h-3.5 w-3.5" />
         Connect to Claude &amp; ChatGPT
       </div>
@@ -90,7 +90,7 @@ export function ConnectMcpBlock({
         <div className="mt-4">
           <Link
             to="/setup-guide#connect-your-toolbox-via-mcp"
-            className="text-[13px] font-semibold text-[hsl(229_94%_82%)] underline-offset-2 hover:underline"
+            className="text-[13px] font-semibold text-accent underline-offset-2 hover:underline"
           >
             See the connect walkthrough →
           </Link>

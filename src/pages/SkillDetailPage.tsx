@@ -172,7 +172,7 @@ export default function SkillDetailPage() {
         ) : (
           <>
             <div className="mt-8 flex items-center gap-3">
-              <span className="text-[10px] px-2 py-[3px] rounded-md border bg-accent/10 text-[hsl(229_94%_82%)] border-accent/25 font-semibold uppercase tracking-[0.08em]">
+              <span className="text-[10px] px-2 py-[3px] rounded-md border bg-accent/10 text-accent border-accent/25 font-semibold uppercase tracking-[0.08em]">
                 {skill.tagline ?? "Skill"}
               </span>
               {isPaid && (
@@ -181,7 +181,7 @@ export default function SkillDetailPage() {
                     <Lock className="h-3 w-3" aria-hidden /> Locked
                   </span>
                 ) : (
-                  <span className="inline-flex items-center gap-1 text-[10px] font-semibold uppercase tracking-[0.08em] text-[hsl(229_94%_82%)]">
+                  <span className="inline-flex items-center gap-1 text-[10px] font-semibold uppercase tracking-[0.08em] text-accent">
                     <Sparkles className="h-3 w-3" aria-hidden /> Unlocked
                   </span>
                 )
@@ -210,7 +210,7 @@ export default function SkillDetailPage() {
                 Overview
               </p>
               {skill.overview ? (
-                <div className="prose prose-invert max-w-none prose-headings:font-display prose-headings:tracking-[-0.01em] prose-h1:text-3xl prose-h2:text-2xl prose-h3:text-xl prose-p:text-muted-foreground prose-p:leading-[1.7] prose-li:text-muted-foreground prose-strong:text-foreground prose-a:text-[hsl(229_94%_82%)]">
+                <div className="prose prose-invert max-w-none prose-headings:font-display prose-headings:tracking-[-0.01em] prose-h1:text-3xl prose-h2:text-2xl prose-h3:text-xl prose-p:text-muted-foreground prose-p:leading-[1.7] prose-li:text-muted-foreground prose-strong:text-foreground prose-a:text-accent">
                   <ReactMarkdown remarkPlugins={[remarkGfm]}>{skill.overview}</ReactMarkdown>
                 </div>
               ) : (
@@ -229,7 +229,7 @@ export default function SkillDetailPage() {
               </p>
               <p className="text-[15px] text-muted-foreground leading-[1.7] mb-4">
                 Fastest way: connect your toolbox once via MCP and your AI loads any skill you own on demand —{" "}
-                <Link to="/setup-guide#connect-your-toolbox-via-mcp" className="text-[hsl(229_94%_82%)] underline-offset-2 hover:underline">
+                <Link to="/setup-guide#connect-your-toolbox-via-mcp" className="text-accent underline-offset-2 hover:underline">
                   see the setup guide
                 </Link>
               </p>
@@ -329,7 +329,7 @@ export default function SkillDetailPage() {
                 </div>
                 <Link
                   to="/setup-guide"
-                  className="inline-block text-[13px] text-[hsl(229_94%_82%)] underline-offset-2 hover:underline"
+                  className="inline-block text-[13px] text-accent underline-offset-2 hover:underline"
                 >
                   First time? How to load a skill →
                 </Link>
@@ -369,7 +369,7 @@ export default function SkillDetailPage() {
                 </div>
                 <Link
                   to="/setup-guide"
-                  className="inline-block text-[13px] text-[hsl(229_94%_82%)] underline-offset-2 hover:underline"
+                  className="inline-block text-[13px] text-accent underline-offset-2 hover:underline"
                 >
                   First time? How to load a skill →
                 </Link>

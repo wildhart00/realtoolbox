@@ -90,7 +90,7 @@ function EntryCard({ entry }: { entry: Entry }) {
       className="group surface-card hover:surface-card-hover rounded-2xl p-6 flex flex-col transition-base"
     >
       <div className="flex items-center justify-between gap-3 mb-3.5">
-        <span className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-[hsl(239_84%_60%)]/15 text-[hsl(229_94%_82%)]">
+        <span className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-[hsl(239_84%_60%)]/15 text-accent">
           <Icon className="h-4 w-4" strokeWidth={2} />
         </span>
         {entry.draft && (
@@ -185,12 +185,12 @@ export default function ResourcesPage() {
       <section className="mx-auto max-w-[1200px] px-6 lg:px-10 pt-16 lg:pt-24 pb-12">
         <div className="max-w-3xl">
           <div className="inline-flex items-center gap-2 rounded-full border border-foreground/10 bg-foreground/[0.03] px-3 py-1 text-[11px] font-semibold tracking-[0.16em] text-muted-foreground uppercase">
-            <span className="h-1.5 w-1.5 rounded-full bg-[hsl(229_94%_82%)]" />
+            <span className="h-1.5 w-1.5 rounded-full bg-accent" />
             Resources
           </div>
           <h1 className="mt-5 font-display text-4xl lg:text-[56px] font-bold leading-[1.03] tracking-[-0.03em] text-foreground">
             Start here if this is{" "}
-            <span className="bg-gradient-to-r from-[hsl(229_94%_82%)] to-[hsl(265_84%_75%)] bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-accent to-[hsl(265_84%_75%)] bg-clip-text text-transparent">
               your first deal.
             </span>
           </h1>
@@ -221,7 +221,7 @@ export default function ResourcesPage() {
           >
             <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] opacity-90" />
             <div className="relative m-[1px] rounded-[15px] bg-[hsl(230_18%_8%)] p-6 flex flex-col flex-1">
-              <span className="inline-flex w-fit items-center rounded-md border border-accent/25 bg-accent/10 px-2 py-[3px] text-[10px] font-semibold uppercase tracking-[0.12em] text-[hsl(229_94%_82%)] mb-3.5">
+              <span className="inline-flex w-fit items-center rounded-md border border-accent/25 bg-accent/10 px-2 py-[3px] text-[10px] font-semibold uppercase tracking-[0.12em] text-accent mb-3.5">
                 Free forever
               </span>
               <h3 className="font-display text-[18px] text-foreground tracking-tight leading-snug">

@@ -3,7 +3,7 @@ import type { PricingModel } from "@/lib/types";
 
 const styles: Record<PricingModel, string> = {
   free: "bg-success/10 text-success border-success/25",
-  freemium: "bg-accent/10 border-accent/25 text-[hsl(229_94%_82%)]",
+  freemium: "bg-accent/10 border-accent/25 text-accent",
   paid: "bg-foreground/[0.05] text-muted-foreground border-foreground/10",
 };
 

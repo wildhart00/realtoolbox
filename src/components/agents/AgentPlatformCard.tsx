@@ -13,7 +13,7 @@ export interface AgentPlatformItem {
 
 const pricingStyles: Record<Pricing, string> = {
   "Open Source": "bg-success/15 text-success border-success/25",
-  Freemium: "bg-accent/10 text-[hsl(229_94%_82%)] border-accent/25",
+  Freemium: "bg-accent/10 text-accent border-accent/25",
   Paid: "bg-foreground/[0.05] text-muted-foreground border-foreground/10",
 };
 
@@ -52,7 +52,7 @@ export function AgentPlatformCard({ item }: { item: AgentPlatformItem }) {
           href={item.url}
           target="_blank"
           rel="noopener noreferrer"
-          className="ml-auto inline-flex items-center gap-1 text-[12px] font-semibold text-[hsl(229_94%_82%)] hover:text-foreground transition-base"
+          className="ml-auto inline-flex items-center gap-1 text-[12px] font-semibold text-accent hover:text-foreground transition-base"
         >
           Visit <ArrowUpRight className="h-3.5 w-3.5" />
         </a>

@@ -123,7 +123,7 @@ export default function OfferChecklistPage() {
         already, read{" "}
         <Link
           to="/resources/verifying-comps"
-          className="text-[hsl(229_94%_82%)] underline-offset-2 hover:underline"
+          className="text-accent underline-offset-2 hover:underline"
         >
           how to verify a comp
         </Link>{" "}

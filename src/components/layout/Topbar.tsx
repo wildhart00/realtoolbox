@@ -75,7 +75,7 @@ export function Topbar() {
   return (
     <header
       className="sticky top-0 z-50 border-b border-foreground/[0.06] backdrop-blur-xl"
-      style={{ background: "hsl(230 22% 5% / 0.9)" }}
+      style={{ background: "hsl(var(--background) / 0.9)" }}
     >
       <div className="mx-auto max-w-[1200px] flex items-center justify-between gap-4 h-[60px] px-6 lg:px-10">
         {/* Logo */}
@@ -87,7 +87,7 @@ export function Topbar() {
             </svg>
           </div>
           <span className="font-display text-[17px] font-bold text-foreground tracking-[-0.02em]">
-            RealToolbox<span className="text-[hsl(229_94%_82%)]">.ai</span>
+            RealToolbox<span className="text-accent">.ai</span>
           </span>
         </Link>
 

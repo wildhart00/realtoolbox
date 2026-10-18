@@ -9,11 +9,11 @@ export function McpDifferentiatorCallout({ className = "" }: { className?: strin
         className
       }
     >
-      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[hsl(239_84%_60%)]/15 text-[hsl(229_94%_82%)]">
+      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[hsl(239_84%_60%)]/15 text-accent">
         <Plug className="h-4.5 w-4.5" />
       </div>
       <div className="min-w-0">
-        <p className="text-[11px] uppercase tracking-[0.14em] text-[hsl(229_94%_82%)] font-semibold">
+        <p className="text-[11px] uppercase tracking-[0.14em] text-accent font-semibold">
           MCP built-in
         </p>
         <p className="mt-1 text-[14px] text-foreground/90 leading-[1.6]">
@@ -28,7 +28,7 @@ export function McpDifferentiatorCallout({ className = "" }: { className?: strin
         */}
         <Link
           to="/how-it-works#connect-your-toolbox"
-          className="mt-2 inline-block text-[12.5px] font-semibold text-[hsl(229_94%_82%)] underline-offset-2 hover:underline"
+          className="mt-2 inline-block text-[12.5px] font-semibold text-accent underline-offset-2 hover:underline"
         >
           How the connection works →
         </Link>

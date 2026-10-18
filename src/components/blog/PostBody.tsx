@@ -77,7 +77,7 @@ function renderInline(text: string): ReactNode[] {
             <Link
               key={key++}
               to={href}
-              className="text-[hsl(229_94%_82%)] underline-offset-2 hover:underline"
+              className="text-accent underline-offset-2 hover:underline"
             >
               {label}
             </Link>
@@ -87,7 +87,7 @@ function renderInline(text: string): ReactNode[] {
               href={href}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-[hsl(229_94%_82%)] underline-offset-2 hover:underline"
+              className="text-accent underline-offset-2 hover:underline"
             >
               {label}
             </a>
@@ -230,7 +230,7 @@ function renderBlock(block: string, i: number): ReactNode {
       <ol key={i} className="mt-5 flex flex-col gap-2.5">
         {items.map((it, j) => (
           <li key={j} className="flex gap-3 text-[15px] text-muted-foreground leading-relaxed">
-            <span className="mt-[1px] inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-[hsl(239_84%_60%)]/15 text-[11px] font-bold text-[hsl(229_94%_82%)]">
+            <span className="mt-[1px] inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-[hsl(239_84%_60%)]/15 text-[11px] font-bold text-accent">
               {j + 1}
             </span>
             <span>{renderInline(it)}</span>
@@ -246,7 +246,7 @@ function renderBlock(block: string, i: number): ReactNode {
       <ul key={i} className="mt-5 flex flex-col gap-2.5">
         {items.map((it, j) => (
           <li key={j} className="flex gap-3 text-[15px] text-muted-foreground leading-relaxed">
-            <span className="mt-[10px] h-1.5 w-1.5 shrink-0 rounded-full bg-[hsl(229_94%_82%)]" />
+            <span className="mt-[10px] h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
             <span>{renderInline(it)}</span>
           </li>
         ))}

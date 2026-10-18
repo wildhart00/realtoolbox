@@ -88,7 +88,7 @@ const workflows: WorkflowItem[] = [
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex items-center gap-2.5 mb-6">
-      <span className="h-1.5 w-1.5 rounded-full bg-[hsl(229_94%_82%)]" />
+      <span className="h-1.5 w-1.5 rounded-full bg-accent" />
       <span className="text-[11px] font-semibold tracking-[0.18em] text-muted-foreground uppercase">
         {children}
       </span>
@@ -121,12 +121,12 @@ export default function AgentsPage() {
       <section className="mx-auto max-w-[1200px] px-6 lg:px-10 pt-16 lg:pt-24 pb-14">
         <div className="max-w-3xl">
           <div className="inline-flex items-center gap-2 rounded-full border border-foreground/10 bg-foreground/[0.03] px-3 py-1 text-[11px] font-semibold tracking-[0.16em] text-muted-foreground uppercase">
-            <span className="h-1.5 w-1.5 rounded-full bg-[hsl(229_94%_82%)]" />
+            <span className="h-1.5 w-1.5 rounded-full bg-accent" />
             Agents
           </div>
           <h1 className="mt-5 font-display text-5xl lg:text-[64px] font-bold leading-[1.02] tracking-[-0.03em] text-foreground">
             Agentic AI for{" "}
-            <span className="bg-gradient-to-r from-[hsl(229_94%_82%)] to-[hsl(265_84%_75%)] bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-accent to-[hsl(265_84%_75%)] bg-clip-text text-transparent">
               real estate
             </span>
           </h1>
@@ -143,7 +143,7 @@ export default function AgentsPage() {
                 key={p}
                 className="inline-flex items-center gap-2 rounded-full border border-foreground/10 bg-foreground/[0.03] px-3.5 py-1.5 text-[12.5px] font-medium text-foreground/80"
               >
-                <span className="h-1.5 w-1.5 rounded-full bg-[hsl(229_94%_82%)]" />
+                <span className="h-1.5 w-1.5 rounded-full bg-accent" />
                 {p}
               </span>
             ))}
@@ -178,7 +178,7 @@ export default function AgentsPage() {
       {/* Submit callout */}
       <section className="mx-auto max-w-[1200px] px-6 lg:px-10 pb-24">
         <div className="relative overflow-hidden rounded-2xl border border-foreground/10 bg-gradient-to-br from-foreground/[0.04] to-foreground/[0.01] px-8 py-10 lg:px-12 lg:py-12 text-center">
-          <div className="absolute inset-x-0 -top-px h-px bg-gradient-to-r from-transparent via-[hsl(229_94%_82%)]/40 to-transparent" />
+          <div className="absolute inset-x-0 -top-px h-px bg-gradient-to-r from-transparent via-accent/40 to-transparent" />
           <h2 className="font-display text-2xl lg:text-3xl font-bold tracking-[-0.02em] text-foreground">
             Running an agent workflow we should feature?
           </h2>

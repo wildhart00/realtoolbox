@@ -30,7 +30,7 @@ export function GuardrailsSection() {
       <div className="mt-6">
         <Link
           to="/how-it-works#why-these-are-different"
-          className="text-[13.5px] font-semibold text-[hsl(229_94%_82%)] underline-offset-2 hover:underline"
+          className="text-[13.5px] font-semibold text-accent underline-offset-2 hover:underline"
         >
           What that looks like on a real deal →
         </Link>

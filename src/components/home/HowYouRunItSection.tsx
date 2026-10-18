@@ -46,10 +46,10 @@ export function HowYouRunItSection() {
           return (
             <div key={w.title} className="surface-card rounded-2xl p-6 lg:p-7 border border-transparent">
               <div className="flex items-center gap-3 mb-3">
-                <span className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-[hsl(239_84%_60%)]/15 text-[hsl(229_94%_82%)]">
+                <span className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-[hsl(239_84%_60%)]/15 text-accent">
                   <Icon className="h-4 w-4" strokeWidth={2} />
                 </span>
-                <span className="text-[11px] uppercase tracking-[0.14em] text-[hsl(229_94%_82%)] font-semibold">
+                <span className="text-[11px] uppercase tracking-[0.14em] text-accent font-semibold">
                   {w.tag}
                 </span>
               </div>
@@ -65,7 +65,7 @@ export function HowYouRunItSection() {
       <div className="mt-6">
         <Link
           to="/how-it-works"
-          className="text-[13.5px] font-semibold text-[hsl(229_94%_82%)] underline-offset-2 hover:underline"
+          className="text-[13.5px] font-semibold text-accent underline-offset-2 hover:underline"
         >
           See how it works, step by step →
         </Link>

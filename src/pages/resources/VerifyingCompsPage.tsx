@@ -57,7 +57,7 @@ export default function VerifyingCompsPage() {
           "It is recent enough that the market it sold into is the market you'll be selling into.",
         ].map((t) => (
           <li key={t} className="flex items-start gap-3 text-[14.5px] text-muted-foreground leading-[1.7]">
-            <span className="mt-[10px] h-1.5 w-1.5 shrink-0 rounded-full bg-[hsl(229_94%_82%)]" />
+            <span className="mt-[10px] h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
             <span>{t}</span>
           </li>
         ))}

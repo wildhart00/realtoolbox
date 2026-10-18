@@ -37,7 +37,7 @@ const WHAT_IT_SOLVES = [
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex items-center gap-2.5 mb-6">
-      <span className="h-1.5 w-1.5 rounded-full bg-[hsl(229_94%_82%)]" />
+      <span className="h-1.5 w-1.5 rounded-full bg-accent" />
       <span className="text-[11px] font-semibold tracking-[0.18em] text-muted-foreground uppercase">
         {children}
       </span>
@@ -115,12 +115,12 @@ export default function ToolboxIndexPage() {
       <section className="mx-auto max-w-[1200px] px-6 lg:px-10 pt-16 lg:pt-24 pb-12">
         <div className="max-w-3xl">
           <div className="inline-flex items-center gap-2 rounded-full border border-foreground/10 bg-foreground/[0.03] px-3 py-1 text-[11px] font-semibold tracking-[0.16em] text-muted-foreground uppercase">
-            <span className="h-1.5 w-1.5 rounded-full bg-[hsl(229_94%_82%)]" />
+            <span className="h-1.5 w-1.5 rounded-full bg-accent" />
             The Toolbox
           </div>
           <h1 className="mt-5 font-display text-4xl lg:text-[56px] font-bold leading-[1.03] tracking-[-0.03em] text-foreground">
             A working set of skills for{" "}
-            <span className="bg-gradient-to-r from-[hsl(229_94%_82%)] to-[hsl(265_84%_75%)] bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-accent to-[hsl(265_84%_75%)] bg-clip-text text-transparent">
               deciding on a deal.
             </span>
           </h1>
@@ -163,7 +163,7 @@ export default function ToolboxIndexPage() {
           Working with investor clients rather than buying yourself?{" "}
           <Link
             to="/for-agents"
-            className="text-[hsl(229_94%_82%)] font-semibold underline-offset-2 hover:underline"
+            className="text-accent font-semibold underline-offset-2 hover:underline"
           >
             The same seven skills, positioned for agents →
           </Link>
@@ -177,7 +177,7 @@ export default function ToolboxIndexPage() {
         <div className="mt-5">
           <Link
             to="/how-it-works#why-these-are-different"
-            className="text-[13.5px] font-semibold text-[hsl(229_94%_82%)] underline-offset-2 hover:underline"
+            className="text-[13.5px] font-semibold text-accent underline-offset-2 hover:underline"
           >
             What each of those means in practice →
           </Link>
@@ -234,7 +234,7 @@ export default function ToolboxIndexPage() {
           >
             <div>
               <h4 className="font-display text-[17px] text-foreground tracking-tight flex items-center gap-2">
-                <Compass className="h-4 w-4 text-[hsl(229_94%_82%)]" /> How it works
+                <Compass className="h-4 w-4 text-accent" /> How it works
               </h4>
               <p className="mt-1 text-[13px] text-muted-foreground leading-[1.6]">
                 What a skill is, both ways to run one, and where the free one fits.
@@ -249,7 +249,7 @@ export default function ToolboxIndexPage() {
           >
             <div>
               <h4 className="font-display text-[17px] text-foreground tracking-tight flex items-center gap-2">
-                <BookOpen className="h-4 w-4 text-[hsl(229_94%_82%)]" /> Setup guide
+                <BookOpen className="h-4 w-4 text-accent" /> Setup guide
               </h4>
               <p className="mt-1 text-[13px] text-muted-foreground leading-[1.6]">
                 Step-by-step for ChatGPT, Claude, and Gemini, plus MCP setup.
@@ -266,7 +266,7 @@ export default function ToolboxIndexPage() {
           <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] opacity-90" />
           <div className="relative m-[1px] rounded-[15px] bg-[hsl(230_18%_8%)] px-6 py-8 lg:px-10 lg:py-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
             <div className="max-w-2xl">
-              <span className="inline-flex items-center rounded-md border border-accent/25 bg-accent/10 px-2 py-[3px] text-[10px] font-semibold uppercase tracking-[0.12em] text-[hsl(229_94%_82%)]">
+              <span className="inline-flex items-center rounded-md border border-accent/25 bg-accent/10 px-2 py-[3px] text-[10px] font-semibold uppercase tracking-[0.12em] text-accent">
                 Free forever
               </span>
               <h3 className="mt-3 font-display text-[24px] sm:text-[30px] text-foreground tracking-[-0.02em] leading-[1.15]">
@@ -330,7 +330,7 @@ export default function ToolboxIndexPage() {
                   "One payment — own it forever",
                 ].map((item) => (
                   <li key={item} className="flex items-start gap-2.5 text-[13px] text-foreground/80">
-                    <Check className="h-4 w-4 text-[hsl(229_94%_82%)] shrink-0 mt-[1px]" />
+                    <Check className="h-4 w-4 text-accent shrink-0 mt-[1px]" />
                     <span>{item}</span>
                   </li>
                 ))}
@@ -380,7 +380,7 @@ export default function ToolboxIndexPage() {
                 "One payment — own it forever",
               ].map((item) => (
                 <li key={item} className="flex items-start gap-2.5 text-[13px] text-foreground/80">
-                  <Check className="h-4 w-4 text-[hsl(229_94%_82%)] shrink-0 mt-[1px]" />
+                  <Check className="h-4 w-4 text-accent shrink-0 mt-[1px]" />
                   <span>{item}</span>
                 </li>
               ))}

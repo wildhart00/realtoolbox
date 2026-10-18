@@ -63,7 +63,7 @@ export default function TermsPage() {
             <p>
               We may update these terms from time to time. Continued use of the site after changes
               means you accept the updated terms. Questions? Reach out via our{" "}
-              <a href="/contact" className="text-[hsl(229_94%_82%)] hover:underline">
+              <a href="/contact" className="text-accent hover:underline">
                 contact page
               </a>.
             </p>

@@ -51,7 +51,7 @@ export function categoryLabel(slug: string): string {
 export function IntegrationCard({ item }: { item: Integration }) {
   const tint = categoryTints[item.category] ?? "from-foreground/10 to-foreground/5";
   return (
-    <div className="group flex flex-col rounded-2xl p-[22px] surface-card hover:surface-card-hover hover:-translate-y-0.5 hover:border-[hsl(229_94%_82%)]/30 transition-base">
+    <div className="group flex flex-col rounded-2xl p-[22px] surface-card hover:surface-card-hover hover:-translate-y-0.5 hover:border-accent/30 transition-base">
       <div className="flex items-start gap-[11px] mb-[14px]">
         {item.logo_url ? (
           <img
@@ -93,7 +93,7 @@ export function IntegrationCard({ item }: { item: Integration }) {
           href={item.setup_url}
           target="_blank"
           rel="noopener noreferrer"
-          className="ml-auto inline-flex items-center gap-1 text-[12px] font-semibold text-[hsl(229_94%_82%)] hover:text-foreground transition-base"
+          className="ml-auto inline-flex items-center gap-1 text-[12px] font-semibold text-accent hover:text-foreground transition-base"
         >
           Learn how to connect <ArrowUpRight className="h-3.5 w-3.5" />
         </a>

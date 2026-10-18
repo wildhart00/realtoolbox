@@ -184,7 +184,7 @@ export default function StackPage({ kind }: { kind: StackKind }) {
       {/* Header */}
       <section className="px-6 lg:px-10 pt-10 pb-6">
         <div className="mx-auto" style={{ maxWidth: 900 }}>
-          <div className="inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-[hsl(229_94%_82%)] mb-4">
+          <div className="inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-accent mb-4">
             <Layers className="h-3.5 w-3.5" />
             {meta.eyebrow}
           </div>
@@ -223,7 +223,7 @@ export default function StackPage({ kind }: { kind: StackKind }) {
             className="mx-auto surface-card rounded-2xl p-8 text-center"
             style={{ maxWidth: 720 }}
           >
-            <Sparkles className="h-6 w-6 text-[hsl(229_94%_82%)] mx-auto mb-3" />
+            <Sparkles className="h-6 w-6 text-accent mx-auto mb-3" />
             <h2 className="font-display text-[20px] font-semibold text-foreground mb-2">
               This stack is being curated
             </h2>
@@ -304,9 +304,9 @@ function CrossPromo({
 }) {
   if (kind === "investor") {
     return (
-      <div className="my-10 rounded-2xl border border-[hsl(229_94%_82%)]/25 bg-gradient-to-br from-[hsl(252_84%_18%)]/40 via-transparent to-[hsl(265_84%_20%)]/30 p-6 md:p-8 flex flex-col md:flex-row items-start md:items-center gap-5">
+      <div className="my-10 rounded-2xl border border-accent/25 bg-gradient-to-br from-[hsl(252_84%_18%)]/40 via-transparent to-[hsl(265_84%_20%)]/30 p-6 md:p-8 flex flex-col md:flex-row items-start md:items-center gap-5">
         <div className="flex-1 min-w-0">
-          <div className="text-[11px] uppercase tracking-[0.14em] font-semibold text-[hsl(229_94%_82%)] mb-2">
+          <div className="text-[11px] uppercase tracking-[0.14em] font-semibold text-accent mb-2">
             Go beyond the tools
           </div>
           <h3 className="font-display text-[22px] font-bold text-foreground tracking-[-0.02em] mb-1.5">
@@ -328,9 +328,9 @@ function CrossPromo({
     );
   }
   return (
-    <div className="my-10 rounded-2xl border border-[hsl(229_94%_82%)]/25 bg-gradient-to-br from-[hsl(252_84%_18%)]/40 via-transparent to-[hsl(265_84%_20%)]/30 p-6 md:p-8 flex flex-col md:flex-row items-start md:items-center gap-5">
+    <div className="my-10 rounded-2xl border border-accent/25 bg-gradient-to-br from-[hsl(252_84%_18%)]/40 via-transparent to-[hsl(265_84%_20%)]/30 p-6 md:p-8 flex flex-col md:flex-row items-start md:items-center gap-5">
       <div className="flex-1 min-w-0">
-        <div className="text-[11px] uppercase tracking-[0.14em] font-semibold text-[hsl(229_94%_82%)] mb-2">
+        <div className="text-[11px] uppercase tracking-[0.14em] font-semibold text-accent mb-2">
           Coming soon
         </div>
         <h3 className="font-display text-[22px] font-bold text-foreground tracking-[-0.02em] mb-1.5">

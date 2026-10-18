@@ -59,7 +59,7 @@ export function SkillPreviewCard({
       )}
     >
       <div className="flex items-start justify-between gap-3">
-        <span className="text-[10px] px-2 py-[3px] rounded-md border bg-accent/10 text-[hsl(229_94%_82%)] border-accent/25 font-semibold uppercase tracking-[0.06em]">
+        <span className="text-[10px] px-2 py-[3px] rounded-md border bg-accent/10 text-accent border-accent/25 font-semibold uppercase tracking-[0.06em]">
           {tagline ?? "Skill"}
         </span>
         {isPaid && (
@@ -68,7 +68,7 @@ export function SkillPreviewCard({
               <Lock className="h-3 w-3" aria-hidden /> Locked
             </span>
           ) : (
-            <span className="inline-flex items-center gap-1 text-[10px] font-semibold uppercase tracking-[0.08em] text-[hsl(229_94%_82%)]">
+            <span className="inline-flex items-center gap-1 text-[10px] font-semibold uppercase tracking-[0.08em] text-accent">
               <Sparkles className="h-3 w-3" aria-hidden /> Unlocked
             </span>
           )

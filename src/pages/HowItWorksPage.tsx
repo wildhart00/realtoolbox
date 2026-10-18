@@ -62,12 +62,12 @@ export default function HowItWorksPage() {
       <section className="mx-auto max-w-[1100px] px-6 lg:px-10 pt-16 lg:pt-24 pb-12">
         <div className="max-w-3xl">
           <div className="inline-flex items-center gap-2 rounded-full border border-foreground/10 bg-foreground/[0.03] px-3 py-1 text-[11px] font-semibold tracking-[0.16em] text-muted-foreground uppercase">
-            <span className="h-1.5 w-1.5 rounded-full bg-[hsl(229_94%_82%)]" />
+            <span className="h-1.5 w-1.5 rounded-full bg-accent" />
             How it works
           </div>
           <h1 className="mt-5 font-display text-4xl lg:text-[56px] font-bold leading-[1.03] tracking-[-0.03em] text-foreground">
             You already have the AI.{" "}
-            <span className="bg-gradient-to-r from-[hsl(229_94%_82%)] to-[hsl(265_84%_75%)] bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-accent to-[hsl(265_84%_75%)] bg-clip-text text-transparent">
               This is what to put in it.
             </span>
           </h1>
@@ -128,10 +128,10 @@ export default function HowItWorksPage() {
             return (
               <div key={m.title} className="surface-card rounded-2xl p-6 lg:p-7 flex flex-col">
                 <div className="flex items-center gap-3 mb-3">
-                  <span className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-[hsl(239_84%_60%)]/15 text-[hsl(229_94%_82%)]">
+                  <span className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-[hsl(239_84%_60%)]/15 text-accent">
                     <Icon className="h-4 w-4" strokeWidth={2} />
                   </span>
-                  <span className="text-[11px] uppercase tracking-[0.14em] text-[hsl(229_94%_82%)] font-semibold">
+                  <span className="text-[11px] uppercase tracking-[0.14em] text-accent font-semibold">
                     {m.kicker}
                   </span>
                 </div>
@@ -142,7 +142,7 @@ export default function HowItWorksPage() {
                 <ul className="mt-4 flex flex-col gap-2 border-t border-foreground/[0.07] pt-4">
                   {m.detail.map((d) => (
                     <li key={d} className="flex items-start gap-2.5 text-[13px] text-foreground/75">
-                      <span className="mt-[7px] h-1 w-1 shrink-0 rounded-full bg-[hsl(229_94%_82%)]" />
+                      <span className="mt-[7px] h-1 w-1 shrink-0 rounded-full bg-accent" />
                       <span className="leading-[1.55]">{d}</span>
                     </li>
                   ))}
@@ -159,7 +159,7 @@ export default function HowItWorksPage() {
         </div>
         <p className="mt-4 text-[13px] text-muted-foreground leading-[1.65] max-w-2xl">
           Already have an account?{" "}
-          <Link to="/setup-guide" className="text-[hsl(229_94%_82%)] underline-offset-2 hover:underline">
+          <Link to="/setup-guide" className="text-accent underline-offset-2 hover:underline">
             The full setup guide
           </Link>{" "}
           walks through each client step by step.
@@ -191,7 +191,7 @@ export default function HowItWorksPage() {
               className="surface-card rounded-2xl p-6 lg:p-7 flex flex-col sm:flex-row gap-4 sm:gap-7"
             >
               <div className="sm:w-[240px] shrink-0">
-                <span className="font-display text-[22px] font-bold text-[hsl(229_94%_82%)] leading-none">
+                <span className="font-display text-[22px] font-bold text-accent leading-none">
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 <h3 className="mt-2 font-display text-[17px] text-foreground tracking-tight leading-snug">
@@ -236,7 +236,7 @@ export default function HowItWorksPage() {
                   : "border border-foreground/10")
               }
             >
-              <span className="font-display text-[20px] font-bold text-[hsl(229_94%_82%)] leading-none w-7 shrink-0 pt-[2px]">
+              <span className="font-display text-[20px] font-bold text-accent leading-none w-7 shrink-0 pt-[2px]">
                 {String(step.num).padStart(2, "0")}
               </span>
               <span className="min-w-0">
@@ -257,7 +257,7 @@ export default function HowItWorksPage() {
         </ol>
 
         <div className="mt-10 relative overflow-hidden rounded-2xl border border-foreground/10 bg-gradient-to-br from-[hsl(239_84%_60%)]/10 via-[hsl(252_84%_64%)]/10 to-[hsl(265_84%_60%)]/10 px-6 py-10 lg:px-12 lg:py-12 text-center">
-          <div className="absolute inset-x-0 -top-px h-px bg-gradient-to-r from-transparent via-[hsl(229_94%_82%)]/60 to-transparent" />
+          <div className="absolute inset-x-0 -top-px h-px bg-gradient-to-r from-transparent via-accent/60 to-transparent" />
           <h2 className="font-display text-[26px] sm:text-[32px] text-foreground tracking-[-0.02em] leading-tight">
             Run one of your own deals through it.
           </h2>

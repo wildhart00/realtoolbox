@@ -103,12 +103,12 @@ export default function InvestorToolboxPage() {
       <section className="mx-auto max-w-[1100px] px-6 lg:px-10 pt-16 lg:pt-24 pb-14">
         <div className="max-w-3xl">
           <div className="inline-flex items-center gap-2 rounded-full border border-foreground/10 bg-foreground/[0.03] px-3 py-1 text-[11px] font-semibold tracking-[0.16em] text-muted-foreground uppercase">
-            <span className="h-1.5 w-1.5 rounded-full bg-[hsl(229_94%_82%)]" />
+            <span className="h-1.5 w-1.5 rounded-full bg-accent" />
             Investor Toolbox
           </div>
           <h1 className="mt-5 font-display text-4xl lg:text-[56px] font-bold leading-[1.03] tracking-[-0.03em] text-foreground">
             Make your first real deal decision{" "}
-            <span className="bg-gradient-to-r from-[hsl(229_94%_82%)] to-[hsl(265_84%_75%)] bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-accent to-[hsl(265_84%_75%)] bg-clip-text text-transparent">
               without losing your shirt.
             </span>
           </h1>
@@ -160,7 +160,7 @@ export default function InvestorToolboxPage() {
                   : "border border-foreground/10")
               }
             >
-              <span className="font-display text-[22px] font-bold text-[hsl(229_94%_82%)] leading-none w-7 shrink-0">
+              <span className="font-display text-[22px] font-bold text-accent leading-none w-7 shrink-0">
                 {String(step.num).padStart(2, "0")}
               </span>
               <span className="min-w-0">
@@ -205,7 +205,7 @@ export default function InvestorToolboxPage() {
         <div className="mt-5">
           <Link
             to="/how-it-works#why-these-are-different"
-            className="text-[13.5px] font-semibold text-[hsl(229_94%_82%)] underline-offset-2 hover:underline"
+            className="text-[13.5px] font-semibold text-accent underline-offset-2 hover:underline"
           >
             What each of those means in practice →
           </Link>
@@ -224,7 +224,7 @@ export default function InvestorToolboxPage() {
           <ul className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3">
             {WHAT_YOU_GET.map((item) => (
               <li key={item} className="flex items-start gap-2.5 text-[14px] text-foreground/85">
-                <Check className="h-4 w-4 text-[hsl(229_94%_82%)] shrink-0 mt-[3px]" />
+                <Check className="h-4 w-4 text-accent shrink-0 mt-[3px]" />
                 <span>{item}</span>
               </li>
             ))}
@@ -240,7 +240,7 @@ export default function InvestorToolboxPage() {
       {/* 6 — Price, last */}
       <section id="pricing" className="mx-auto max-w-[1100px] px-6 lg:px-10 pb-16 scroll-mt-20">
         <div className="relative overflow-hidden rounded-2xl border border-foreground/10 bg-gradient-to-br from-[hsl(239_84%_60%)]/10 via-[hsl(252_84%_64%)]/10 to-[hsl(265_84%_60%)]/10 px-6 py-10 lg:px-12 lg:py-12 text-center">
-          <div className="absolute inset-x-0 -top-px h-px bg-gradient-to-r from-transparent via-[hsl(229_94%_82%)]/60 to-transparent" />
+          <div className="absolute inset-x-0 -top-px h-px bg-gradient-to-r from-transparent via-accent/60 to-transparent" />
           <h2 className="font-display text-[28px] sm:text-[34px] text-foreground tracking-[-0.02em] leading-tight">
             One payment. Yours forever.
           </h2>
@@ -263,7 +263,7 @@ export default function InvestorToolboxPage() {
             Not ready?{" "}
             <Link
               to={freeCtaTarget}
-              className="text-[hsl(229_94%_82%)] font-semibold underline-offset-2 hover:underline"
+              className="text-accent font-semibold underline-offset-2 hover:underline"
             >
               Start with the free Deal Screen
             </Link>{" "}
@@ -297,14 +297,14 @@ export default function InvestorToolboxPage() {
           Still deciding?{" "}
           <Link
             to="/how-it-works"
-            className="text-[hsl(229_94%_82%)] font-semibold underline-offset-2 hover:underline"
+            className="text-accent font-semibold underline-offset-2 hover:underline"
           >
             Read how it works
           </Link>
           . Working with investor clients?{" "}
           <Link
             to="/for-agents"
-            className="text-[hsl(229_94%_82%)] font-semibold underline-offset-2 hover:underline"
+            className="text-accent font-semibold underline-offset-2 hover:underline"
           >
             See the agent fit
           </Link>

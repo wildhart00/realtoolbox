@@ -80,7 +80,7 @@ export function InvestorArcSection() {
       <div className="mt-10 flex justify-center">
         <Link
           to="/toolbox/investor"
-          className="text-[14px] font-semibold text-[hsl(229_94%_82%)] hover:text-[hsl(229_94%_90%)] transition-base"
+          className="text-[14px] font-semibold text-accent hover:text-[hsl(229_94%_90%)] transition-base"
         >
           See all seven in detail →
         </Link>

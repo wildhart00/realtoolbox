@@ -129,12 +129,12 @@ function BlogIndex() {
       <section className="mx-auto max-w-[1100px] px-6 lg:px-10 pt-16 lg:pt-24 pb-10">
         <div className="max-w-3xl">
           <div className="inline-flex items-center gap-2 rounded-full border border-foreground/10 bg-foreground/[0.03] px-3 py-1 text-[11px] font-semibold tracking-[0.16em] text-muted-foreground uppercase">
-            <span className="h-1.5 w-1.5 rounded-full bg-[hsl(229_94%_82%)]" />
+            <span className="h-1.5 w-1.5 rounded-full bg-accent" />
             Blog
           </div>
           <h1 className="mt-5 font-display text-4xl lg:text-[56px] font-bold leading-[1.03] tracking-[-0.03em] text-foreground">
             Which tools are worth it,{" "}
-            <span className="bg-gradient-to-r from-[hsl(229_94%_82%)] to-[hsl(265_84%_75%)] bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-accent to-[hsl(265_84%_75%)] bg-clip-text text-transparent">
               and which aren&apos;t.
             </span>
           </h1>
@@ -240,7 +240,7 @@ function BlogIndex() {
                         {hero.reading_minutes} min read
                       </span>
                     </div>
-                    <span className="mt-5 inline-flex items-center gap-1.5 text-[13.5px] font-semibold text-[hsl(229_94%_82%)]">
+                    <span className="mt-5 inline-flex items-center gap-1.5 text-[13.5px] font-semibold text-accent">
                       Read article
                       <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                     </span>
@@ -322,7 +322,7 @@ function EmptyBlog() {
             const Icon = t.icon;
             return (
               <div key={t.title} className="rounded-xl border border-foreground/10 bg-foreground/[0.02] p-5">
-                <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-[hsl(239_84%_60%)]/15 text-[hsl(229_94%_82%)]">
+                <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-[hsl(239_84%_60%)]/15 text-accent">
                   <Icon className="h-4 w-4" strokeWidth={2} />
                 </span>
                 <h4 className="mt-3 text-[14.5px] font-semibold text-foreground leading-snug">
@@ -424,7 +424,7 @@ function BlogPostView({ slug }: { slug: string }) {
                 <li key={h.id}>
                   <a
                     href={`#${h.id}`}
-                    className="text-[13.5px] text-foreground/80 hover:text-[hsl(229_94%_82%)] underline-offset-2 hover:underline"
+                    className="text-[13.5px] text-foreground/80 hover:text-accent underline-offset-2 hover:underline"
                   >
                     {h.text}
                   </a>

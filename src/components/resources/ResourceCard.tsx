@@ -30,7 +30,7 @@ const typeMeta: Record<
 > = {
   guide: {
     label: "Guide",
-    badge: "bg-accent/10 text-[hsl(229_94%_82%)] border-accent/25",
+    badge: "bg-accent/10 text-accent border-accent/25",
     icon: BookOpen,
   },
   "prompt-library": {
@@ -59,7 +59,7 @@ const accessMeta: Record<AccessLevel, { label: string; badge: string }> = {
   free: { label: "Free", badge: "bg-success/15 text-success border-success/25" },
   "email-gated": {
     label: "Free with email",
-    badge: "bg-accent/10 text-[hsl(229_94%_82%)] border-accent/25",
+    badge: "bg-accent/10 text-accent border-accent/25",
   },
   premium: {
     label: "Premium",

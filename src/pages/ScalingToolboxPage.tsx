@@ -102,12 +102,12 @@ export default function ScalingToolboxPage() {
       <section className="mx-auto max-w-[1100px] px-6 lg:px-10 pt-16 lg:pt-24 pb-14">
         <div className="max-w-3xl">
           <div className="inline-flex items-center gap-2 rounded-full border border-foreground/10 bg-foreground/[0.03] px-3 py-1 text-[11px] font-semibold tracking-[0.16em] text-muted-foreground uppercase">
-            <span className="h-1.5 w-1.5 rounded-full bg-[hsl(229_94%_82%)]" />
+            <span className="h-1.5 w-1.5 rounded-full bg-accent" />
             Coming soon
           </div>
           <h1 className="mt-5 font-display text-4xl lg:text-[56px] font-bold leading-[1.03] tracking-[-0.03em] text-foreground">
             The Scaling Toolbox{" "}
-            <span className="bg-gradient-to-r from-[hsl(229_94%_82%)] to-[hsl(265_84%_75%)] bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-accent to-[hsl(265_84%_75%)] bg-clip-text text-transparent">
               is coming.
             </span>
           </h1>
@@ -173,7 +173,7 @@ export default function ScalingToolboxPage() {
           <ul className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3">
             {CONTENTS.map((item) => (
               <li key={item} className="flex items-start gap-2.5 text-[14px] text-foreground/85">
-                <Check className="h-4 w-4 text-[hsl(229_94%_82%)] shrink-0 mt-[3px]" />
+                <Check className="h-4 w-4 text-accent shrink-0 mt-[3px]" />
                 <span>{item}</span>
               </li>
             ))}
@@ -188,7 +188,7 @@ export default function ScalingToolboxPage() {
       {/* Waitlist */}
       <section className="mx-auto max-w-[820px] px-6 lg:px-10 pb-14">
         <div className="relative overflow-hidden rounded-2xl border border-foreground/10 bg-gradient-to-br from-foreground/[0.06] to-foreground/[0.01] px-8 py-10 lg:px-12 lg:py-12 text-center">
-          <div className="absolute inset-x-0 -top-px h-px bg-gradient-to-r from-transparent via-[hsl(229_94%_82%)]/40 to-transparent" />
+          <div className="absolute inset-x-0 -top-px h-px bg-gradient-to-r from-transparent via-accent/40 to-transparent" />
           <h2 className="font-display text-2xl lg:text-[32px] font-bold tracking-[-0.02em] text-foreground">
             Join the waitlist
           </h2>
