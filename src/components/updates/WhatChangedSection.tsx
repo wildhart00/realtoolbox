@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import * as RadioGroupPrimitive from "@radix-ui/react-radio-group";
 import { UPDATES, SEED_META, type AudienceChoice } from "@/lib/updates/seed";
@@ -32,6 +32,7 @@ export function WhatChangedSection({ now, hostname }: Props) {
   const host = hostname ?? (typeof window !== "undefined" ? window.location.hostname : "");
   const [refNow] = useState(() => now ?? new Date());
   const [choice, setChoice] = useState<AudienceChoice>(readStored);
+  const arrowRef = useRef(false);
   const [taskId, setTaskId] = useState<string | null>(null);
   useEffect(() => {
     try { localStorage.setItem(KEY, choice); } catch { /* ignore */ }
@@ -72,11 +73,12 @@ export function WhatChangedSection({ now, hostname }: Props) {
             onValueChange={(v) => setChoice(v as AudienceChoice)}
             orientation="horizontal"
             loop
-            onKeyUp={(e) => {
-              // Ensure arrow-key focus also selects (WAI-ARIA radio pattern).
-              if (!e.key.startsWith("Arrow")) return;
-              const v = (document.activeElement as HTMLElement | null)?.getAttribute("value");
-              if (v === "investor" || v === "agent" || v === "both") setChoice(v);
+            onKeyDown={(e) => {
+              // WAI-ARIA radio pattern: arrow keys move focus AND select.
+              if (e.key.startsWith("Arrow")) {
+                arrowRef.current = true;
+                window.setTimeout(() => { arrowRef.current = false; }, 150);
+              }
             }}
             className="inline-flex rounded-full border border-foreground/15 p-1 bg-background/40"
           >
@@ -84,6 +86,7 @@ export function WhatChangedSection({ now, hostname }: Props) {
               <RadioGroupPrimitive.Item
                 key={o.value}
                 value={o.value}
+                onFocus={() => { if (arrowRef.current) setChoice(o.value); }}
                 className={cn(
                   "min-h-11 rounded-full px-4 text-[13px] font-medium transition-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
                   "text-foreground/70 hover:text-foreground data-[state=checked]:bg-foreground data-[state=checked]:text-background",
