@@ -18,3 +18,7 @@
 - [x] Prepare server-only bounded official-source HTTP collection and draft submission with fixtures; real source compatibility/coverage and prior-revision linkage remain unverified (requires approved source fetch checks).
 - [x] Prepare and locally validate narrow worker reservation/health/snapshot/job-log RPC proposal (115 regression + 31 new SQL checks).
 - [x] Record allowlist, terms/robots prerequisites, limits, hashes, tests and activation scope; stop before live changes.
+
+# Atom final preparation
+- [ ] Prepare exact-URL Workspace Atom transport/parser and two manual-review draft payloads with synthetic tests.
+- [ ] Document proposed allowlist and blocked newsroom adapters; no live fetch, SQL or activation.
