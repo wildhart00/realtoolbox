@@ -1,0 +1,13 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1792341970022,
+      "tag": "0000_install_dormant_update_engine",
+      "breakpoints": true
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+PASS missing_settings_ingest
+PASS missing_settings_publish
+PASS missing_settings_pause
+TOTAL pass=3 fail=0

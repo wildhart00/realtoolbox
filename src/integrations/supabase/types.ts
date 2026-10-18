@@ -881,6 +881,301 @@ export type Database = {
         }
         Relationships: []
       }
+      update_candidates: {
+        Row: {
+          canonical_url: string
+          content_hash: string
+          contradictions: string[]
+          draft_summary: string
+          evidence_level: string
+          first_seen_at: string
+          flags: string[]
+          id: string
+          published_at: string | null
+          published_date: string
+          reviewed_at: string | null
+          revision_of: string | null
+          risk: string
+          risk_reasons: string[]
+          source_checked_at: string
+          source_id: string
+          state: string
+          title: string
+          updated_at: string
+          withdrawn_at: string | null
+        }
+        Insert: {
+          canonical_url: string
+          content_hash: string
+          contradictions?: string[]
+          draft_summary: string
+          evidence_level?: string
+          first_seen_at?: string
+          flags?: string[]
+          id: string
+          published_at?: string | null
+          published_date: string
+          reviewed_at?: string | null
+          revision_of?: string | null
+          risk: string
+          risk_reasons?: string[]
+          source_checked_at: string
+          source_id: string
+          state?: string
+          title: string
+          updated_at?: string
+          withdrawn_at?: string | null
+        }
+        Update: {
+          canonical_url?: string
+          content_hash?: string
+          contradictions?: string[]
+          draft_summary?: string
+          evidence_level?: string
+          first_seen_at?: string
+          flags?: string[]
+          id?: string
+          published_at?: string | null
+          published_date?: string
+          reviewed_at?: string | null
+          revision_of?: string | null
+          risk?: string
+          risk_reasons?: string[]
+          source_checked_at?: string
+          source_id?: string
+          state?: string
+          title?: string
+          updated_at?: string
+          withdrawn_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "update_candidates_revision_of_fkey"
+            columns: ["revision_of"]
+            isOneToOne: false
+            referencedRelation: "update_candidates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "update_candidates_revision_of_fkey"
+            columns: ["revision_of"]
+            isOneToOne: false
+            referencedRelation: "updates_public"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "update_candidates_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "update_sources"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "update_candidates_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "update_sources_public"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      update_engine_settings: {
+        Row: {
+          id: boolean
+          paused: boolean
+          template_auto_publish_tested: boolean
+          updated_at: string
+        }
+        Insert: {
+          id?: boolean
+          paused?: boolean
+          template_auto_publish_tested?: boolean
+          updated_at?: string
+        }
+        Update: {
+          id?: boolean
+          paused?: boolean
+          template_auto_publish_tested?: boolean
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      update_job_runs: {
+        Row: {
+          budget_used: Json
+          detail: Json
+          id: string
+          outcome: string
+          source_id: string | null
+          started_at: string
+        }
+        Insert: {
+          budget_used?: Json
+          detail?: Json
+          id?: string
+          outcome: string
+          source_id?: string | null
+          started_at?: string
+        }
+        Update: {
+          budget_used?: Json
+          detail?: Json
+          id?: string
+          outcome?: string
+          source_id?: string | null
+          started_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "update_job_runs_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "update_sources"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "update_job_runs_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "update_sources_public"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      update_review_events: {
+        Row: {
+          actor_id: string | null
+          candidate_id: string
+          created_at: string
+          from_state: string | null
+          id: string
+          note: string | null
+          to_state: string
+        }
+        Insert: {
+          actor_id?: string | null
+          candidate_id: string
+          created_at?: string
+          from_state?: string | null
+          id?: string
+          note?: string | null
+          to_state: string
+        }
+        Update: {
+          actor_id?: string | null
+          candidate_id?: string
+          created_at?: string
+          from_state?: string | null
+          id?: string
+          note?: string | null
+          to_state?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "update_review_events_candidate_id_fkey"
+            columns: ["candidate_id"]
+            isOneToOne: false
+            referencedRelation: "update_candidates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "update_review_events_candidate_id_fkey"
+            columns: ["candidate_id"]
+            isOneToOne: false
+            referencedRelation: "updates_public"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      update_sources: {
+        Row: {
+          allowed_hosts: string[]
+          allowed_path_prefixes: string[]
+          cadence_hours: number
+          consecutive_failures: number
+          created_at: string
+          enabled: boolean
+          id: string
+          index_url: string
+          last_attempt_at: string | null
+          last_change_at: string | null
+          last_error: string | null
+          last_good_snapshot_hash: string | null
+          last_success_at: string | null
+          stale_after_hours: number
+          tool_id: string | null
+          updated_at: string
+          vendor: string
+        }
+        Insert: {
+          allowed_hosts: string[]
+          allowed_path_prefixes: string[]
+          cadence_hours?: number
+          consecutive_failures?: number
+          created_at?: string
+          enabled?: boolean
+          id: string
+          index_url: string
+          last_attempt_at?: string | null
+          last_change_at?: string | null
+          last_error?: string | null
+          last_good_snapshot_hash?: string | null
+          last_success_at?: string | null
+          stale_after_hours?: number
+          tool_id?: string | null
+          updated_at?: string
+          vendor: string
+        }
+        Update: {
+          allowed_hosts?: string[]
+          allowed_path_prefixes?: string[]
+          cadence_hours?: number
+          consecutive_failures?: number
+          created_at?: string
+          enabled?: boolean
+          id?: string
+          index_url?: string
+          last_attempt_at?: string | null
+          last_change_at?: string | null
+          last_error?: string | null
+          last_good_snapshot_hash?: string | null
+          last_success_at?: string | null
+          stale_after_hours?: number
+          tool_id?: string | null
+          updated_at?: string
+          vendor?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "update_sources_tool_id_fkey"
+            columns: ["tool_id"]
+            isOneToOne: false
+            referencedRelation: "tools"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_preferences: {
+        Row: {
+          audience: string
+          last_seen_updates_at: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          audience?: string
+          last_seen_updates_at?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          audience?: string
+          last_seen_updates_at?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -902,12 +1197,81 @@ export type Database = {
         }
         Relationships: []
       }
+      user_watch_topics: {
+        Row: {
+          created_at: string
+          topic: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          topic: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          topic?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
-      [_ in never]: never
+      update_sources_public: {
+        Row: {
+          id: string | null
+          index_url: string | null
+          last_success_at: string | null
+          vendor: string | null
+        }
+        Insert: {
+          id?: string | null
+          index_url?: string | null
+          last_success_at?: string | null
+          vendor?: string | null
+        }
+        Update: {
+          id?: string | null
+          index_url?: string | null
+          last_success_at?: string | null
+          vendor?: string | null
+        }
+        Relationships: []
+      }
+      updates_public: {
+        Row: {
+          evidence_level: string | null
+          id: string | null
+          published_at: string | null
+          source_checked_at: string | null
+          source_published_date: string | null
+          source_url: string | null
+          summary: string | null
+          title: string | null
+          vendor: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       claim_first_admin: { Args: never; Returns: boolean }
+      engine_record_revision: {
+        Args: {
+          _canonical_url: string
+          _content_hash: string
+          _contradictions: string[]
+          _draft_summary: string
+          _flags: string[]
+          _published_date: string
+          _revision_of: string
+          _risk: string
+          _risk_reasons: string[]
+          _source_checked_at: string
+          _source_id: string
+          _title: string
+        }
+        Returns: string
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -918,6 +1282,19 @@ export type Database = {
       increment_skill_download: {
         Args: { skill_slug: string }
         Returns: number
+      }
+      publish_update_candidate: {
+        Args: { _id: string; _note: string }
+        Returns: string
+      }
+      review_update_candidate: {
+        Args: { _id: string; _note: string; _to: string }
+        Returns: string
+      }
+      set_update_engine_paused: { Args: { _paused: boolean }; Returns: boolean }
+      withdraw_update_candidate: {
+        Args: { _id: string; _note: string }
+        Returns: string
       }
     }
     Enums: {
