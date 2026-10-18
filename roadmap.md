@@ -26,3 +26,8 @@
 - [x] Wire feed-only reservation, metadata draft submission, lineage and health finish; no live effects.
 - [x] Validate mocked whole path, Deno runtime and disposable PG16 SQL/ACL/concurrency.
 - [x] Record approval artifact hashes, exact source/settings changes and credit checkpoint.
+
+# Approved one live manual Atom test
+- [x] Fix lost-unpause-response cleanup and verify artifact pins/tests (177 passed).
+- [ ] Install approved RPCs/source/handler: blocked by Deno rejecting ClientRequest.options.lookup; live target/dependencies verified, no installation performed.
+- [ ] Attempt one capped request: blocked by unsupported pinned transport; final paused=true/tested=false and zero source/draft/job/public rows independently verified.

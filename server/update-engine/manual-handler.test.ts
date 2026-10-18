@@ -1,6 +1,19 @@
 import {describe,it,expect,vi} from 'vitest';
 import {manualAtomHandler} from './manual-handler.proposal';
 describe('manual admin boundary',()=>{
+ it('restores pause when unpause commits but its response is lost',async()=>{
+  let paused=true;
+  const rpc=vi.fn(async(_name:string,args:Record<string,unknown>)=>{
+   paused=args._paused===true;
+   if(!paused)throw Error('lost response after commit');
+   return {data:true,error:null};
+  });
+  const collect=vi.fn();
+  const handler=manualAtomHandler({verifyAdmin:async()=>({userId:'synthetic-admin',rpc}),workerRpc:vi.fn(),collect});
+  expect((await handler(new Request('https://local.invalid',{method:'POST'}))).status).toBe(503);
+  expect(rpc.mock.calls.map(c=>c[1]._paused)).toEqual([false,true]);
+  expect(paused).toBe(true);expect(collect).not.toHaveBeenCalled();
+ });
  it('denies unsigned callers without any worker access',async()=>{
   const workerRpc=vi.fn();const handler=manualAtomHandler({verifyAdmin:async()=>null,workerRpc});
   expect((await handler(new Request('https://local.invalid',{method:'POST'}))).status).toBe(403);expect(workerRpc).not.toHaveBeenCalled();

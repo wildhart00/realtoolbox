@@ -1,0 +1,62 @@
+
+ RUN  v3.2.4 /dev-server
+
+ ✓ src/lib/engine/discovery.test.ts (11 tests) 44ms
+ ✓ server/update-engine/shadow.test.ts (9 tests) 45ms
+ ✓ server/update-engine/manual-atom.test.ts (6 tests) 41ms
+ ✓ server/update-engine/atom.test.ts (7 tests) 63ms
+ ✓ src/lib/engine/engine.corrections.test.ts (18 tests) 59ms
+ ✓ src/lib/engine/engine.test.ts (93 tests) 110ms
+stderr | src/components/updates/WhatChangedSection.test.tsx > WhatChangedSection > on Oct 18 2026 the exact preview host shows 2 recent and 4 background cards
+⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition.
+⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath.
+
+ ✓ src/lib/updates/logic.test.ts (5 tests) 14ms
+ ✓ server/update-engine/manual-handler.test.ts (5 tests) 30ms
+stderr | src/components/updates/WhatChangedSection.test.tsx > WhatChangedSection > ArrowLeft keyboard event moves focus and selection and filters cards
+Warning: An update to ForwardRef inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at file:///persist/node_modules/@radix-ui/react-roving-focus/dist/index.mjs:32:5
+    at file:///persist/node_modules/@radix-ui/react-slot/dist/index.mjs:33:13
+    at file:///persist/node_modules/@radix-ui/react-slot/dist/index.mjs:9:13
+    at file:///persist/node_modules/@radix-ui/react-collection/dist/index.mjs:27:15
+    at Provider (file:///persist/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
+    at CollectionProvider (file:///persist/node_modules/@radix-ui/react-collection/dist/index.mjs:17:13)
+    at file:///persist/node_modules/@radix-ui/react-roving-focus/dist/index.mjs:26:68
+    at Provider (file:///persist/node_modules/@radix-ui/react-context/dist/index.mjs:27:15)
+    at file:///persist/node_modules/@radix-ui/react-radio-group/dist/index.mjs:169:7
+    at fieldset
+    at div
+    at section
+    at WhatChangedSection (/dev-server/src/components/updates/WhatChangedSection.tsx:47:31)
+    at Router (/persist/node_modules/react-router/dist/umd/react-router.development.js:1207:17)
+    at MemoryRouter (/persist/node_modules/react-router/dist/umd/react-router.development.js:1101:7)
+
+ ✓ src/lib/updates/releaseGuard.test.ts (9 tests) 14ms
+ ✓ src/hooks/useEntitlements.test.tsx (1 test) 68ms
+ ✓ src/components/updates/WhatChangedSection.test.tsx (6 tests) 719ms
+stderr | src/pages/admin/UpdatesEngineAdmin.nonadmin.test.tsx > authenticated non-admin > is shown Admin only and never sees the simulation
+⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition.
+⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath.
+
+ ✓ src/pages/admin/UpdatesEngineAdmin.nonadmin.test.tsx (1 test) 39ms
+ ✓ src/test/example.test.ts (1 test) 2ms
+stderr | src/pages/admin/UpdatesEngineAdmin.test.tsx > UpdatesEngineAdmin (simulation) > is not reachable without admin (existing role gate)
+⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition.
+⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath.
+
+ ✓ src/pages/admin/UpdatesEngineAdmin.test.tsx (5 tests) 256ms
+
+ Test Files  14 passed (14)
+      Tests  177 passed (177)
+   Start at  17:19:55
+   Duration  2.85s (transform 1.34s, setup 2.27s, collect 4.07s, tests 1.51s, environment 4.96s, prepare 1.08s)
+
