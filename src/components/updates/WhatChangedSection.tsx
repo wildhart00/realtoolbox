@@ -121,7 +121,7 @@ export function WhatChangedSection({ now, hostname }: Props) {
 
         <div id="find-a-tool" className="mt-14 scroll-mt-20" role="region" aria-labelledby="task-finder-heading">
           <h2 id="task-finder-heading" className="font-display text-[26px] sm:text-[30px] tracking-[-0.02em] text-foreground">
-            Workflows: find a tool by task
+            Find a tool by task
           </h2>
           <p className="mt-2 max-w-2xl text-[14.5px] text-muted-foreground">
             Matches come from each vendor's own description of the tools in our directory. We have not tested them, and this is not a ranking. Looking for skills you own? See the <Link to="/toolbox" className="text-accent underline-offset-2 hover:underline">Toolbox</Link>; the full <Link to="/browse" className="text-accent underline-offset-2 hover:underline">tool directory</Link> is separate.
