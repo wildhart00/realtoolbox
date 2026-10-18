@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import { render, screen, fireEvent, within } from "@testing-library/react";
+import { render, screen, fireEvent, within, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { WhatChangedSection } from "./WhatChangedSection";
 import { FINDER_TASKS, TOOL_NAMES } from "@/lib/updates/taskFinder";
