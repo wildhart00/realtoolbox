@@ -43,7 +43,7 @@ expect auth_no_exec_worker 'permission denied' authenticated $ADMIN "$(rec https
 expect anon_no_exec_pause 'permission denied' anon "" "SELECT public.set_update_engine_paused(false)"
 expect member_pause_not_admin 'not_admin' authenticated $MEMBER "SELECT public.set_update_engine_paused(false)"
 expect sandbox_bypassrls '^t$' postgres "" "SELECT rolbypassrls FROM pg_roles WHERE rolname='sandbox_exec'"
-expect sandbox_default_table_acl '^ar$' postgres "" "SELECT (SELECT string_agg(privilege_type, ',' ORDER BY privilege_type) FROM aclexplode(defaclacl) WHERE grantee=(SELECT oid FROM pg_roles WHERE rolname='sandbox_exec')) = 'INSERT,SELECT' FROM pg_default_acl WHERE defaclnamespace='public'::regnamespace AND defaclobjtype='r'" 
+expect sandbox_default_table_acl '^t$' postgres "" "SELECT (SELECT string_agg(privilege_type, ',' ORDER BY privilege_type) FROM aclexplode(defaclacl) WHERE grantee=(SELECT oid FROM pg_roles WHERE rolname='sandbox_exec')) = 'INSERT,SELECT' FROM pg_default_acl WHERE defaclnamespace='public'::regnamespace AND defaclobjtype='r'"
 for t in update_engine_settings update_sources update_candidates update_review_events update_job_runs user_watch_topics user_preferences update_sources_public updates_public; do
   expect "sandbox_no_select_$t" 'permission denied' sandbox_exec "" "SELECT count(*) FROM public.$t"
   expect "sandbox_no_any_acl_$t" '^f$' postgres "" "SELECT has_table_privilege('sandbox_exec','public.$t','SELECT,INSERT,UPDATE,DELETE,TRUNCATE,REFERENCES,TRIGGER')"
