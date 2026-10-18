@@ -15,3 +15,10 @@ Review findings (not fixed): service_role and authenticated still hold EXECUTE
 on the admin functions via default privileges (refused by has_role, but the
 REVOKE should name them). updates_public / update_sources_public run with owner
 rights — a deliberate projection needing review; raw candidate fields stay out.
+
+## Revision 3.1 (sha256 f5eeeca0…04f2): function EXECUTE revoked from PUBLIC, anon,
+authenticated, service_role before specific grants. Re-run: function ACL matrix
+(fnacl.txt) as intended; 92/93 pass — the single "fail" was the old expectation
+(not_admin) for service_role calling an admin RPC; it is now denied earlier with
+"permission denied for function". Expectation updated in run_tests.sh, not re-run.
+Public view smoke: 0 before publish, 1 after, 0 after withdraw.

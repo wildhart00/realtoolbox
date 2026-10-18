@@ -21,3 +21,17 @@ Candid limits:
 - `updated_at` is bookkeeping only; cards show `source_checked_at` and `published_at`.
 
 Target backend ID: pcnsuyadfqrmythikwpa (serves preview and live). Revision 3 adds REVOKE-before-GRANT, empty search_path, settings FOR SHARE locking, atomic duplicate upsert. SQL is unverified until SQL_TEST_SPEC.md runs on an isolated database.
+
+## Final matrix for owner approval (Revision 3.1, sha256 f5eeeca0aa57f51dedb5e8ccd3b9326cd2545827269dff64a978434c1f1204f2, target pcnsuyadfqrmythikwpa)
+| Object | PUBLIC | anon | authenticated | service_role |
+|---|---|---|---|---|
+| update_engine_settings / sources / candidates | none | none | SELECT, RLS admin-only | SELECT (bypasses RLS) |
+| update_review_events / update_job_runs | none | none | SELECT, RLS admin-only | none |
+| Direct INSERT/UPDATE/DELETE on any engine table | none | none | none | none |
+| updates_public (owner-rights view: safe columns, published only) | none | SELECT | SELECT | none |
+| update_sources_public (owner-rights view: id, vendor, index_url, last_success_at, enabled only) | none | SELECT | SELECT | none |
+| user_watch_topics | none | none | SELECT/INSERT/DELETE own rows | none |
+| user_preferences | none | none | SELECT/INSERT/UPDATE own rows | none |
+| review/publish/withdraw/set_paused RPCs | none | none | EXECUTE + internal has_role admin check | none |
+| engine_record_revision (worker) | none | none | none | EXECUTE |
+Owner-rights public views are a reviewed deliberate projection; raw tables stay denied to anon. No private helper RPCs exist in this proposal.
