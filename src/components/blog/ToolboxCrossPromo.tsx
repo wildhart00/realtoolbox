@@ -39,7 +39,7 @@ export function ToolboxCrossPromo({
       </h3>
       <p className="mt-2.5 text-[13.5px] text-muted-foreground leading-[1.7] max-w-xl">
         The Investor Toolbox is seven AI skills that underwrite a property conservatively — refusing
-        to invent comps, taxes, or rents, and refusing a verdict when the inputs are too thin. Deal
+        to supply comps, taxes, or rents themselves, and holding back a verdict when the inputs are too thin. Deal
         Screen, the fast go/no-go, is free with an account.
       </p>
       <div className="mt-5 flex flex-col sm:flex-row items-start sm:items-center gap-4">

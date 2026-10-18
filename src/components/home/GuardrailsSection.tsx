@@ -20,8 +20,8 @@ export function GuardrailsSection() {
         </h2>
         <p className="mt-3 text-[14.5px] text-muted-foreground leading-relaxed">
           A general AI will invent a comp and hand it to you in a clean table. These skills are
-          written to do the opposite — show their work, name what they don&apos;t know, and stop
-          rather than guess.
+          written to push the other way — show their work, name what they don&apos;t know, and ask
+          rather than guess. Always check the output.
         </p>
       </div>
 

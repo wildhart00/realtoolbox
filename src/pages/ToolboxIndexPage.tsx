@@ -80,7 +80,7 @@ export default function ToolboxIndexPage() {
   useSeo({
     title: "The Toolbox — Conservative AI skills for real estate deals | RealToolbox.ai",
     description:
-      "A working set of AI skills that analyze real estate deals conservatively — refusing to invent numbers and refusing a verdict on weak inputs. Start with the free Deal Screen.",
+      "A working set of AI skills that analyze real estate deals conservatively — written to ask for missing numbers and to hold back a verdict on weak inputs. Start with the free Deal Screen.",
     canonicalPath: "/toolbox",
   });
 

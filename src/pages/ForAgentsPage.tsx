@@ -40,7 +40,7 @@ const WHY_IT_HOLDS = [
   },
   {
     title: "It protects the relationship",
-    body: "The skills refuse to invent comps or rents and refuse a verdict on weak inputs. That means you're never handing a client a confident number you can't stand behind — which is the one mistake that ends an investor relationship permanently.",
+    body: "The skills are written to ask for comps and rents rather than supply them, and to hold back a verdict on weak inputs. That lowers the risk of handing a client a confident number you can't stand behind — which is the one mistake that ends an investor relationship permanently.",
   },
 ];
 

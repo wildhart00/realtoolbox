@@ -40,7 +40,7 @@ export default function VerifyingCompsPage() {
         downstream was carefully calculating the wrong thing.
       </Prose>
       <Prose>
-        The skills will not invent a comp for you. That is a feature, and it means the quality of
+        The skills are written to ask you for comps rather than supply them. That is a feature, and it means the quality of
         what comes out depends on the quality of what you put in. This is how to put in something
         good.
       </Prose>
