@@ -28,7 +28,7 @@ function StepCard({ step }: { step: ArcStep }) {
         style={{
           background: step.free
             ? "linear-gradient(135deg, hsl(239 84% 60%), hsl(265 84% 60%))"
-            : "hsl(230 14% 20%)",
+            : "hsl(var(--border) / 0.25)",
         }}
       >
         {step.num}
@@ -80,7 +80,7 @@ export function InvestorArcSection() {
       <div className="mt-10 flex justify-center">
         <Link
           to="/toolbox/investor"
-          className="text-[14px] font-semibold text-accent hover:text-[hsl(229_94%_90%)] transition-base"
+          className="text-[14px] font-semibold text-accent hover:text-foreground transition-base"
         >
           See all seven in detail →
         </Link>

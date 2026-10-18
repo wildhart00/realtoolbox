@@ -140,7 +140,7 @@ export default function ForAgentsPage() {
               ) : (
                 <>
                   <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] opacity-90" />
-                  <div className="relative m-[1px] rounded-[15px] bg-[hsl(230_18%_8%)] p-6 lg:p-7 flex-1">
+                  <div className="relative m-[1px] rounded-[15px] bg-card p-6 lg:p-7 flex-1">
                     <p className="text-[11px] uppercase tracking-[0.14em] text-accent font-semibold">
                       {a.label}
                     </p>

@@ -220,7 +220,7 @@ export default function ResourcesPage() {
             className="group relative rounded-2xl flex"
           >
             <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] opacity-90" />
-            <div className="relative m-[1px] rounded-[15px] bg-[hsl(230_18%_8%)] p-6 flex flex-col flex-1">
+            <div className="relative m-[1px] rounded-[15px] bg-card p-6 flex flex-col flex-1">
               <span className="inline-flex w-fit items-center rounded-md border border-accent/25 bg-accent/10 px-2 py-[3px] text-[10px] font-semibold uppercase tracking-[0.12em] text-accent mb-3.5">
                 Free forever
               </span>

@@ -264,7 +264,7 @@ export default function ToolboxIndexPage() {
       <section className="mx-auto max-w-[1200px] px-6 lg:px-10 pb-14">
         <div className="relative rounded-2xl">
           <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] opacity-90" />
-          <div className="relative m-[1px] rounded-[15px] bg-[hsl(230_18%_8%)] px-6 py-8 lg:px-10 lg:py-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+          <div className="relative m-[1px] rounded-[15px] bg-card px-6 py-8 lg:px-10 lg:py-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
             <div className="max-w-2xl">
               <span className="inline-flex items-center rounded-md border border-accent/25 bg-accent/10 px-2 py-[3px] text-[10px] font-semibold uppercase tracking-[0.12em] text-accent">
                 Free forever
@@ -303,7 +303,7 @@ export default function ToolboxIndexPage() {
           {/* Investor */}
           <div className="relative rounded-2xl flex">
             <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)]" />
-            <div className="relative m-[1px] rounded-[15px] bg-[hsl(230_18%_8%)] p-6 lg:p-7 flex flex-col gap-5 flex-1">
+            <div className="relative m-[1px] rounded-[15px] bg-card p-6 lg:p-7 flex flex-col gap-5 flex-1">
               <div>
                 <span className="inline-flex items-center rounded-full bg-gradient-to-r from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] px-2.5 py-[3px] text-[10px] font-bold uppercase tracking-[0.12em] text-white">
                   Available now
