@@ -33,6 +33,6 @@
 - [ ] Attempt one capped request: blocked by unsupported pinned transport; final paused=true/tested=false and zero source/draft/job/public rows independently verified.
 
 # Fixed-feed Deno compatibility (code/tests only)
-- [ ] Add dedicated immutable-URL native fetch wire without altering generic pinning.
-- [ ] Run offline Deno limits/parser/manual-path/cleanup tests and existing regressions.
-- [ ] Record changed threat model, review hashes and credit checkpoint; no live effects.
+- [x] Add dedicated immutable-URL native fetch wire without altering generic pinning.
+- [x] Run offline Deno limits/parser/manual-path/cleanup tests (12/12) and existing regressions (177/177).
+- [x] Record changed threat model and review artifacts; stop for independent review, no live effects.
