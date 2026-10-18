@@ -62,7 +62,7 @@ export default function ContactPage() {
               <p className="mt-2 text-[14px] text-foreground/55">Thanks — we&apos;ll get back to you soon.</p>
               <button
                 onClick={() => setDone(false)}
-                className="mt-5 text-[13px] text-[hsl(229_94%_82%)] hover:underline"
+                className="mt-5 text-[13px] text-accent hover:underline"
               >
                 Send another message
               </button>

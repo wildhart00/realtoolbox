@@ -19,9 +19,9 @@ export function DealScreenStrip() {
         {/* Gradient border wrapper */}
         <div className="relative rounded-2xl">
           <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] opacity-90" />
-          <div className="relative m-[1px] rounded-[15px] bg-[hsl(230_18%_8%)] px-6 py-8 lg:px-10 lg:py-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+          <div className="relative m-[1px] rounded-[15px] bg-card px-6 py-8 lg:px-10 lg:py-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
             <div className="max-w-2xl">
-              <span className="inline-flex items-center rounded-md border border-accent/25 bg-accent/10 px-2 py-[3px] text-[10px] font-semibold uppercase tracking-[0.12em] text-[hsl(229_94%_82%)]">
+              <span className="inline-flex items-center rounded-md border border-accent/25 bg-accent/10 px-2 py-[3px] text-[10px] font-semibold uppercase tracking-[0.12em] text-accent">
                 Free forever · Start here
               </span>
               <h3 className="mt-3 font-display text-[26px] sm:text-[32px] text-foreground tracking-[-0.02em] leading-[1.15]">
@@ -36,7 +36,7 @@ export function DealScreenStrip() {
             <div className="flex flex-col items-start md:items-end gap-2 shrink-0">
               <Link
                 to={freeDealScreenPath(!!user)}
-                className="inline-flex items-center justify-center gap-2 rounded-[10px] bg-gradient-to-r from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] px-6 py-3.5 text-[14px] font-semibold text-white shadow-lg shadow-[hsl(252_84%_50%)]/25 hover:shadow-[hsl(252_84%_50%)]/40 transition-base"
+                className="inline-flex items-center justify-center gap-2 rounded-[10px] bg-foreground hover:bg-foreground/90 px-6 py-3.5 text-[14px] font-semibold text-background transition-base"
               >
                 Get the free Deal Screen <ArrowRight className="h-4 w-4" />
               </Link>

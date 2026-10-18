@@ -69,7 +69,7 @@ export default function PrivacyPage() {
             <p>
               You can request your data, unsubscribe, or ask us to delete your account at any time
               by using our{" "}
-              <a href="/contact" className="text-[hsl(229_94%_82%)] hover:underline">
+              <a href="/contact" className="text-accent hover:underline">
                 contact page
               </a>.
             </p>

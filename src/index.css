@@ -2,90 +2,85 @@
 @tailwind components;
 @tailwind utilities;
 
-/* RealToolbox.ai — Premium dark editorial design system.
-   Dark-only. All colors HSL. Linear/Stripe/Vercel applied to a directory. */
+/* RealToolbox.ai — practical editorial briefing. Off-white paper, ink, one restrained accent. All colors HSL. */
 
 @layer base {
   :root {
     /* Surfaces */
-    --background: 230 22% 5%;            /* #0a0b0f */
-    --foreground: 240 6% 95%;            /* #f1f1f3 */
+    --background: 40 30% 97%;            /* calm off-white paper */
+    --foreground: 222 30% 12%;           /* ink */
 
-    --card: 230 18% 8%;
-    --card-foreground: 240 6% 95%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 30% 12%;
 
-    --popover: 230 22% 7%;
-    --popover-foreground: 240 6% 95%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 30% 12%;
 
-    --primary: 240 6% 95%;
-    --primary-foreground: 230 22% 5%;
+    --primary: 222 30% 12%;
+    --primary-foreground: 40 30% 97%;
 
     /* Indigo accent */
-    --accent: 239 84% 67%;               /* #6366f1 */
+    --accent: 236 62% 48%;               /* restrained ink-indigo */
     --accent-foreground: 0 0% 100%;
     --accent-soft: 239 64% 24%;
     --accent-glow: 252 76% 75%;          /* violet #8b5cf6-ish */
 
-    --secondary: 230 14% 14%;
-    --secondary-foreground: 240 6% 95%;
+    --secondary: 40 18% 92%;
+    --secondary-foreground: 222 30% 12%;
 
-    --muted: 230 14% 12%;
-    --muted-foreground: 220 9% 60%;      /* #9ca3af-ish */
+    --muted: 40 18% 93%;
+    --muted-foreground: 222 12% 36%;
 
-    --success: 158 64% 52%;              /* #34d399 */
+    --success: 158 64% 30%;              /* #34d399 */
     --success-foreground: 230 22% 5%;
 
-    --warning: 38 92% 60%;
+    --warning: 32 90% 38%;
     --warning-foreground: 230 22% 5%;
 
-    --destructive: 0 72% 55%;
+    --destructive: 0 68% 42%;
     --destructive-foreground: 0 0% 100%;
 
     /* Borders/inputs use rgba-style alpha via custom utilities below */
-    --border: 240 6% 95%;                /* used with /6 opacity in components */
-    --input: 230 14% 14%;
-    --ring: 239 84% 67%;
+    --border: 222 30% 12%;               /* ink, used with low opacity */
+    --input: 40 14% 86%;
+    --ring: 236 62% 48%;
 
     --radius: 0.875rem;
 
     /* Gradients */
-    --gradient-accent: linear-gradient(135deg, hsl(239 84% 67%), hsl(265 84% 67%));
+    --gradient-accent: linear-gradient(135deg, hsl(236 62% 48%), hsl(236 62% 40%));
     --gradient-hero: linear-gradient(135deg, hsl(239 84% 67%) 0%, hsl(265 84% 67%) 60%, hsl(290 70% 60%) 100%);
 
     /* Shadows */
-    --shadow-glow: 0 4px 20px hsl(239 84% 67% / 0.30);
-    --shadow-card: 0 1px 0 0 hsl(0 0% 100% / 0.03) inset, 0 12px 32px -16px hsl(0 0% 0% / 0.6);
+    --shadow-glow: 0 2px 8px hsl(222 30% 12% / 0.10);
+    --shadow-card: 0 1px 2px hsl(222 30% 12% / 0.05);
 
     /* Sidebar (kept for any shadcn sidebar usage) */
-    --sidebar-background: 230 22% 5%;
-    --sidebar-foreground: 220 9% 60%;
-    --sidebar-primary: 239 84% 67%;
+    --sidebar-background: 40 30% 97%;
+    --sidebar-foreground: 222 12% 36%;
+    --sidebar-primary: 236 62% 48%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 230 14% 12%;
-    --sidebar-accent-foreground: 240 6% 95%;
-    --sidebar-border: 240 6% 95%;
-    --sidebar-ring: 239 84% 67%;
+    --sidebar-accent: 40 18% 93%;
+    --sidebar-accent-foreground: 222 30% 12%;
+    --sidebar-border: 222 30% 12%;
+    --sidebar-ring: 236 62% 48%;
 
     --transition-base: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
   }
 }
 
 @layer base {
-  * { @apply border-border/[0.07]; }
+  * { @apply border-border/[0.12]; }
 
   html {
     font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    color-scheme: dark;
+    color-scheme: light;
   }
 
   body {
     @apply bg-background text-foreground;
-    background-image:
-      radial-gradient(ellipse 700px 500px at 0% 0%, hsl(239 84% 67% / 0.10), transparent 60%),
-      radial-gradient(ellipse 400px 320px at 100% 100%, hsl(172 76% 40% / 0.06), transparent 60%);
-    background-attachment: fixed;
   }
 
   h1, h2, h3, h4 {
@@ -122,12 +117,12 @@
 
   /* Card surfaces per spec */
   .surface-card {
-    background: hsl(0 0% 100% / 0.03);
-    border: 1px solid hsl(0 0% 100% / 0.07);
+    background: hsl(var(--card));
+    border: 1px solid hsl(var(--border) / 0.12);
   }
   .surface-card-hover {
-    background: hsl(0 0% 100% / 0.05);
-    border-color: hsl(0 0% 100% / 0.14);
+    background: hsl(var(--card));
+    border-color: hsl(var(--border) / 0.28);
   }
 
 }

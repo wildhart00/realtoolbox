@@ -38,7 +38,7 @@ export function StacksHomeStrip() {
               <Layers className="h-5 w-5 text-white" />
             </div>
             <div className="min-w-0 flex-1">
-              <div className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[hsl(229_94%_82%)] mb-1">
+              <div className="text-[11px] font-semibold uppercase tracking-[0.12em] text-accent mb-1">
                 {s.kicker}
               </div>
               <div className="font-display text-[16px] font-semibold text-foreground mb-1 tracking-[-0.01em]">

@@ -190,7 +190,7 @@ export function CaptureDialog({
                       className={cn(
                         "rounded-full px-3.5 py-1.5 text-[12.5px] font-medium border transition-base",
                         active
-                          ? "bg-gradient-to-r from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] text-white border-transparent shadow-md shadow-[hsl(252_84%_50%)]/25"
+                          ? "bg-foreground hover:bg-foreground/90 text-background border-transparent shadow-md shadow-[hsl(252_84%_50%)]/25"
                           : "bg-background/40 text-foreground/75 border-foreground/15 hover:border-[hsl(239_84%_67%)]/45 hover:text-foreground",
                       )}
                     >

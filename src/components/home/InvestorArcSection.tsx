@@ -19,7 +19,7 @@ function StepCard({ step }: { step: ArcStep }) {
       }
     >
       {step.free && (
-        <span className="absolute -top-2.5 left-4 inline-flex items-center rounded-full bg-gradient-to-r from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] px-2 py-[2px] text-[9px] font-bold uppercase tracking-[0.14em] text-white shadow-sm">
+        <span className="absolute -top-2.5 left-4 inline-flex items-center rounded-full bg-foreground hover:bg-foreground/90 px-2 py-[2px] text-[9px] font-bold uppercase tracking-[0.14em] text-background shadow-sm">
           Free
         </span>
       )}
@@ -28,7 +28,7 @@ function StepCard({ step }: { step: ArcStep }) {
         style={{
           background: step.free
             ? "linear-gradient(135deg, hsl(239 84% 60%), hsl(265 84% 60%))"
-            : "hsl(230 14% 20%)",
+            : "hsl(var(--border) / 0.25)",
         }}
       >
         {step.num}
@@ -80,7 +80,7 @@ export function InvestorArcSection() {
       <div className="mt-10 flex justify-center">
         <Link
           to="/toolbox/investor"
-          className="text-[14px] font-semibold text-[hsl(229_94%_82%)] hover:text-[hsl(229_94%_90%)] transition-base"
+          className="text-[14px] font-semibold text-accent hover:text-foreground transition-base"
         >
           See all seven in detail →
         </Link>

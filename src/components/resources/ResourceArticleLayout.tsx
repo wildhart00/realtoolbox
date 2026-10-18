@@ -60,7 +60,7 @@ export function ResourceArticleLayout({
         </Link>
 
         <div className="mt-8 inline-flex items-center gap-2 rounded-full border border-foreground/10 bg-foreground/[0.03] px-3 py-1 text-[11px] font-semibold tracking-[0.16em] text-muted-foreground uppercase">
-          <span className="h-1.5 w-1.5 rounded-full bg-[hsl(229_94%_82%)]" />
+          <span className="h-1.5 w-1.5 rounded-full bg-accent" />
           {eyebrow}
         </div>
 
@@ -94,7 +94,7 @@ export function ResourceArticleLayout({
                 <li key={s.id}>
                   <a
                     href={`#${s.id}`}
-                    className="text-[13px] text-foreground/80 hover:text-[hsl(229_94%_82%)] underline-offset-2 hover:underline"
+                    className="text-[13px] text-foreground/80 hover:text-accent underline-offset-2 hover:underline"
                   >
                     {s.title}
                   </a>
@@ -110,8 +110,8 @@ export function ResourceArticleLayout({
       {/* Cross-promo — every resource page routes back to the free skill */}
       <section className="mx-auto max-w-[880px] px-6 lg:px-10 pb-20">
         <div className="relative overflow-hidden rounded-2xl border border-foreground/10 bg-gradient-to-br from-[hsl(239_84%_60%)]/10 via-[hsl(252_84%_64%)]/10 to-[hsl(265_84%_60%)]/10 px-6 py-8 lg:px-10 lg:py-10">
-          <div className="absolute inset-x-0 -top-px h-px bg-gradient-to-r from-transparent via-[hsl(229_94%_82%)]/60 to-transparent" />
-          <p className="text-[11px] uppercase tracking-[0.14em] text-[hsl(229_94%_82%)] font-semibold">
+          <div className="absolute inset-x-0 -top-px h-px bg-gradient-to-r from-transparent via-accent/60 to-transparent" />
+          <p className="text-[11px] uppercase tracking-[0.14em] text-accent font-semibold">
             Put it to work
           </p>
           <h2 className="mt-2 font-display text-[24px] sm:text-[28px] text-foreground tracking-[-0.02em] leading-tight">
@@ -124,7 +124,7 @@ export function ResourceArticleLayout({
           <div className="mt-6 flex flex-col sm:flex-row items-start sm:items-center gap-4">
             <Link
               to={freeDealScreenPath(!!user)}
-              className="inline-flex items-center justify-center gap-2 rounded-[10px] bg-gradient-to-r from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] px-5 py-2.5 text-[13.5px] font-semibold text-white shadow-lg shadow-[hsl(252_84%_50%)]/20 hover:shadow-[hsl(252_84%_50%)]/35 transition-base"
+              className="inline-flex items-center justify-center gap-2 rounded-[10px] bg-foreground hover:bg-foreground/90 px-5 py-2.5 text-[13.5px] font-semibold text-background shadow-lg shadow-[hsl(252_84%_50%)]/20 hover:shadow-[hsl(252_84%_50%)]/35 transition-base"
             >
               Get the free Deal Screen <ArrowRight className="h-4 w-4" />
             </Link>

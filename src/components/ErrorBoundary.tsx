@@ -45,8 +45,8 @@ export class ErrorBoundary extends Component<Props, State> {
       <div className="min-h-screen flex items-center justify-center bg-background px-6">
         <div className="max-w-md w-full text-center">
           <div className="inline-flex items-center gap-2 bg-accent/[0.08] border border-accent/20 rounded-full px-3.5 py-[5px] mb-6">
-            <span className="h-[5px] w-[5px] rounded-full bg-[hsl(229_94%_82%)]" />
-            <span className="text-[11px] tracking-[0.16em] text-[hsl(229_94%_82%)] font-semibold uppercase">
+            <span className="h-[5px] w-[5px] rounded-full bg-accent" />
+            <span className="text-[11px] tracking-[0.16em] text-accent font-semibold uppercase">
               Something went wrong
             </span>
           </div>
@@ -67,7 +67,7 @@ export class ErrorBoundary extends Component<Props, State> {
             <button
               type="button"
               onClick={this.handleReload}
-              className="inline-flex items-center justify-center rounded-[10px] bg-gradient-to-r from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] px-6 py-3 text-[14px] font-semibold text-white shadow-lg shadow-[hsl(252_84%_50%)]/25 hover:shadow-[hsl(252_84%_50%)]/40 transition-base"
+              className="inline-flex items-center justify-center rounded-[10px] bg-foreground hover:bg-foreground/90 px-6 py-3 text-[14px] font-semibold text-background transition-base"
             >
               Reload page
             </button>

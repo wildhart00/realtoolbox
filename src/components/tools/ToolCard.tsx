@@ -165,7 +165,7 @@ export function ToolCard({ tool, isSaved: _isSaved }: { tool: Tool; isSaved?: bo
             </span>
           ))}
           {!tool.re_only && (
-            <span className="text-[10px] px-[7px] py-[2px] rounded bg-accent/10 text-[hsl(229_94%_82%)] font-medium border border-accent/20">
+            <span className="text-[10px] px-[7px] py-[2px] rounded bg-accent/10 text-accent font-medium border border-accent/20">
               General use
             </span>
           )}

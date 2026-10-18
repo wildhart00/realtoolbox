@@ -25,8 +25,8 @@ export function ToolboxCrossPromo({
         (compact ? "px-6 py-6 my-8" : "px-6 py-8 lg:px-9 lg:py-9 my-10")
       }
     >
-      <div className="absolute inset-x-0 -top-px h-px bg-gradient-to-r from-transparent via-[hsl(229_94%_82%)]/60 to-transparent" />
-      <p className="text-[11px] uppercase tracking-[0.14em] text-[hsl(229_94%_82%)] font-semibold">
+      <div className="absolute inset-x-0 -top-px h-px bg-gradient-to-r from-transparent via-accent/60 to-transparent" />
+      <p className="text-[11px] uppercase tracking-[0.14em] text-accent font-semibold">
         From RealToolbox
       </p>
       <h3
@@ -39,13 +39,13 @@ export function ToolboxCrossPromo({
       </h3>
       <p className="mt-2.5 text-[13.5px] text-muted-foreground leading-[1.7] max-w-xl">
         The Investor Toolbox is seven AI skills that underwrite a property conservatively — refusing
-        to invent comps, taxes, or rents, and refusing a verdict when the inputs are too thin. Deal
+        to supply comps, taxes, or rents themselves, and holding back a verdict when the inputs are too thin. Deal
         Screen, the fast go/no-go, is free with an account.
       </p>
       <div className="mt-5 flex flex-col sm:flex-row items-start sm:items-center gap-4">
         <Link
           to={freeDealScreenPath(!!user)}
-          className="inline-flex items-center justify-center gap-2 rounded-[10px] bg-gradient-to-r from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] px-5 py-2.5 text-[13.5px] font-semibold text-white shadow-lg shadow-[hsl(252_84%_50%)]/20 hover:shadow-[hsl(252_84%_50%)]/35 transition-base"
+          className="inline-flex items-center justify-center gap-2 rounded-[10px] bg-foreground hover:bg-foreground/90 px-5 py-2.5 text-[13.5px] font-semibold text-background shadow-lg shadow-[hsl(252_84%_50%)]/20 hover:shadow-[hsl(252_84%_50%)]/35 transition-base"
         >
           Get the free Deal Screen <ArrowRight className="h-4 w-4" />
         </Link>

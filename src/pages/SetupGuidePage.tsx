@@ -119,7 +119,7 @@ export default function SetupGuidePage() {
         </Link>
 
         <div className="mt-8 flex items-center gap-3">
-          <span className="text-[10px] px-2 py-[3px] rounded-md border bg-accent/10 text-[hsl(229_94%_82%)] border-accent/25 font-semibold uppercase tracking-[0.08em]">
+          <span className="text-[10px] px-2 py-[3px] rounded-md border bg-accent/10 text-accent border-accent/25 font-semibold uppercase tracking-[0.08em]">
             Setup guide
           </span>
         </div>
@@ -137,7 +137,7 @@ export default function SetupGuidePage() {
             type="button"
             onClick={copyAll}
             disabled={!content}
-            className="inline-flex items-center justify-center gap-2 rounded-[10px] bg-gradient-to-r from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] px-5 py-2.5 text-[13.5px] font-semibold text-white shadow-lg shadow-[hsl(252_84%_50%)]/20 hover:shadow-[hsl(252_84%_50%)]/35 transition-base disabled:opacity-60"
+            className="inline-flex items-center justify-center gap-2 rounded-[10px] bg-foreground hover:bg-foreground/90 px-5 py-2.5 text-[13.5px] font-semibold text-background shadow-lg shadow-[hsl(252_84%_50%)]/20 hover:shadow-[hsl(252_84%_50%)]/35 transition-base disabled:opacity-60"
           >
             {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
             {copied ? "Copied!" : "Copy entire guide"}
@@ -162,7 +162,7 @@ export default function SetupGuidePage() {
                 <li key={h.id}>
                   <a
                     href={`#${h.id}`}
-                    className="text-[13px] text-foreground/80 hover:text-[hsl(229_94%_82%)] underline-offset-2 hover:underline"
+                    className="text-[13px] text-foreground/80 hover:text-accent underline-offset-2 hover:underline"
                   >
                     {h.text}
                   </a>
@@ -182,7 +182,7 @@ export default function SetupGuidePage() {
           ) : error ? (
             <p className="text-sm text-muted-foreground">{error}</p>
           ) : (
-            <div className="prose prose-invert max-w-none prose-headings:font-display prose-headings:tracking-[-0.01em] prose-h1:text-3xl prose-h2:text-2xl prose-h2:mt-10 prose-h2:scroll-mt-24 prose-h3:text-xl prose-h3:scroll-mt-24 prose-p:text-muted-foreground prose-p:leading-[1.75] prose-li:text-muted-foreground prose-strong:text-foreground prose-a:text-[hsl(229_94%_82%)] prose-code:text-foreground prose-pre:bg-background/60 prose-pre:border prose-pre:border-foreground/10">
+            <div className="prose prose-invert max-w-none prose-headings:font-display prose-headings:tracking-[-0.01em] prose-h1:text-3xl prose-h2:text-2xl prose-h2:mt-10 prose-h2:scroll-mt-24 prose-h3:text-xl prose-h3:scroll-mt-24 prose-p:text-muted-foreground prose-p:leading-[1.75] prose-li:text-muted-foreground prose-strong:text-foreground prose-a:text-accent prose-code:text-foreground prose-pre:bg-background/60 prose-pre:border prose-pre:border-foreground/10">
               <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
                 components={{

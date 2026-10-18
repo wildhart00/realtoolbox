@@ -1,6 +1,6 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Menu, X, Shield, LogOut, LogIn } from "lucide-react";
+import { Menu, X, Shield, LogOut, LogIn, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -17,16 +17,18 @@ import {
 
 // Stacks (/stacks/investor, /stacks/agent) are intentionally absent — unpublished
 // from navigation while the routes stay live. See the note in App.tsx.
+// Primary: three destinations. "Workflows" finds directory tools by task;
+// "Toolbox" is the AI skills you can own. Everything else lives under More.
 const navLinks = [
-  { name: "Updates", href: "/#updates" },
-  { name: "Find a tool", href: "/#find-a-tool" },
-  { name: "Browse Tools", href: "/browse" },
+  { name: "Latest", href: "/#updates" },
+  { name: "Workflows", href: "/#find-a-tool" },
   { name: "Toolbox", href: "/toolbox" },
-  { name: "Resources", href: "/resources" },
-  { name: "Blog", href: "/blog" },
 ];
 
 const mobileExtraLinks = [
+  { name: "Tool directory", href: "/browse" },
+  { name: "Resources", href: "/resources" },
+  { name: "Blog", href: "/blog" },
   { name: "How it works", href: "/how-it-works" },
   { name: "Integrations", href: "/integrations" },
   { name: "Agents", href: "/agents" },
@@ -75,32 +77,32 @@ export function Topbar() {
   return (
     <header
       className="sticky top-0 z-50 border-b border-foreground/[0.06] backdrop-blur-xl"
-      style={{ background: "hsl(230 22% 5% / 0.9)" }}
+      style={{ background: "hsl(var(--background) / 0.9)" }}
     >
       <div className="mx-auto max-w-[1200px] flex items-center justify-between gap-4 h-[60px] px-6 lg:px-10">
         {/* Logo */}
         <Link to="/" onClick={handleHomeClick} className="flex items-center gap-[9px] shrink-0">
-          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-accent">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5">
+          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-foreground text-background">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
               <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
               <polyline points="9,22 9,12 15,12 15,22" />
             </svg>
           </div>
           <span className="font-display text-[17px] font-bold text-foreground tracking-[-0.02em]">
-            RealToolbox<span className="text-[hsl(229_94%_82%)]">.ai</span>
+            RealToolbox<span className="text-accent">.ai</span>
           </span>
         </Link>
 
         {/* Center nav */}
         <nav className="hidden lg:flex items-center gap-0.5">
           {navLinks.map((l) => {
-            const active = location.pathname.startsWith(l.href);
+            const active = l.href.startsWith("/#") ? false : location.pathname.startsWith(l.href);
             return (
               <Link
                 key={l.name}
                 to={l.href}
                 className={cn(
-                  "text-[13.5px] font-medium px-2.5 py-1.5 rounded-md transition-base",
+                  "text-[14px] font-medium px-3 py-2 rounded-md transition-base",
                   active ? "text-foreground" : "text-muted-foreground hover:text-foreground hover:bg-foreground/[0.05]",
                 )}
               >
@@ -108,6 +110,18 @@ export function Topbar() {
               </Link>
             );
           })}
+          <DropdownMenu>
+            <DropdownMenuTrigger className="inline-flex items-center gap-1 text-[14px] font-medium px-3 py-2 rounded-md text-muted-foreground hover:text-foreground hover:bg-foreground/[0.05] outline-none">
+              More <ChevronDown className="h-3.5 w-3.5" aria-hidden />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" className="w-48">
+              {mobileExtraLinks.map((l) => (
+                <DropdownMenuItem key={l.name} asChild>
+                  <Link to={l.href}>{l.name}</Link>
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </nav>
 
         {/* Right */}
@@ -115,7 +129,7 @@ export function Topbar() {
           <button
             type="button"
             onClick={openCapture}
-            className="inline-flex items-center justify-center rounded-[10px] bg-gradient-to-r from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] px-4 py-2 text-[13px] font-semibold text-white shadow-lg shadow-[hsl(252_84%_50%)]/25 hover:shadow-[hsl(252_84%_50%)]/40 transition-base"
+            className="inline-flex items-center justify-center rounded-[10px] bg-foreground hover:bg-foreground/90 px-4 py-2 text-[13px] font-semibold text-background transition-base"
           >
             Start free
           </button>
@@ -124,7 +138,7 @@ export function Topbar() {
             <DropdownMenu>
               <DropdownMenuTrigger className="outline-none">
                 <Avatar className="h-8 w-8 cursor-pointer ring-1 ring-foreground/10 hover:ring-foreground/30 transition-base">
-                  <AvatarFallback className="bg-gradient-accent text-[12px] font-semibold text-white">
+                  <AvatarFallback className="bg-foreground text-[12px] font-semibold text-background">
                     {initial}
                   </AvatarFallback>
                 </Avatar>
@@ -164,7 +178,7 @@ export function Topbar() {
         <button
           aria-label="Menu"
           onClick={() => setOpen((o) => !o)}
-          className="lg:hidden h-9 w-9 inline-flex items-center justify-center rounded-md hover:bg-foreground/[0.05]"
+          className="lg:hidden h-11 w-11 inline-flex items-center justify-center rounded-md hover:bg-foreground/[0.05]"
         >
           {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </button>
@@ -178,22 +192,24 @@ export function Topbar() {
                 key={l.name}
                 to={l.href}
                 onClick={() => setOpen(false)}
-                className="block rounded-md px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-foreground/[0.05]"
+                className="block rounded-md px-3 py-3 text-[16px] font-semibold text-foreground hover:bg-foreground/[0.05]"
               >
                 {l.name}
               </Link>
             ))}
+            <p className="px-3 pt-3 pb-1 text-[12px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">More</p>
+            <div className="grid grid-cols-2 gap-1">
             {mobileExtraLinks.map((l) => (
               <Link
                 key={l.name}
                 to={l.href}
                 onClick={() => setOpen(false)}
-                className="block rounded-md px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-foreground/[0.05]"
+                className="block rounded-md px-3 py-2.5 text-[14px] font-medium text-muted-foreground hover:text-foreground hover:bg-foreground/[0.05]"
               >
                 {l.name}
               </Link>
             ))}
-
+            </div>
 
             <div className="my-2 border-t border-foreground/[0.06]" />
 
@@ -219,7 +235,7 @@ export function Topbar() {
             <button
               type="button"
               onClick={openCapture}
-              className="block w-full mt-3 text-center rounded-[10px] bg-gradient-to-r from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] px-4 py-2 text-sm font-semibold text-white"
+              className="block w-full mt-3 text-center rounded-[10px] bg-foreground hover:bg-foreground/90 px-4 py-3 text-[15px] font-semibold text-background"
             >
               Start free
             </button>

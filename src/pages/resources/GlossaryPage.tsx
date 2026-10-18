@@ -209,7 +209,7 @@ export default function GlossaryPage() {
                     {t.term}
                   </span>
                   {t.short && (
-                    <span className="text-[12px] text-[hsl(229_94%_82%)] font-medium">{t.short}</span>
+                    <span className="text-[12px] text-accent font-medium">{t.short}</span>
                   )}
                 </dt>
                 <dd className="mt-1.5 text-[13.5px] text-muted-foreground leading-[1.7]">{t.def}</dd>

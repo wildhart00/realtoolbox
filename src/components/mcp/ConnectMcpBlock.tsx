@@ -47,7 +47,7 @@ export function ConnectMcpBlock({
         (compact ? "p-5" : "p-6 lg:p-7")
       }
     >
-      <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.16em] text-[hsl(229_94%_82%)] font-semibold">
+      <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.16em] text-accent font-semibold">
         <Plug className="h-3.5 w-3.5" />
         Connect to Claude &amp; ChatGPT
       </div>
@@ -78,7 +78,7 @@ export function ConnectMcpBlock({
           <button
             type="button"
             onClick={copy}
-            className="inline-flex items-center justify-center gap-2 rounded-[10px] bg-gradient-to-r from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] px-4 py-2.5 text-[13px] font-semibold text-white shadow-lg shadow-[hsl(252_84%_50%)]/20 hover:shadow-[hsl(252_84%_50%)]/35 transition-base"
+            className="inline-flex items-center justify-center gap-2 rounded-[10px] bg-foreground hover:bg-foreground/90 px-4 py-2.5 text-[13px] font-semibold text-background shadow-lg shadow-[hsl(252_84%_50%)]/20 hover:shadow-[hsl(252_84%_50%)]/35 transition-base"
           >
             {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
             {copied ? "Copied" : "Copy URL"}
@@ -90,7 +90,7 @@ export function ConnectMcpBlock({
         <div className="mt-4">
           <Link
             to="/setup-guide#connect-your-toolbox-via-mcp"
-            className="text-[13px] font-semibold text-[hsl(229_94%_82%)] underline-offset-2 hover:underline"
+            className="text-[13px] font-semibold text-accent underline-offset-2 hover:underline"
           >
             See the connect walkthrough →
           </Link>

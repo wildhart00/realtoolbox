@@ -51,24 +51,15 @@ export function WhatChangedSection({ now, hostname }: Props) {
   const nothingApproved = recent.length === 0 && background.length === 0;
 
   return (
-    <section aria-labelledby="what-changed-heading" className="w-full px-6 lg:px-10 py-12">
+    <section aria-labelledby="what-changed-heading" className="w-full px-6 lg:px-10 pt-6 pb-12">
       <div className="mx-auto max-w-[1100px]">
         <div id="updates" className="scroll-mt-20" />
-        {preview && (
-          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-accent">
-            Preview · draft content, not approved for publication
-          </p>
-        )}
-        <h2 id="what-changed-heading" className="mt-2 font-display text-[30px] sm:text-[38px] tracking-[-0.02em] leading-[1.1] text-foreground">
-          What changed in real estate AI
-        </h2>
-        <p className="mt-3 max-w-2xl text-[14.5px] leading-[1.6] text-muted-foreground">
-          Dated vendor announcements, with what they may mean for your work and what we have not verified.
-          {" "}{SEED_META.coverage_note} A source check date is not a guarantee the feature is available in your account today.
-        </p>
-
-        <fieldset className="mt-6">
-          <legend id="audience-legend" className="text-[12.5px] text-muted-foreground mb-2">Show updates for</legend>
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between border-b border-foreground/12 pb-4">
+          <h2 id="what-changed-heading" className="font-display text-[26px] sm:text-[32px] tracking-[-0.02em] leading-[1.1] text-foreground">
+            Latest
+          </h2>
+        <fieldset>
+          <legend id="audience-legend" className="sr-only">Show updates for</legend>
           <RadioGroupPrimitive.Root
             aria-labelledby="audience-legend"
             value={choice}
@@ -82,7 +73,7 @@ export function WhatChangedSection({ now, hostname }: Props) {
                 window.setTimeout(() => { arrowRef.current = false; }, 150);
               }
             }}
-            className="inline-flex rounded-full border border-foreground/15 p-1 bg-background/40"
+            className="inline-flex rounded-full border border-foreground/15 p-1 bg-card"
           >
             {OPTIONS.map((o) => (
               <RadioGroupPrimitive.Item
@@ -90,7 +81,7 @@ export function WhatChangedSection({ now, hostname }: Props) {
                 value={o.value}
                 onFocus={() => { if (arrowRef.current) setChoice(o.value); }}
                 className={cn(
-                  "min-h-11 rounded-full px-4 text-[13px] font-medium transition-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                  "min-h-11 rounded-full px-4 text-[14px] font-medium transition-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
                   "text-foreground/70 hover:text-foreground data-[state=checked]:bg-foreground data-[state=checked]:text-background",
                 )}
               >
@@ -99,6 +90,17 @@ export function WhatChangedSection({ now, hostname }: Props) {
             ))}
           </RadioGroupPrimitive.Root>
         </fieldset>
+        </div>
+
+        <div className="mt-4 rounded-lg border border-foreground/12 bg-muted/60 px-4 py-3 text-[14px] leading-[1.55] text-foreground/80">
+          {preview && (
+            <p className="font-semibold text-accent">Preview · draft content, not approved for publication.</p>
+          )}
+          <p>
+            Each item is based on the vendor's own announcement unless marked otherwise; we have not tested these tools.
+            {" "}{SEED_META.coverage_note} "Announced" is the vendor's date; "Source checked" is when we last re-read it — neither guarantees availability in your account.
+          </p>
+        </div>
 
         {nothingApproved ? (
           <p className="mt-8 text-[14px] text-muted-foreground" data-testid="no-approved">
@@ -106,7 +108,7 @@ export function WhatChangedSection({ now, hostname }: Props) {
           </p>
         ) : (
           <>
-            <h3 className="mt-10 text-[13px] font-semibold uppercase tracking-[0.12em] text-foreground/70">Last 30 days</h3>
+            <h3 className="mt-6 text-[14px] font-semibold text-foreground/75">Last 30 days</h3>
             {recent.length === 0 ? (
               <p className="mt-3 text-[14px] text-muted-foreground">No reviewed announcements for this audience in the last 30 days.</p>
             ) : (
@@ -121,8 +123,8 @@ export function WhatChangedSection({ now, hostname }: Props) {
           <h2 id="task-finder-heading" className="font-display text-[26px] sm:text-[30px] tracking-[-0.02em] text-foreground">
             Find a tool by task
           </h2>
-          <p className="mt-2 max-w-2xl text-[13.5px] text-muted-foreground">
-            Matches come from each vendor's own description of the tools in our directory. We have not tested them, and this is not a ranking.
+          <p className="mt-2 max-w-2xl text-[14.5px] text-muted-foreground">
+            Matches come from each vendor's own description of the tools in our directory. We have not tested them, and this is not a ranking. Looking for skills you own? See the <Link to="/toolbox" className="text-accent underline-offset-2 hover:underline">Toolbox</Link>; the full <Link to="/browse" className="text-accent underline-offset-2 hover:underline">tool directory</Link> is separate.
           </p>
           <div className="mt-5 flex flex-wrap gap-2">
             {tasks.map((t) => {
@@ -134,7 +136,7 @@ export function WhatChangedSection({ now, hostname }: Props) {
                   aria-pressed={active}
                   onClick={() => setTaskId(active ? null : t.id)}
                   className={cn(
-                    "min-h-11 rounded-full border px-3.5 text-[13px] transition-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                    "min-h-11 rounded-full border px-4 text-[14px] transition-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
                     active ? "border-accent bg-accent/15 text-foreground" : "border-foreground/15 text-foreground/75 hover:text-foreground",
                   )}
                 >
@@ -148,7 +150,7 @@ export function WhatChangedSection({ now, hostname }: Props) {
               <ul className="flex flex-wrap gap-3" aria-label={`Tools for: ${activeTask.label}`}>
                 {activeTask.toolSlugs.map((s) => (
                   <li key={s}>
-                    <Link to={`/tools/${s}`} className="inline-flex min-h-11 items-center rounded-lg border border-foreground/15 px-3 text-[13.5px] text-foreground hover:border-accent">
+                    <Link to={`/tools/${s}`} className="inline-flex min-h-11 items-center rounded-lg border border-foreground/15 px-3 text-[14px] text-foreground hover:border-accent">
                       {TOOL_NAMES[s] ?? s} →
                     </Link>
                   </li>
@@ -159,14 +161,14 @@ export function WhatChangedSection({ now, hostname }: Props) {
         </div>
 
         {preview && <div className="mt-12" role="region" aria-labelledby="use-case-heading">
-          <h3 id="use-case-heading" className="text-xl text-foreground">Practical applications to evaluate</h3>
+          <h3 id="use-case-heading" className="font-display text-[22px] text-foreground">Practical applications to evaluate</h3>
           <div className="mt-4 grid gap-5 md:grid-cols-2">
             {PREVIEW_USE_CASES.filter(c => choice === "both" || c.audience.includes(choice)).map(c => <UseCaseCard key={c.id} title={c.title} sourceUrl={c.sourceUrl} useCase={c.useCase} />)}
           </div>
         </div>}
         {background.length > 0 && (
           <>
-            <h3 className="mt-14 text-[13px] font-semibold uppercase tracking-[0.12em] text-foreground/70">
+            <h3 className="mt-14 text-[14px] font-semibold text-foreground/75">
               Background — earlier announcements, not new this month
             </h3>
             <div className="mt-4 grid gap-5 md:grid-cols-2">

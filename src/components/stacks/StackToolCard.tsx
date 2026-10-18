@@ -24,7 +24,7 @@ export function StackToolCard({ tool, whyNote, refTag }: Props) {
           <div className="flex items-center gap-2 mb-1 flex-wrap">
             <Link
               to={`/tools/${tool.slug}`}
-              className="font-display text-[16px] font-semibold text-foreground hover:text-[hsl(229_94%_82%)] transition-base truncate"
+              className="font-display text-[16px] font-semibold text-foreground hover:text-accent transition-base truncate"
             >
               {tool.name}
             </Link>
@@ -37,8 +37,8 @@ export function StackToolCard({ tool, whyNote, refTag }: Props) {
       </div>
 
       {whyNote && (
-        <blockquote className="relative rounded-xl bg-foreground/[0.03] border-l-2 border-[hsl(229_94%_82%)]/70 px-4 py-3">
-          <div className="text-[10px] uppercase tracking-[0.12em] font-semibold text-[hsl(229_94%_82%)]/80 mb-1.5">
+        <blockquote className="relative rounded-xl bg-foreground/[0.03] border-l-2 border-accent/70 px-4 py-3">
+          <div className="text-[10px] uppercase tracking-[0.12em] font-semibold text-accent/80 mb-1.5">
             Why it's in the stack
           </div>
           <p className="text-[13.5px] text-foreground/80 leading-[1.65] whitespace-pre-line">

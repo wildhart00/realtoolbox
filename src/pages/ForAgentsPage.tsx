@@ -40,7 +40,7 @@ const WHY_IT_HOLDS = [
   },
   {
     title: "It protects the relationship",
-    body: "The skills refuse to invent comps or rents and refuse a verdict on weak inputs. That means you're never handing a client a confident number you can't stand behind — which is the one mistake that ends an investor relationship permanently.",
+    body: "The skills are written to ask for comps and rents rather than supply them, and to hold back a verdict on weak inputs. That lowers the risk of handing a client a confident number you can't stand behind — which is the one mistake that ends an investor relationship permanently.",
   },
 ];
 
@@ -74,12 +74,12 @@ export default function ForAgentsPage() {
       <section className="mx-auto max-w-[1100px] px-6 lg:px-10 pt-16 lg:pt-24 pb-14">
         <div className="max-w-3xl">
           <div className="inline-flex items-center gap-2 rounded-full border border-foreground/10 bg-foreground/[0.03] px-3 py-1 text-[11px] font-semibold tracking-[0.16em] text-muted-foreground uppercase">
-            <span className="h-1.5 w-1.5 rounded-full bg-[hsl(229_94%_82%)]" />
+            <span className="h-1.5 w-1.5 rounded-full bg-accent" />
             For agents
           </div>
           <h1 className="mt-5 font-display text-4xl lg:text-[56px] font-bold leading-[1.03] tracking-[-0.03em] text-foreground">
             Your investor client sent you a listing.{" "}
-            <span className="bg-gradient-to-r from-[hsl(229_94%_82%)] to-[hsl(265_84%_75%)] bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-accent to-accent bg-clip-text text-transparent">
               Send back an underwrite.
             </span>
           </h1>
@@ -91,7 +91,7 @@ export default function ForAgentsPage() {
           <div className="mt-7 flex flex-col sm:flex-row items-start sm:items-center gap-4">
             <a
               href="#pricing"
-              className="inline-flex items-center justify-center gap-2 rounded-[10px] bg-gradient-to-r from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] px-5 py-3 text-[14px] font-semibold text-white shadow-lg shadow-[hsl(252_84%_50%)]/20 hover:shadow-[hsl(252_84%_50%)]/35 transition-base"
+              className="inline-flex items-center justify-center gap-2 rounded-[10px] bg-foreground hover:bg-foreground/90 px-5 py-3 text-[14px] font-semibold text-background shadow-lg shadow-[hsl(252_84%_50%)]/20 hover:shadow-[hsl(252_84%_50%)]/35 transition-base"
             >
               See the price <ArrowRight className="h-4 w-4" />
             </a>
@@ -140,8 +140,8 @@ export default function ForAgentsPage() {
               ) : (
                 <>
                   <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] opacity-90" />
-                  <div className="relative m-[1px] rounded-[15px] bg-[hsl(230_18%_8%)] p-6 lg:p-7 flex-1">
-                    <p className="text-[11px] uppercase tracking-[0.14em] text-[hsl(229_94%_82%)] font-semibold">
+                  <div className="relative m-[1px] rounded-[15px] bg-card p-6 lg:p-7 flex-1">
+                    <p className="text-[11px] uppercase tracking-[0.14em] text-accent font-semibold">
                       {a.label}
                     </p>
                     <p className="mt-3 text-[14px] text-foreground/85 leading-[1.7]">{a.body}</p>
@@ -191,14 +191,14 @@ export default function ForAgentsPage() {
                   : "border border-foreground/10")
               }
             >
-              <span className="font-display text-[22px] font-bold text-[hsl(229_94%_82%)] leading-none w-7 shrink-0">
+              <span className="font-display text-[22px] font-bold text-accent leading-none w-7 shrink-0">
                 {String(step.num).padStart(2, "0")}
               </span>
               <span className="min-w-0">
                 <span className="block text-[13.5px] font-semibold text-foreground leading-snug">
                   {step.title}
                   {step.free && (
-                    <span className="ml-1.5 inline-flex items-center rounded-full bg-gradient-to-r from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] px-1.5 py-[1px] text-[9px] font-bold uppercase tracking-[0.12em] text-white align-middle">
+                    <span className="ml-1.5 inline-flex items-center rounded-full bg-foreground hover:bg-foreground/90 px-1.5 py-[1px] text-[9px] font-bold uppercase tracking-[0.12em] text-background align-middle">
                       Free
                     </span>
                   )}
@@ -230,7 +230,7 @@ export default function ForAgentsPage() {
         <div className="mt-5">
           <Link
             to="/how-it-works#why-these-are-different"
-            className="text-[13.5px] font-semibold text-[hsl(229_94%_82%)] underline-offset-2 hover:underline"
+            className="text-[13.5px] font-semibold text-accent underline-offset-2 hover:underline"
           >
             What each of those means in practice →
           </Link>
@@ -252,7 +252,7 @@ export default function ForAgentsPage() {
             const Icon = m.icon;
             return (
               <div key={m.title} className="surface-card rounded-2xl p-6 lg:p-7">
-                <span className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-[hsl(239_84%_60%)]/15 text-[hsl(229_94%_82%)]">
+                <span className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-[hsl(239_84%_60%)]/15 text-accent">
                   <Icon className="h-4 w-4" strokeWidth={2} />
                 </span>
                 <h3 className="mt-3.5 font-display text-[19px] text-foreground tracking-tight leading-tight">
@@ -266,7 +266,7 @@ export default function ForAgentsPage() {
         <div className="mt-5">
           <Link
             to="/how-it-works#connect-your-toolbox"
-            className="text-[13.5px] font-semibold text-[hsl(229_94%_82%)] underline-offset-2 hover:underline"
+            className="text-[13.5px] font-semibold text-accent underline-offset-2 hover:underline"
           >
             See how it works, step by step →
           </Link>
@@ -276,7 +276,7 @@ export default function ForAgentsPage() {
       {/* Price */}
       <section id="pricing" className="mx-auto max-w-[1100px] px-6 lg:px-10 pb-20 scroll-mt-20">
         <div className="relative overflow-hidden rounded-2xl border border-foreground/10 bg-gradient-to-br from-[hsl(239_84%_60%)]/10 via-[hsl(252_84%_64%)]/10 to-[hsl(265_84%_60%)]/10 px-6 py-10 lg:px-12 lg:py-12 text-center">
-          <div className="absolute inset-x-0 -top-px h-px bg-gradient-to-r from-transparent via-[hsl(229_94%_82%)]/60 to-transparent" />
+          <div className="absolute inset-x-0 -top-px h-px bg-gradient-to-r from-transparent via-accent/60 to-transparent" />
           <h2 className="font-display text-[28px] sm:text-[34px] text-foreground tracking-[-0.02em] leading-tight">
             One payment. Yours forever.
           </h2>
@@ -295,7 +295,7 @@ export default function ForAgentsPage() {
             type="button"
             onClick={() => startCheckout("investor", "/for-agents")}
             disabled={loading}
-            className="mt-7 inline-flex items-center justify-center gap-2 rounded-[10px] bg-gradient-to-r from-[hsl(239_84%_60%)] via-[hsl(252_84%_64%)] to-[hsl(265_84%_60%)] px-6 py-3 text-[14px] font-semibold text-white shadow-lg shadow-[hsl(252_84%_50%)]/20 hover:shadow-[hsl(252_84%_50%)]/35 transition-base disabled:opacity-70"
+            className="mt-7 inline-flex items-center justify-center gap-2 rounded-[10px] bg-foreground hover:bg-foreground/90 px-6 py-3 text-[14px] font-semibold text-background shadow-lg shadow-[hsl(252_84%_50%)]/20 hover:shadow-[hsl(252_84%_50%)]/35 transition-base disabled:opacity-70"
           >
             {loading ? (
               <>
@@ -309,7 +309,7 @@ export default function ForAgentsPage() {
             Not ready?{" "}
             <Link
               to={freeDealScreenPath(!!user)}
-              className="text-[hsl(229_94%_82%)] font-semibold underline-offset-2 hover:underline"
+              className="text-accent font-semibold underline-offset-2 hover:underline"
             >
               Run the free Deal Screen on a client&apos;s property
             </Link>{" "}
@@ -321,7 +321,7 @@ export default function ForAgentsPage() {
           Working your own deals too?{" "}
           <Link
             to="/toolbox/investor"
-            className="text-[hsl(229_94%_82%)] font-semibold underline-offset-2 hover:underline"
+            className="text-accent font-semibold underline-offset-2 hover:underline"
           >
             The full Investor Toolbox page
           </Link>{" "}

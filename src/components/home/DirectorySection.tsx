@@ -64,7 +64,7 @@ export function DirectorySection({
               to={l.to}
               className="group surface-card hover:surface-card-hover rounded-xl px-4 py-3.5 flex items-center gap-3 transition-base"
             >
-              <Icon className="h-4 w-4 shrink-0 text-[hsl(229_94%_82%)]" strokeWidth={2} />
+              <Icon className="h-4 w-4 shrink-0 text-accent" strokeWidth={2} />
               <span className="min-w-0 flex-1">
                 <span className="block text-[13.5px] font-semibold text-foreground leading-tight">
                   {l.label}
