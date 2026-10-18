@@ -13,3 +13,8 @@
 - [x] Show read-only dormant backend status; preserve security and paid flows.
 - [x] Run 149 discovery/regression tests and signed-in desktop/mobile preview checks; report credit checkpoint.
 - [x] Document health/snapshot/job-log RPC as remaining capability, deferred under the approved budget checkpoint.
+
+# Shadow collection preparation
+- [x] Prepare server-only bounded official-source HTTP collection and draft submission with fixtures; real source compatibility/coverage and prior-revision linkage remain unverified (requires approved source fetch checks).
+- [x] Prepare and locally validate narrow worker reservation/health/snapshot/job-log RPC proposal (115 regression + 31 new SQL checks).
+- [x] Record allowlist, terms/robots prerequisites, limits, hashes, tests and activation scope; stop before live changes.
