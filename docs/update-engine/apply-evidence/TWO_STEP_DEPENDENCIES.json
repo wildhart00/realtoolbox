@@ -1,0 +1,11 @@
+{
+  "rows": [
+    {
+      "has_role": true,
+      "sandbox_expected": true,
+      "timestamp_trigger": true,
+      "tools_uuid": true,
+      "unexpected_default_roles": null
+    }
+  ]
+}
