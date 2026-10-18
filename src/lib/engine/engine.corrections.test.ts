@@ -140,3 +140,13 @@ describe("hardening: URL authority", () => {
     expect(checkUrl(u, A).ok).toBe(false);
   });
 });
+
+describe("hardening: path prefix boundary", () => {
+  const A = fixtureSource("appfolio-newsroom");
+  it("accepts allowed prefix, rejects lookalike path", async () => {
+    const { checkUrl } = await import("./registry");
+    expect(checkUrl("https://www.appfolio.com/newsroom/x", A).ok).toBe(true);
+    expect(checkUrl("https://www.appfolio.com/newsroomevil/x", A).ok).toBe(false);
+    expect(checkUrl("https://www.appfolio.com/other/newsroom/x", A).ok).toBe(false);
+  });
+});
