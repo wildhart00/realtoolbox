@@ -65,6 +65,14 @@ export interface Candidate {
   flags: CandidateFlag[];
   contradictions: string[];
   state: ReviewState;
+  /** When the source page was last fetched and this exact content seen. Never updated_at. */
+  sourceCheckedAt: string;
+  /** When this revision was first detected. */
+  firstSeenAt: string;
+  /** Editorial publication time; null until published. */
+  publishedAt: string | null;
+  /** Earlier candidate id for the same canonical URL, if this is a later revision. */
+  revisionOf: string | null;
   history: { at: string; from: ReviewState | null; to: ReviewState; note?: string }[];
 }
 
@@ -81,7 +89,15 @@ export interface SourceHealth {
 }
 
 export type RunOutcome =
-  | { kind: "skipped"; reason: "paused" | "source_disabled" | "budget_exhausted" }
+  | { kind: "skipped"; reason: "paused" | "source_disabled" | "budget_exhausted" | "settings_missing" }
+  | { kind: "partial"; created: number; duplicates: number; rejected: number; deferred: number }
   | { kind: "failed"; reason: string }
   | { kind: "no_change" }
   | { kind: "changed"; created: number; duplicates: number; rejected: number };
+
+export interface EngineSettings {
+  paused: boolean;
+  templateAutoPublishTested: boolean;
+}
+/** Seed/default: fail closed. */
+export const SEED_SETTINGS: EngineSettings = { paused: true, templateAutoPublishTested: false };
