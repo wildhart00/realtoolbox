@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { safeHttps, validDate } from "@/lib/updates/validation";
 
-const text = (max: number) => z.string().min(1).refine(v => !!v.trim(), "Text required").max(max).refine(v => !/[<>\u0000-\u0008\u000b\u000c\u000e-\u001f]/.test(v), "Plain text only");
+const text = (max: number) => z.string().min(1).max(max).refine(v => !!v.trim(), "Text required").refine(v => !/[<>\u0000-\u0008\u000b\u000c\u000e-\u001f]/.test(v), "Plain text only");
 const timestamp = z.string().refine(v => validDate(v), "Invalid timestamp with timezone");
 const citation = z.object({
   type: z.enum(["primary_source", "vendor_demo", "independent_report", "hands_on_test", "video"]),
