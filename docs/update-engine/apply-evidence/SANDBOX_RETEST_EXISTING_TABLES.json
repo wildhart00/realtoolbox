@@ -1,0 +1,136 @@
+{
+  "rows": [
+    {
+      "policy_hash": "4b36db1794600a853d9e57feabee9764",
+      "relacl": "{postgres=arwdDxtm/postgres,anon=arwdDxtm/postgres,authenticated=arwdDxtm/postgres,service_role=arwdDxtm/postgres,sandbox_exec=ar/postgres}",
+      "relname": "affiliate_earnings",
+      "relrowsecurity": true
+    },
+    {
+      "policy_hash": "3f69f7f321ec4f43d8cfaf4aab22a211",
+      "relacl": "{postgres=arwdDxtm/postgres,anon=arwdDxtm/postgres,authenticated=arwdDxtm/postgres,service_role=arwdDxtm/postgres,sandbox_exec=ar/postgres}",
+      "relname": "affiliate_programs",
+      "relrowsecurity": true
+    },
+    {
+      "policy_hash": "ccccfd1337f3c0265cffd364b6d6af97",
+      "relacl": "{postgres=arwdDxtm/postgres,anon=arwdDxtm/postgres,authenticated=arwdDxtm/postgres,service_role=arwdDxtm/postgres,sandbox_exec=ar/postgres}",
+      "relname": "blog_posts",
+      "relrowsecurity": true
+    },
+    {
+      "policy_hash": "6353e383380265945522ef6904dd2e77",
+      "relacl": "{postgres=arwdDxtm/postgres,anon=arwdDxtm/postgres,authenticated=arwdDxtm/postgres,service_role=arwdDxtm/postgres,sandbox_exec=ar/postgres}",
+      "relname": "categories",
+      "relrowsecurity": true
+    },
+    {
+      "policy_hash": "177bd668dca77ee77baf5d915c542ceb",
+      "relacl": "{postgres=arwdDxtm/postgres,anon=arwdDxtm/postgres,authenticated=arwdDxtm/postgres,service_role=arwdDxtm/postgres,sandbox_exec=ar/postgres}",
+      "relname": "click_events",
+      "relrowsecurity": true
+    },
+    {
+      "policy_hash": "2559bf7f73187386c25e58cab7fdfc40",
+      "relacl": "{postgres=arwdDxtm/postgres,anon=arwdDxtm/postgres,authenticated=arwdDxtm/postgres,service_role=arwdDxtm/postgres,sandbox_exec=ar/postgres}",
+      "relname": "contact_messages",
+      "relrowsecurity": true
+    },
+    {
+      "policy_hash": "3aafa843d5c2f45567ad2d52c8109ebc",
+      "relacl": "{postgres=arwdDxtm/postgres,anon=arwdDxtm/postgres,authenticated=arwdDxtm/postgres,service_role=arwdDxtm/postgres,sandbox_exec=ar/postgres}",
+      "relname": "integrations",
+      "relrowsecurity": true
+    },
+    {
+      "policy_hash": "7c5c61e4cba7a7ba729a515a4de2044e",
+      "relacl": "{postgres=arwdDxtm/postgres,anon=arwdDxtm/postgres,authenticated=arwdDxtm/postgres,service_role=arwdDxtm/postgres,sandbox_exec=ar/postgres}",
+      "relname": "newsletter_subscribers",
+      "relrowsecurity": true
+    },
+    {
+      "policy_hash": "a9eabd006ee41bf3f1bb41b5bad121d9",
+      "relacl": "{postgres=arwdDxtm/postgres,anon=arwdDxtm/postgres,authenticated=arwdDxtm/postgres,service_role=arwdDxtm/postgres,sandbox_exec=ar/postgres}",
+      "relname": "profiles",
+      "relrowsecurity": true
+    },
+    {
+      "policy_hash": "ae3e5606d2a77f8f6777d84d24e9d9db",
+      "relacl": "{postgres=arwdDxtm/postgres,anon=arwdDxtm/postgres,authenticated=arwdDxtm/postgres,service_role=arwdDxtm/postgres,sandbox_exec=ar/postgres}",
+      "relname": "purchases",
+      "relrowsecurity": true
+    },
+    {
+      "policy_hash": "50f011f0ae4274e65ee596bbfc8ca082",
+      "relacl": "{postgres=arwdDxtm/postgres,anon=arwdDxtm/postgres,authenticated=arwdDxtm/postgres,service_role=arwdDxtm/postgres,sandbox_exec=ar/postgres}",
+      "relname": "resources",
+      "relrowsecurity": true
+    },
+    {
+      "policy_hash": "4cc0e36f47851db075152443bec1069b",
+      "relacl": "{postgres=arwdDxtm/postgres,anon=arwdDxtm/postgres,authenticated=arwdDxtm/postgres,service_role=arwdDxtm/postgres,sandbox_exec=ar/postgres}",
+      "relname": "reviews",
+      "relrowsecurity": true
+    },
+    {
+      "policy_hash": "657f80e48c90f4ef45cf0966b5bf9e0d",
+      "relacl": "{postgres=arwdDxtm/postgres,anon=arwdDxtm/postgres,authenticated=arwdDxtm/postgres,service_role=arwdDxtm/postgres,sandbox_exec=ar/postgres}",
+      "relname": "saved_tools",
+      "relrowsecurity": true
+    },
+    {
+      "policy_hash": "f3f7621bf45e8914222083a4d9e4dd21",
+      "relacl": "{postgres=arwdDxtm/postgres,anon=arwdDxtm/postgres,authenticated=arwdDxtm/postgres,service_role=arwdDxtm/postgres,sandbox_exec=ar/postgres}",
+      "relname": "skill_subscribers",
+      "relrowsecurity": true
+    },
+    {
+      "policy_hash": "0d34545f394f23346285c4dd27951984",
+      "relacl": "{postgres=arwdDxtm/postgres,authenticated=arwdDxtm/postgres,service_role=arwdDxtm/postgres,sandbox_exec=ar/postgres}",
+      "relname": "skills",
+      "relrowsecurity": true
+    },
+    {
+      "policy_hash": "5025fb6a2ca1619242583265ecd07d7b",
+      "relacl": "{postgres=arwdDxtm/postgres,anon=arwdDxtm/postgres,authenticated=arwdDxtm/postgres,service_role=arwdDxtm/postgres,sandbox_exec=ar/postgres}",
+      "relname": "stack_entries",
+      "relrowsecurity": true
+    },
+    {
+      "policy_hash": "d056e22d4525defc572ff846d07894dc",
+      "relacl": "{postgres=arwdDxtm/postgres,anon=arwdDxtm/postgres,authenticated=arwdDxtm/postgres,service_role=arwdDxtm/postgres,sandbox_exec=ar/postgres}",
+      "relname": "stacks",
+      "relrowsecurity": true
+    },
+    {
+      "policy_hash": "fe5c62651bcbb4467fa0bb5d913de32c",
+      "relacl": "{postgres=arwdDxtm/postgres,anon=arwdDxtm/postgres,authenticated=arwdDxtm/postgres,service_role=arwdDxtm/postgres,sandbox_exec=ar/postgres}",
+      "relname": "submissions",
+      "relrowsecurity": true
+    },
+    {
+      "policy_hash": "06699b6997283e0abc105290a22c9bcc",
+      "relacl": "{postgres=arwdDxtm/postgres,anon=arwdDxtm/postgres,authenticated=arwdDxtm/postgres,service_role=arwdDxtm/postgres,sandbox_exec=ar/postgres}",
+      "relname": "subscriptions",
+      "relrowsecurity": true
+    },
+    {
+      "policy_hash": "4dc3d66409f625acbef14f91bd7ed51a",
+      "relacl": "{postgres=arwdDxtm/postgres,anon=arwdDxtm/postgres,authenticated=arwdDxtm/postgres,service_role=arwdDxtm/postgres,sandbox_exec=ar/postgres}",
+      "relname": "tool_categories",
+      "relrowsecurity": true
+    },
+    {
+      "policy_hash": "ee618943860d93f6b3e1cb1570d71d63",
+      "relacl": "{postgres=arwdDxtm/postgres,anon=arwdDxtm/postgres,authenticated=arwdDxtm/postgres,service_role=arwdDxtm/postgres,sandbox_exec=ar/postgres}",
+      "relname": "tools",
+      "relrowsecurity": true
+    },
+    {
+      "policy_hash": "86182902acbd654ab05e3cda89dc945f",
+      "relacl": "{postgres=arwdDxtm/postgres,anon=arwdDxtm/postgres,authenticated=arwdDxtm/postgres,service_role=arwdDxtm/postgres,sandbox_exec=ar/postgres}",
+      "relname": "user_roles",
+      "relrowsecurity": true
+    }
+  ]
+}
