@@ -1,61 +1,89 @@
-# RealToolbox.ai — investor-first evolution (plan only, nothing auto-applied)
+# RealToolbox.ai — maintained AI developments & tool-discovery destination (revised plan, nothing auto-applied)
 
-## Recommended architecture (one)
-Keep the current site, routes, Stripe one-time purchases and entitlements exactly as they are. Add **one guided "First-Pass Deal Check" page** at a new URL (`/toolbox/deal-screen/check`) that runs **entirely in the browser** on numbers the user types (or a built-in synthetic sample deal). No file uploads, no AI model calls, no new paid tier. Output = a checklist of assumptions, each tagged *user-entered / derived / unknown*, with simple rule-based flags (e.g. rehab budget missing, ARV source not stated, rent not verified). Results can be saved only as an opt-in email of the summary to the user (reuses the existing newsletter capture), not a stored "deal" record.
+## Core promise
+For residential real estate investors and agents: know what changed, why it matters for your work, and what is worth trying. Skills stay as supporting products; existing lifetime purchases and paid routes stay intact. No new DealScreen as the core.
 
-Why: delivers the hosted Deal Screen the September remix promised without hosted AI cost, without storing customer documents, and without letting a one-time purchase turn into unlimited AI. Hosted AI is a later, separately priced decision once unit economics are known.
+## Verified current state (read this turn, not assumed)
+- Backend: one Lovable Cloud instance serves both preview and the published site. Any backend write made "in preview" is a live write. Draft-branch backend isolation is not established for this project and is not relied on.
+- Data today: 9 published tools, 4 published blog posts, 0 reviews, 0 saved tools, 0 profile bios, 1 newsletter subscriber, 74 click events, 1 paid purchase.
+- Scheduling extensions (pg_cron, pg_net) are installed. Existing scheduled-style functions: `expire-just-launched`, `refresh-tool-images` (both write `tools` with the admin key).
+- A web-scraping connector (Firecrawl) is already connected; its plan limits and cost are not yet checked.
+- No email-sending function exists. The current newsletter form only stores an address; it delivers nothing. Account signup is not marketing consent.
+- `click_events` exists (used by `/go/:slug` and admin analytics); it has no test-traffic exclusion and no event-id dedup.
+- Reusable, verified: `tools` + `categories` + `tool_categories`, `ToolCard`/`ToolGrid`/`ToolLogo`/`PricingBadge`, `ToolDetailPage`, `BrowsePage`, `saved_tools` table + `useSavedToolIds`, blog CMS (`BlogAdmin`, `PostBody`), `AdminLayout` + `has_role` admin gating, `CaptureDialog`, `useAuth`, `useEntitlements`, `AffiliateDisclosure`, Stacks pages.
+- Security: `profiles` SELECT is `USING (true)` for everyone.
 
-## Verified current state (read this turn)
-- Routes: `/toolbox/:slug` skill detail, `/toolbox/investor`, `/resources/*`, `/how-it-works`, `/auth`, `/reset-password`. No `/members` route exists.
-- `ResetPasswordPage` sends users to `/members` after a reset — that lands on the 404 page.
-- `profiles` SELECT policy is `USING (true)` for everyone; table includes `bio`. Reviews only need `display_name` + `avatar_url` (confirmed in `useReviews`).
-- Tests: Vitest set up, only `example.test.ts` exists.
-- Reusable: `CaptureDialog` (email + investor stage), `freeDealScreenPath()` signup routing, `useEntitlements`, `SkillDetailPage` layout, `ResourceArticleLayout`, `GuardrailCards`, `HowToUseSteps`, `/resources/verifying-comps` and `/offer-checklist` pages, `AppLayout`, design tokens.
+## Recommended architecture
+```text
+Allowlisted sources (vendor changelogs, pricing pages, release notes)
+   -> scheduled fetch (bounded: N sources, 1x/day, timeout, 2 retries)
+   -> snapshot hash + normalized diff (change detection, dedup by source+hash)
+   -> AI-drafted factual summary of the diff (short, own words, link out; no copying)
+   -> REVIEW QUEUE (admin) -> approve / edit / reject
+   -> published "Update" with labels + dates
+   -> feeds: homepage, tool pages, task finder, watchlists, weekly digest
+```
+New tables (all admin-write, service-role for jobs, public read only of published rows):
+- `sources` — tool_id, url, kind, enabled, last_checked_at, last_success_at, consecutive_failures.
+- `source_snapshots` — source_id, fetched_at, content_hash, extracted text (truncated, internal only).
+- `updates` — tool_id, title, summary, why_it_matters, audience (investor/agent/both), evidence_level (`vendor_announced` | `editorially_checked` | `hands_on_tested`), source_url, source_published_date, checked_at, status (draft/approved/rejected), reviewed_by.
+- `tool_facts` — tool_id, field (price_basis, requirements, limitation…), value, source_url, checked_at; stale flag computed from checked_at.
+- `tasks` + `tool_tasks` — task-based finder ("write listing copy", "skip trace", "underwrite a rental").
+- `watchlist_items` — user_id, tool_id or topic.
+- `email_consents` — user/email, digest opt-in, consented_at, method, unsubscribed_at (separate from signup).
+- `analytics_events` — event_id (client-generated, unique), name, session_id, user_id, is_test, created_at.
 
-## Phase 1 — Security proposal, auth route, truthful positioning (budget cap ~18 credits)
-Needs your approval for each item before it runs:
-1. **Profiles exposure (approval required).** Replace the open SELECT with: users read their own full row; anon/authenticated get column-level SELECT on `user_id, display_name, avatar_url` only (same pattern used for `skills.file_url`). Reviews keep working; `bio` stops being public. Verify with an anonymous request that `bio` is refused and a tool page still shows reviewer names.
-2. **Password reset landing (approval required).** Change `/members` target to `/welcome` (existing page). `MembersPage.tsx` stays as backlog, untouched.
-3. **Truthful copy.** Audit hero, toolbox, skill detail and OfferBand for claims of hosted screening, saved deals, or numbers not backed by data; replace with what exists today. Deliver a list of exact before/after lines for your sign-off first.
+Operator controls: per-source enable/disable, global "pause collection" flag, manual re-run, failure alert (admin banner + count when a source fails 3x or a job fails), stale badges (fact >90 days unchecked; threshold your choice).
 
-## Phase 2 — One working outcome flow (budget cap ~35 credits)
-- New page `/toolbox/deal-screen/check`: 4-step form (property & strategy, purchase/rehab, exit or rent assumptions, sources for each number).
-- Pure TypeScript rules module produces flags + "unknowns" list; each line shows its source label. No market data, comps or return promises — only arithmetic on user inputs (e.g. max offer at user's chosen rule) clearly labeled as such.
-- "Load sample deal" button with obviously synthetic numbers labeled "Example — not a real property".
-- Optional "Email me this summary" via existing `CaptureDialog` (source `deal-check`).
-- Link in from existing Deal Screen skill page and homepage `DealScreenStrip`; existing URLs unchanged.
-- Unit tests for each rule (concrete inputs → expected flag).
+## What may automate vs. what needs review
+- Candidate for auto-publish only after a pilot (e.g. 4 weeks, >=95% of drafts approved unedited): price amount changes on a vendor's own pricing page, new version/changelog entries, "checked on" date refresh when nothing changed. Always labeled `vendor_announced`.
+- Always human review: "why it matters", any comparison or ranking, `editorially_checked` / `hands_on_tested` labels, security/privacy/compliance claims, financial or return claims, anything about MLS/fair-housing/licensing, sponsorship.
+- Never generated: testing claims, rankings, customer results, "continuously monitored" wording beyond the real schedule.
 
-## Phase 3 — Original workflow content, conversion, QA (budget cap ~20 credits)
-- Two workflow pages under `/resources/` (e.g. "Checking an ARV before you offer", "Rehab budget sanity check"), each ending in the Deal Check and the free signup. Written from method, not invented results.
-- Sitemap + meta updates for new pages only.
-- Playwright pass: signed out, signed in free, signed in with a paid toolbox — confirm paid skills still unlock and nothing regressed.
+## Monetization (hypothesis, not built now)
+Free: updates feed, finder, tool pages, comparisons. Paid hypothesis later: tailored watchlist monitoring and deeper comparisons. Sponsorship later, clearly labeled. Not a news paywall.
 
-Total cap ~73 of ~78; ~5 held for fixes. Credit use is usage-based, so these are budget caps to stop at, not guaranteed costs; I will report at each phase end and pause before exceeding a cap.
+## Phases, checkpoints and credit allocation
+Credit use is usage-based; these are budget checkpoints to stop and report at, not guaranteed costs. Remaining expiring credits as stated by you: ~78.
 
-## Isolating drafts from the live database
-- Phase 2 and 3 are front-end only (no schema change) and can be built in a **draft branch**, which has its own isolated backend, previewed, then accepted.
-- Phase 1 policy change is the only live-DB change; it ships as one reversible migration with a written rollback (restore the previous policy).
-- No publish without your explicit "publish".
+Phase 0 — Separately gated security repair (~8). Only after your explicit approval:
+- Base `profiles` row: readable/updatable only by its owner; admins read via `has_role`.
+- Public author projection: a security-definer function (or view) returning only `display_name, avatar_url` for user_ids that have at least one review, used by `useReviews`. Column grants alone are not used because they cannot distinguish owner from public.
+- Tests: anon cannot read `bio` or any profile without a review; owner reads own row; review author names still render. Rollback SQL written first.
+- Also proposed separately: `/reset-password` currently lands on `/members` (404) — target choice is yours.
 
-## Instrumentation
-- Reuse `newsletter_subscribers.source` values: `deal-check`, `workflow-arv`, `workflow-rehab`.
-- Count step completion in the existing project analytics (page views per step URL hash); no new tracking table.
-- Measured: Deal Check starts, completions, email opt-ins, signup clicks, toolbox page visits from the check.
+Phase 1 — Smallest useful preview build (~22). Front-end + read-only, no new tables, no jobs, no emails:
+- Editorial homepage with Investor / Agent / Both selector (stored in the browser only).
+- "What changed" section rendering manually entered updates from a hard-coded, reviewed list in code (5–10 real items you approve, each with source link, source date, checked date, evidence label).
+- Evidence-label + stale-badge components reused on tool pages.
+- Task finder v0: filter existing 9 tools by tasks you approve (static mapping).
+- Truthful copy: no "continuous coverage", no rankings, no invented results.
+- Acceptance: every update shows all three dates/labels; selector filters correctly; legacy URLs (`/toolbox/*`, `/skills/*`, `/tools/*`, `/go/*`) resolve; paid skill still unlocks for the paid test account.
 
-## Acceptance criteria
-- Anonymous request cannot read `profiles.bio`; reviews still show names/avatars.
-- Password reset ends on a real page, not 404.
-- Deal Check works with zero network calls to AI/model endpoints; every output line shows a source label; sample deal clearly labeled synthetic.
-- Rule tests pass; existing paid entitlements unlock the same skills before and after.
-- No new testimonials, customer names, market stats or return figures anywhere.
-- All existing indexed URLs still resolve.
+Phase 2 — Pipeline + review queue (~30). Needs approval for each live migration and for scraping cost:
+- Tables above (except consents/watchlists), admin Sources and Review Queue pages built on `AdminLayout`.
+- One edge function, scheduled daily, over a 5–10 source allowlist; hash dedup, retries, failure counter, pause flag.
+- AI drafting via the built-in AI service, capped per run (e.g. max 20 drafts/day); nothing publishes without approval.
+- Acceptance: unchanged source creates no new draft; changed source creates exactly one; a failing source increments failures and shows an alert; paused flag stops the run; rejected drafts never appear publicly.
 
-## Approvals needed from you
-1. Profiles policy change (Phase 1.1).
-2. Reset landing page target (1.2).
-3. Copy before/after list (1.3).
-4. Draft-branch use for Phase 2–3, and final accept/publish.
+Phase 3 — Personalization, consent, analytics (~15):
+- Save tools/topics (reuse `saved_tools`; add topics), "changes since you last visited" on a watchlist page.
+- Digest opt-in with its own checkbox and record in `email_consents`; actual sending deferred until an email domain/provider is set up and quoted.
+- `analytics_events` with unique event_id dedup, `is_test` set for admin/test accounts and localhost, events: selector_choice, update_open, finder_filter, tool_save, digest_optin, outbound_click.
+- Acceptance: duplicate event_id stored once; admin sessions excluded from the dashboard; consent record exists only after the explicit checkbox.
 
-## Smallest first build brief
-Phase 1 items 1–2 only: one migration (profiles column-level read) + one-line reset redirect fix, verified by an anonymous query and a reset-flow click-through. Nothing else changes.
+Reserve ~3 for fixes. I stop and report at each phase end.
+
+## Approvals needed
+1. Phase 0 profile repair and reset-page target (separate from everything else).
+2. The Phase 1 update list and task mapping (real content only).
+3. Each live migration in Phase 2–3 (preview shares the live database).
+4. Scraping source allowlist and connector usage cost.
+5. Email provider/domain before any digest is sent.
+6. Publish — only on your explicit word.
+
+## Unknowns (stay unknown until quoted/measured)
+Daily scraping cost, AI drafting cost per run, email sending cost, backend compute from schedules.
+
+## Smallest useful preview build scope
+Phase 1 only: homepage selector, a reviewed hard-coded "What changed" list with labels/dates, evidence/stale badges, static task finder over existing tools. No database, auth, payment, email or scheduling changes.
