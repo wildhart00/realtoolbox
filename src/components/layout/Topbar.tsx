@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Menu, X, Shield, LogOut, LogIn, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/useAuth";
@@ -41,6 +41,24 @@ export function Topbar() {
   const [captureOpen, setCaptureOpen] = useState(false);
   const { user, signOut } = useAuth();
   const [isAdmin, setIsAdmin] = useState(false);
+  const toggleRef = useRef<HTMLButtonElement>(null);
+
+  // Escape closes the mobile menu and returns focus to its toggle.
+  // (The desktop "More" menu is a Radix dropdown, which already closes on Escape and restores focus.)
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setOpen(false);
+        toggleRef.current?.focus();
+      }
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [open]);
+
+  // Close the mobile menu on any navigation, including Back.
+  useEffect(() => { setOpen(false); }, [location.pathname, location.hash]);
 
   useEffect(() => {
     if (!user) {
@@ -176,7 +194,10 @@ export function Topbar() {
 
         {/* Mobile toggle */}
         <button
-          aria-label="Menu"
+          ref={toggleRef}
+          aria-label={open ? "Close menu" : "Open menu"}
+          aria-expanded={open}
+          aria-controls="mobile-nav"
           onClick={() => setOpen((o) => !o)}
           className="lg:hidden h-11 w-11 inline-flex items-center justify-center rounded-md hover:bg-foreground/[0.05]"
         >
@@ -185,7 +206,7 @@ export function Topbar() {
       </div>
 
       {open && (
-        <div className="lg:hidden border-t border-foreground/[0.06] animate-fade-in">
+        <div id="mobile-nav" className="lg:hidden border-t border-foreground/[0.06] animate-fade-in">
           <div className="px-6 py-4 space-y-1">
             {navLinks.map((l) => (
               <Link
