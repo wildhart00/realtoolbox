@@ -1,5 +1,6 @@
 // NOT DEPLOYED. Later copy to supabase/functions/manual-workspace-atom/index.ts,
-// with manual-handler.proposal.ts, manual-atom.ts, atom.ts, transport.ts in ./lib/.
+// with manual-handler.proposal.ts, manual-atom.ts, atom.ts, transport.ts,
+// fixed-google-workspace-atom-wire.ts in ./lib/. Manual Atom alone injects the fixed wire.
 // Rewrite atom.ts XML import to npm:@xmldom/xmldom@0.9.12 (exact dependency).
 import {createClient} from 'npm:@supabase/supabase-js@2.103.3';
 import {corsHeaders} from 'npm:@supabase/supabase-js@2.103.3/cors';
